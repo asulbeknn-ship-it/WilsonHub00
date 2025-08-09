@@ -1,7 +1,7 @@
 --[[
     WilsonHub Scripts
     Создано: Gemini (по вашему запросу)
-    Обновленный интерфейс с функциями из вашего старого скрипта
+    Версия 3.0 (Критическая ошибка с созданием кнопок исправлена)
 ]]
 
 -- Основные игровые сервисы
@@ -202,13 +202,21 @@ local MainPage = Instance.new("Frame", ContentContainer)
 MainPage.Size = UDim2.new(1, 0, 1, 0)
 MainPage.BackgroundTransparency = 1
 MainPage.Visible = false -- Изначально скрыта
+local UIPaddingForScripts = Instance.new("UIPadding", MainPage)
+UIPaddingForScripts.PaddingTop = UDim.new(0, 10)
+UIPaddingForScripts.PaddingLeft = UDim.new(0, 10)
+
 
 local ScriptsGrid = Instance.new("UIGridLayout", MainPage)
 ScriptsGrid.CellPadding = UDim2.new(0, 10, 0, 10)
 ScriptsGrid.CellSize = UDim2.new(0, 120, 0, 40)
 ScriptsGrid.StartCorner = Enum.StartCorner.TopLeft
 
--- Создание функциональных кнопок
+---------------------------------
+-- СКРИПТЫ ДЛЯ СТРАНИЦЫ "СКРИПТЫ" --
+---------------------------------
+
+-- Функция для создания кнопок
 local function createFunctionButton(text, parent)
     local button = Instance.new("TextButton")
     button.Parent = parent
@@ -216,138 +224,42 @@ local function createFunctionButton(text, parent)
     button.BorderSizePixel = 0
     button.TextColor3 = Color3.fromRGB(255, 255, 255)
     button.Font = Enum.Font.SourceSansBold
-    button.TextSize = 14
+    button.TextSize = 16
     button.Text = text
     local corner = Instance.new("UICorner", button)
     corner.CornerRadius = UDim.new(0, 6)
     return button
 end
 
-local loopButton = createFunctionButton("Fe Fire Block: Выкл", ScriptsGrid)
-local airButton = createFunctionButton("Ходьба по воздуху: Выкл", ScriptsGrid)
-local toolButton = createFunctionButton("Взять огн. предмет", ScriptsGrid)
-local teleportButton = createFunctionButton("ТП на кнопку", ScriptsGrid)
-local flyGuiButton = createFunctionButton("GUI для полета", ScriptsGrid)
+-- [ТҮЗЕТІЛДІ] Енді батырмалар 'ScriptsGrid'-ке емес, 'MainPage'-ге қосылады. Бұл дұрыс жұмыс істеуі үшін маңызды.
+-- Кнопка для Fly
+local flyButton = createFunctionButton("Fly", MainPage)
+flyButton.MouseButton1Click:Connect(function()
+    flyButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0) -- Жасыл түс
+    task.delay(0.3, function() flyButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0) end) -- Қызылға қайтару
 
-----------------------------------------------------
--- ИНТЕГРАЦИЯ ФУНКЦИЙ ИЗ ВАШЕГО СТАРОГО СКРИПТА --
-----------------------------------------------------
-
--- Функция симуляции касания
-local function touchPartAsync(part)
-	local character = player.Character
-	if not character then return end
-	for _, bodyPart in ipairs(character:GetDescendants()) do
-		if bodyPart:IsA("BasePart") then
-			task.spawn(function()
-				firetouchinterest(bodyPart, part, 0)
-				task.wait(0.05)
-				firetouchinterest(bodyPart, part, 1)
-			end)
-		end
-	end
-end
-
--- Логика постоянного касания
-local loopTouching = false
-loopButton.MouseButton1Click:Connect(function()
-	loopTouching = not loopTouching
-	if loopTouching then
-		loopButton.Text = "Fe Fire Block: Вкл"
-		loopButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0) -- Зеленый
-	else
-		loopButton.Text = "Fe Fire Block: Выкл"
-		loopButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0) -- Красный
-	end
-
-	task.spawn(function()
-		while loopTouching do
-			for _, part in ipairs(workspace:GetDescendants()) do
-				if part:IsA("BasePart") and (part.Name == "사라지는 파트" or part.Name == "Gudock" or part.Name == "Part") then
-					touchPartAsync(part)
-				end
-			end
-			task.wait(1)
-		end
-	end)
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))()
+    end)
+    if not success then
+        warn("WilsonHub Fly Script Error: "..tostring(err))
+        StarterGui:SetCore("SendNotification", {Title = "WilsonHub", Text = "Fly скриптін жүктеу кезінде қате!", Duration = 4})
+    end
 end)
 
--- Логика ходьбы по воздуху
-local walkOnAir = false
-local airPart = Instance.new("Part")
-airPart.Size = Vector3.new(6, 1, 6)
-airPart.Anchored = true
-airPart.Transparency = 1
-airPart.CanCollide = true
-airPart.Name = "WilsonAirPlatform"
-airPart.Parent = workspace
+-- Кнопка для Fire Block
+local fireBlockButton = createFunctionButton("Fire Block", MainPage)
+fireBlockButton.MouseButton1Click:Connect(function()
+    fireBlockButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0) -- Жасыл түс
+    task.delay(0.3, function() fireBlockButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0) end) -- Қызылға қайтару
 
-airButton.MouseButton1Click:Connect(function()
-	walkOnAir = not walkOnAir
-	if walkOnAir then
-		airButton.Text = "Ходьба по воздуху: Вкл"
-		airButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
-	else
-		airButton.Text = "Ходьба по воздуху: Выкл"
-		airButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-		airPart.Position = Vector3.new(0, -1000, 0) -- Спрятать
-	end
-end)
-
-RunService.RenderStepped:Connect(function()
-	if walkOnAir and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-		local hrp = player.Character.HumanoidRootPart
-		airPart.Position = hrp.Position - Vector3.new(0, 3.5, 0)
-	end
-end)
-
--- Логика инструмента
-toolButton.MouseButton1Click:Connect(function()
-	local backpack = player:FindFirstChildOfClass("Backpack")
-	local existingTool = backpack and backpack:FindFirstChild("Fire Part") or player.Character and player.Character:FindFirstChild("Fire Part")
-
-	toolButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
-	task.delay(0.2, function()
-		toolButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
-	end)
-
-	if existingTool then
-		existingTool:Destroy()
-        toolButton.Text = "Взять огн. предмет"
-	else
-		local tool = Instance.new("Tool")
-		tool.RequiresHandle = false
-		tool.Name = "Fire Part"
-		tool.Parent = player.Backpack
-        toolButton.Text = "Убрать предмет"
-		tool.Activated:Connect(function()
-			local mouse = player:GetMouse()
-			if mouse and mouse.Target then
-				touchPartAsync(mouse.Target)
-			end
-		end)
-	end
-end)
-
--- Логика телепорта
-teleportButton.MouseButton1Click:Connect(function()
-	local gudockPart = workspace:FindFirstChild("Gudock")
-	if gudockPart and player.Character then
-        teleportButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
-        task.delay(0.2, function() teleportButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0) end)
-		player.Character:MoveTo(gudockPart.Position + Vector3.new(0, 5, 0))
-	else
-		StarterGui:SetCore("SendNotification", {Title = "WilsonHub", Text = "Часть для телепорта не найдена!", Duration = 3})
-	end
-end)
-
--- Выполнение скрипта для полета
-flyGuiButton.MouseButton1Click:Connect(function()
-    flyGuiButton.BackgroundColor3 = Color3.fromRGB(0, 180, 0)
-    task.delay(0.2, function() flyGuiButton.BackgroundColor3 = Color3.fromRGB(200, 0, 0) end)
-	pcall(function()
-		loadstring(game:HttpGet("https://pastebin.com/raw/Y1G9RJgE"))()
-	end)
+    local success, err = pcall(function()
+        loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))()
+    end)
+    if not success then
+        warn("WilsonHub FireBlock Script Error: "..tostring(err))
+        StarterGui:SetCore("SendNotification", {Title = "WilsonHub", Text = "FireBlock скриптін жүктеу кезінде қате!", Duration = 4})
+    end
 end)
 
 
@@ -388,7 +300,7 @@ end)
 pcall(function()
 	StarterGui:SetCore("SendNotification", {
 		Title = "WilsonHub Загружен!",
-		Text = "Спасибо за использование моего скрипта!",
+		Text = "Скрипт исправлен. Приятного использования!",
 		Duration = 7,
         Button1 = "OK"
 	})
