@@ -1,7 +1,7 @@
 --[[
 Made by @Nurgazy_21 tg: nurr_wilson
 Script name: WilsonHub
-version script: 1.2.0 (Language Update)
+version script: 1.2.1 (Bug Fix)
 ]]
 
 -- Основные сервисы
@@ -905,7 +905,21 @@ end)
 
 -- 3. АНИМАЦИЯ ЗАГРУЗКИ
 applyLanguage(settings.language)
-local loadDuration=3;for i=0,100 do local progress=i/100;local numDots=math.floor(i/12)%4;LoadingLabel.Text=LoadingLabel.Text:match("(.+)%.%.%." or "(.+)") ..string.rep(".",numDots);PercentageLabel.Text=i.." %";ProgressBarFill.Size=UDim2.new(progress,0,1,0);task.wait(loadDuration/100)end;task.wait(0.2)
+local loadDuration=3
+local langCode = languageMap[settings.language] or "en"
+local baseLoadingText = translations.loading[langCode] or translations.loading.en
+for i=0,100 do 
+    local progress=i/100
+    local numDots=math.floor(i/12)%4
+    if LoadingLabel and LoadingLabel.Parent then
+        LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
+    end
+    PercentageLabel.Text=i.." %"
+    ProgressBarFill.Size=UDim2.new(progress,0,1,0)
+    task.wait(loadDuration/100)
+end
+task.wait(0.2)
+
 
 -- 4. ЗАВЕРШЕНИЕ
 LoadingGui:Destroy()
