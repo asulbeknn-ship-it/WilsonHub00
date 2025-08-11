@@ -1,7 +1,7 @@
 --[[
 Made by @Nurgazy_21 tg: nurr_wilson
 Script name: WilsonHub
-version script: 1.2.1 (Executor Fix)
+version script: 1.2.0 (Gemini Enhanced)
 ]]
 
 -- Основные сервисы
@@ -32,6 +32,8 @@ MusicPlayer.Parent = CoreGui
 -- 2. Переводчик
 local TRANSLATOR_SETTINGS = {
     -- ВАЖНО: Этот URL - всего лишь заглушка. Вам нужен РАБОЧИЙ прокси-сервер для перевода.
+    -- Пример: ваш сервер на Glitch/Heroku, который принимает POST-запросы с текстом и языком,
+    -- и возвращает переведенный текст от Google Translate.
     API_Endpoint = "https://your-translator-proxy.glitch.me/translate",
     TargetLanguage = "None" -- 'ru', 'en', 'kk', 'zh-CN', 'fr'
 }
@@ -253,7 +255,7 @@ task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
         local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; 
-        MainFrame.Size = UDim2.new(0, 600, 0, 350);
+        MainFrame.Size = UDim2.new(0, 600, 0, 350); -- Увеличено для новых вкладок
         MainFrame.Position = UDim2.new(0.5, -300, 0.5, -175);
         MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)  
         local IconFrame = Instance.new("TextButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 100, 0, 40); IconFrame.Position = UDim2.new(0, 10, 0, 10); IconFrame.BorderSizePixel = 0; IconFrame.Text = ""; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 8)  
@@ -477,7 +479,7 @@ task.spawn(function()
             -- THEMES
             local ThemeFrame = Instance.new("Frame", SettingsContainer); ThemeFrame.BackgroundTransparency=1; ThemeFrame.Size=UDim2.new(1,0,0,100);
             local ThemeTitle = createInfoLabel(nil, ThemeFrame, true, "Color Theme"); ThemeTitle.Font=Enum.Font.SourceSansBold; ThemeTitle.TextSize=18;
-            local ThemeGrid = Instance.new("UIGridLayout", ThemeFrame); ThemeGrid.CellPadding=UDim2.new(0,10,0,10); ThemeGrid.CellSize=UDim2.new(0,120,0,40); ThemeGrid.HorizontalAlignment=Enum.HorizontalAlignment.Left; ThemeGrid.StartPosition = UDim2.new(0,0,0,30)
+            local ThemeGrid = Instance.new("UIGridLayout", ThemeFrame); ThemeGrid.CellPadding=UDim2.new(0,10,0,10); ThemeGrid.CellSize=UDim2.new(0,120,0,40); ThemeGrid.HorizontalAlignment = Enum.HorizontalAlignment.Left; ThemeGrid.StartPosition = UDim2.new(0,0,0,30)
             createFunctionButton(nil, ThemeFrame, function() applyTheme("Red") end).Text = "Red (Default)"; createFunctionButton(nil, ThemeFrame, function() applyTheme("Yellow") end).Text = "Yellow"; createFunctionButton(nil, ThemeFrame, function() applyTheme("Blue") end).Text = "Blue"; createFunctionButton(nil, ThemeFrame, function() applyTheme("Green") end).Text = "Green"; createFunctionButton(nil, ThemeFrame, function() applyTheme("White") end).Text = "White"; createFunctionButton(nil, ThemeFrame, function() activateRainbowTheme() end).Text = "Rainbow";
 
             -- MENU LANGUAGE
@@ -495,39 +497,8 @@ task.spawn(function()
         end
         -- #endregion
 
-        -- #region EXECUTOR (FIXED)
-        do
-            local ExecutorInput = Instance.new("TextBox", ExecutorPage); 
-            ExecutorInput.Size = UDim2.new(1, -20, 1, -60); 
-            ExecutorInput.Position = UDim2.new(0, 10, 0, 10); 
-            ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); 
-            ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); 
-            ExecutorInput.PlaceholderText = "--[[ Paste your script here ]]--"; 
-            ExecutorInput.Font = Enum.Font.Code; 
-            ExecutorInput.TextSize = 14; 
-            ExecutorInput.TextWrapped = true; 
-            ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; 
-            ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; 
-            ExecutorInput.ClearTextOnFocus = false; 
-            Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); 
-            
-            local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); 
-            ExecutorStroke.Color = currentTheme.main; 
-            table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); 
-            
-            local ExecuteButton = createFunctionButton("Execute", ExecutorPage, function() 
-                local s,e = pcall(loadstring(ExecutorInput.Text)); 
-                if not s then StarterGui:SetCore("SendNotification",{Title="Executor Error", Text=tostring(e)}) end 
-            end); 
-            ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); 
-            ExecuteButton.Position = UDim2.new(0, 10, 1, -45); 
-            
-            local ClearButton = createFunctionButton("Clear", ExecutorPage, function() 
-                ExecutorInput.Text = "" 
-            end); 
-            ClearButton.Size = UDim2.new(0.5, -15, 0, 35); 
-            ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
-        end
+        -- #region EXECUTOR
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.PlaceholderText = "--[[ Paste your script here ]]--"; ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("Execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then StarterGui:SetCore("SendNotification",{Title="Executor Error", Text=tostring(e)}) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("Clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
 
         -- #region HELP PAGE
@@ -566,15 +537,7 @@ task.spawn(function()
         for i,tab in ipairs(tabs) do tab.MouseButton1Click:Connect(function() 
             if activeTab and activeTab.Parent then activeTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60) end
             activeTab = tab 
-
-            -- Возвращаемся к оригинальной логике переключения для стабильности
-            for _, p in ipairs(pages) do
-                p.Visible = false
-            end
-            if pages[i] then
-                pages[i].Visible = true
-            end
-            
+            for j, p in ipairs(pages) do p.Visible = (i == j) end
             if not rainbowThemeActive then activeTab.BackgroundColor3 = currentTheme.main end
             
             local was_chat_active = chat_state.is_active
