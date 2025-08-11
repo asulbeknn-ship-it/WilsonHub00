@@ -1,7 +1,7 @@
 --[[
 Made by @Nurgazy_21 tg: nurr_wilson
 Script name: WilsonHub
-version script: 1.2.1 (Bug Fix)
+version script: 1.2.2 (Major Bug Fixes & Layout Improvements)
 ]]
 
 -- Основные сервисы
@@ -65,7 +65,7 @@ local translations = {
     -- LOADING SCREEN
     loading = { en = "Loading", ru = "Загрузка", kz = "Жүктелуде", zh = "加载中", fr = "Chargement" },
     -- MAIN GUI
-    main_title = { en = "HACK WILSONHUB SCRIPTS FOR ROBLOX (V1.2.0)", ru = "HACK WILSONHUB SCRIPTS ДЛЯ ROBLOX (V1.2.0)", kz = "ROBLOX ҮШІН WILSONHUB SCRIPTS ХАГЫ (V1.2.0)", zh = "ROBLOX版WILSONHUB脚本黑客工具 (V1.2.0)", fr = "HACK WILSONHUB SCRIPTS POUR ROBLOX (V1.2.0)" },
+    main_title = { en = "HACK WILSONHUB SCRIPTS FOR ROBLOX (V1.2.2)", ru = "HACK WILSONHUB SCRIPTS ДЛЯ ROBLOX (V1.2.2)", kz = "ROBLOX ҮШІН WILSONHUB SCRIPTS ХАГЫ (V1.2.2)", zh = "ROBLOX版WILSONHUB脚本黑客工具 (V1.2.2)", fr = "HACK WILSONHUB SCRIPTS POUR ROBLOX (V1.2.2)" },
     close_button = { en = "X", ru = "X", kz = "X", zh = "X", fr = "X" },
     -- TABS
     tab_home = { en = "HOME", ru = "ГЛАВНАЯ", kz = "БАСТЫ", zh = "主页", fr = "ACCUEIL" },
@@ -565,6 +565,12 @@ task.spawn(function()
             b.TextColor3=theme.text
             b.Font=Enum.Font.SourceSansBold
             b.TextSize=16
+            
+            -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
+            local langCode = languageMap[settings.language] or "en"
+            local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
+            b.Text = initialText
+
             b.TextScaled = false
             b.RichText = false
             b.TextYAlignment = Enum.TextYAlignment.Center
@@ -612,7 +618,86 @@ task.spawn(function()
         -- #endregion
 
         -- #region GUI MODS PAGE
-        do local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;local function createToggle(textKey,order,callback) local frame=Instance.new("Frame",GuiModsContainer);frame.Size=UDim2.new(1,-20,0,40);frame.BackgroundTransparency=1;frame.LayoutOrder=order;local label=Instance.new("TextLabel",frame);label.Size=UDim2.new(0.6,0,1,0);label.BackgroundTransparency=1;label.Font=Enum.Font.SourceSansBold;label.TextColor3=Color3.new(1,1,1);label.TextSize=16;label.TextXAlignment=Enum.TextXAlignment.Left;table.insert(translatableObjects,{object=label,property="Text",key=textKey});local btn=Instance.new("TextButton",frame);btn.Size=UDim2.new(0.4,-10,1,0);btn.Position=UDim2.new(0.6,10,0,0);btn.BackgroundColor3=currentTheme.main;btn.TextColor3=currentTheme.text;btn.Font=Enum.Font.SourceSansBold;Instance.new("UICorner",btn).CornerRadius=UDim.new(0,6);local on_trans_obj={object=btn,property="Text",key="on"};local off_trans_obj={object=btn,property="Text",key="off"};table.insert(translatableObjects,off_trans_obj);btn.MouseButton1Click:Connect(function()local state=(btn.Text==(translations.off[languageMap[settings.language] or "en"]));if state then table.move(translatableObjects,table.find(translatableObjects,off_trans_obj),1,nil,translatableObjects);table.insert(translatableObjects,on_trans_obj) else table.move(translatableObjects,table.find(translatableObjects,on_trans_obj),1,nil,translatableObjects);table.insert(translatableObjects,off_trans_obj) end;applyLanguage(settings.language);if state then btn.BackgroundColor3=Color3.fromRGB(0,150,0)else local theme=rainbowThemeActive and Themes.Red or currentTheme;btn.BackgroundColor3=theme.main;btn.TextColor3=theme.text end;if callback then pcall(callback,state,btn) end end);return btn end;createToggle("mod_healthbar",1,toggleCustomHealthbar);createToggle("mod_fpsping",2,toggleFpsPing);local colorChangerContainer=Instance.new("Frame",GuiModsContainer);colorChangerContainer.Size=UDim2.new(1,-20,0,200);colorChangerContainer.BackgroundTransparency=1;colorChangerContainer.LayoutOrder=3;local colorList=Instance.new("UIListLayout",colorChangerContainer);colorList.Padding=UDim.new(0,5);local title=Instance.new("TextLabel",colorChangerContainer);title.Size=UDim2.new(1,0,0,20);title.BackgroundTransparency=1;title.Font=Enum.Font.SourceSansBold;title.TextColor3=Color3.new(1,1,1);title.TextSize=18;table.insert(translatableObjects,{object=title,property="Text",key="mod_worldcolor"});local colorPreview=Instance.new("Frame",colorChangerContainer);colorPreview.Size=UDim2.new(1,0,0,30);colorPreview.BackgroundColor3=selectedColor;Instance.new("UICorner",colorPreview).CornerRadius=UDim.new(0,6);local function createSlider(label,parent,callback) local sliderFrame=Instance.new("Frame",parent);sliderFrame.Size=UDim2.new(1,0,0,30);sliderFrame.BackgroundTransparency=1;local textLabel=Instance.new("TextLabel",sliderFrame);textLabel.Size=UDim2.new(0.2,0,1,0);textLabel.BackgroundTransparency=1;textLabel.Font=Enum.Font.SourceSansBold;textLabel.Text=label;textLabel.TextColor3=Color3.new(1,1,1);textLabel.TextSize=18;local bar=Instance.new("Frame",sliderFrame);bar.Size=UDim2.new(0.8,-10,0,10);bar.Position=UDim2.new(0.2,0,0.5,-5);bar.BackgroundColor3=Color3.fromRGB(30,30,30);Instance.new("UICorner",bar).CornerRadius=UDim.new(1,0);local handle=Instance.new("TextButton",bar);handle.Size=UDim2.new(0,12,1,4);handle.BackgroundColor3=currentTheme.main;handle.Text="";handle.AnchorPoint=Vector2.new(0.5,0.5);Instance.new("UICorner",handle).CornerRadius=UDim.new(1,0);table.insert(themableObjects,{object=handle,property="BackgroundColor3",colorType="main"});local inputChangedConn,inputEndedConn;handle.InputBegan:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end;inputChangedConn=UserInputService.InputChanged:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseMovement or inputObj.UserInputType==Enum.UserInputType.Touch then local pos=inputObj.Position.X-bar.AbsolutePosition.X;local percentage=math.clamp(pos/bar.AbsoluteSize.X,0,1);handle.Position=UDim2.fromScale(percentage,0.5);pcall(callback,percentage)end end);inputEndedConn=UserInputService.InputEnded:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseButton1 or inputObj.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end end end)end end);return handle end;local r,g,b=selectedColor.r,selectedColor.g,selectedColor.b;createSlider("R",colorChangerContainer,function(p)r=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(r,0.5);createSlider("G",colorChangerContainer,function(p)g=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(g,0.5);createSlider("B",colorChangerContainer,function(p)b=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(b,0.5);local buttonContainer=Instance.new("Frame",colorChangerContainer);buttonContainer.Size=UDim2.new(1,0,0,40);buttonContainer.BackgroundTransparency=1;buttonContainer.LayoutOrder=4;local btnLayout=Instance.new("UIGridLayout",buttonContainer);btnLayout.CellSize=UDim2.new(0.333,-5,1,0);btnLayout.CellPadding=UDim2.new(0,5,0,0);local rainbowToggle;createFunctionButton("apply",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;applyWorldColor(selectedColor)end);rainbowToggle=createToggle("mod_rainbow",0,function(state)toggleRainbowMode(state)end);rainbowToggle.Parent=buttonContainer;rainbowToggle.Name="RainbowToggle";createFunctionButton("reset",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;resetWorldColors()end)end
+        do 
+            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;
+            local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
+            
+            -- [[ FIX: Rewritten createToggle function for reliability ]]
+            local function createToggle(textKey, order, callback)
+                local frame = Instance.new("Frame", GuiModsContainer)
+                frame.Size = UDim2.new(1, -20, 0, 40)
+                frame.BackgroundTransparency = 1
+                frame.LayoutOrder = order
+                
+                local label = Instance.new("TextLabel", frame)
+                label.Size = UDim2.new(0.6, 0, 1, 0)
+                label.BackgroundTransparency = 1
+                label.Font = Enum.Font.SourceSansBold
+                label.TextColor3 = Color3.new(1, 1, 1)
+                label.TextSize = 16
+                label.TextXAlignment = Enum.TextXAlignment.Left
+                table.insert(translatableObjects, {object = label, property = "Text", key = textKey})
+
+                local btn = Instance.new("TextButton", frame)
+                btn.Size = UDim2.new(0.4, -10, 1, 0)
+                btn.Position = UDim2.new(0.6, 10, 0, 0)
+                btn.Font = Enum.Font.SourceSansBold
+                Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+            
+                local state = false -- Internal state: false=OFF, true=ON
+                
+                local trans_obj = {object = btn, property = "Text", key = "off"}
+                table.insert(translatableObjects, trans_obj)
+            
+                local theme_bg_obj = {object = btn, property = "BackgroundColor3", colorType = "main"}
+                table.insert(themableObjects, theme_bg_obj)
+                local theme_text_obj = {object = btn, property = "TextColor3", colorType = "text"}
+                table.insert(themableObjects, theme_text_obj)
+            
+                btn.MouseButton1Click:Connect(function()
+                    state = not state -- Flip the internal state
+            
+                    local langCode = languageMap[settings.language] or "en"
+                    trans_obj.key = state and "on" or "off"
+                    btn.Text = translations[trans_obj.key][langCode] or translations[trans_obj.key].en
+
+                    if state then -- If turning ON
+                        for i = #themableObjects, 1, -1 do
+                            if themableObjects[i] == theme_bg_obj or themableObjects[i] == theme_text_obj then
+                                table.remove(themableObjects, i)
+                            end
+                        end
+                        btn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+                        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    else -- If turning OFF
+                        local found_bg = false; for _,v in ipairs(themableObjects) do if v == theme_bg_obj then found_bg=true; break; end end
+                        if not found_bg then table.insert(themableObjects, theme_bg_obj) end
+                        
+                        local found_text = false; for _,v in ipairs(themableObjects) do if v == theme_text_obj then found_text=true; break; end end
+                        if not found_text then table.insert(themableObjects, theme_text_obj) end
+                        
+                        local theme = rainbowThemeActive and Themes.Red or currentTheme
+                        btn.BackgroundColor3 = theme.main
+                        btn.TextColor3 = theme.text
+                    end
+                    
+                    if callback then pcall(callback, state, btn) end
+                end)
+            
+                -- Set initial text and color
+                btn.Text = translations.off[languageMap[settings.language] or "en"]
+                local theme = rainbowThemeActive and Themes.Red or currentTheme
+                btn.BackgroundColor3 = theme.main
+                btn.TextColor3 = theme.text
+            
+                return btn
+            end
+
+            createToggle("mod_healthbar",1,toggleCustomHealthbar);
+            createToggle("mod_fpsping",2,toggleFpsPing);
+            
+            local colorChangerContainer=Instance.new("Frame",GuiModsContainer);colorChangerContainer.Size=UDim2.new(1,-20,0,200);colorChangerContainer.BackgroundTransparency=1;colorChangerContainer.LayoutOrder=3;local colorList=Instance.new("UIListLayout",colorChangerContainer);colorList.Padding=UDim.new(0,5);local title=Instance.new("TextLabel",colorChangerContainer);title.Size=UDim2.new(1,0,0,20);title.BackgroundTransparency=1;title.Font=Enum.Font.SourceSansBold;title.TextColor3=Color3.new(1,1,1);title.TextSize=18;table.insert(translatableObjects,{object=title,property="Text",key="mod_worldcolor"});local colorPreview=Instance.new("Frame",colorChangerContainer);colorPreview.Size=UDim2.new(1,0,0,30);colorPreview.BackgroundColor3=selectedColor;Instance.new("UICorner",colorPreview).CornerRadius=UDim.new(0,6);local function createSlider(label,parent,callback) local sliderFrame=Instance.new("Frame",parent);sliderFrame.Size=UDim2.new(1,0,0,30);sliderFrame.BackgroundTransparency=1;local textLabel=Instance.new("TextLabel",sliderFrame);textLabel.Size=UDim2.new(0.2,0,1,0);textLabel.BackgroundTransparency=1;textLabel.Font=Enum.Font.SourceSansBold;textLabel.Text=label;textLabel.TextColor3=Color3.new(1,1,1);textLabel.TextSize=18;local bar=Instance.new("Frame",sliderFrame);bar.Size=UDim2.new(0.8,-10,0,10);bar.Position=UDim2.new(0.2,0,0.5,-5);bar.BackgroundColor3=Color3.fromRGB(30,30,30);Instance.new("UICorner",bar).CornerRadius=UDim.new(1,0);local handle=Instance.new("TextButton",bar);handle.Size=UDim2.new(0,12,1,4);handle.BackgroundColor3=currentTheme.main;handle.Text="";handle.AnchorPoint=Vector2.new(0.5,0.5);Instance.new("UICorner",handle).CornerRadius=UDim.new(1,0);table.insert(themableObjects,{object=handle,property="BackgroundColor3",colorType="main"});local inputChangedConn,inputEndedConn;handle.InputBegan:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end;inputChangedConn=UserInputService.InputChanged:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseMovement or inputObj.UserInputType==Enum.UserInputType.Touch then local pos=inputObj.Position.X-bar.AbsolutePosition.X;local percentage=math.clamp(pos/bar.AbsoluteSize.X,0,1);handle.Position=UDim2.fromScale(percentage,0.5);pcall(callback,percentage)end end);inputEndedConn=UserInputService.InputEnded:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseButton1 or inputObj.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end end end)end end);return handle end;local r,g,b=selectedColor.r,selectedColor.g,selectedColor.b;createSlider("R",colorChangerContainer,function(p)r=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(r,0.5);createSlider("G",colorChangerContainer,function(p)g=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(g,0.5);createSlider("B",colorChangerContainer,function(p)b=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(b,0.5);local buttonContainer=Instance.new("Frame",colorChangerContainer);buttonContainer.Size=UDim2.new(1,0,0,40);buttonContainer.BackgroundTransparency=1;buttonContainer.LayoutOrder=4;local btnLayout=Instance.new("UIGridLayout",buttonContainer);btnLayout.CellSize=UDim2.new(0.333,-5,1,0);btnLayout.CellPadding=UDim2.new(0,5,0,0);local rainbowToggle;createFunctionButton("apply",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;applyWorldColor(selectedColor)end);rainbowToggle=createToggle("mod_rainbow",0,function(state)toggleRainbowMode(state)end);rainbowToggle.Parent=buttonContainer;rainbowToggle.Name="RainbowToggle";createFunctionButton("reset",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;resetWorldColors()end)
+        end
         -- #endregion
 
         -- #region SCRIPTS PAGE
@@ -841,11 +926,31 @@ task.spawn(function()
 
         -- #region SETTINGS & EXECUTOR
         do 
-            local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,0,1,0); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; local SettingsGrid = Instance.new("UIGridLayout", SettingsContainer); SettingsGrid.CellPadding=UDim2.new(0,10,0,10); SettingsGrid.CellSize=UDim2.new(0,125,0,40); SettingsGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center; 
-            local ThemesLabel = Instance.new("TextLabel", SettingsContainer); ThemesLabel.Size = UDim2.new(1, -10, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"}); SettingsGrid:ApplyLayout()
-            createFunctionButton("theme_red", SettingsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", SettingsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", SettingsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", SettingsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", SettingsContainer, function() applyTheme("White") end); createFunctionButton("theme_rainbow", SettingsContainer, function() activateRainbowTheme() end);
-            local LangLabel = Instance.new("TextLabel", SettingsContainer); LangLabel.Size = UDim2.new(1, -10, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"}); SettingsGrid:ApplyLayout()
-            createFunctionButton("lang_en", SettingsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", SettingsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", SettingsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", SettingsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", SettingsContainer, function() applyLanguage("French") end);
+            local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,-10,1,-10); SettingsContainer.Position=UDim2.new(0,5,0,5); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; 
+            
+            -- [[ FIX: Use a UIListLayout for clean separation of sections ]]
+            local ListLayout = Instance.new("UIListLayout", SettingsContainer)
+            ListLayout.Padding = UDim.new(0, 15)
+            ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+            -- Create a frame for Themes
+            local ThemesFrame = Instance.new("Frame", SettingsContainer)
+            ThemesFrame.Name = "ThemesFrame"; ThemesFrame.BackgroundTransparency = 1; ThemesFrame.Size = UDim2.new(1, 0, 0, 1); ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y; ThemesFrame.LayoutOrder = 1
+            local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame); ThemesListLayout.Padding = UDim.new(0, 5)
+            local ThemesLabel = Instance.new("TextLabel", ThemesFrame); ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});
+            local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame); ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer); ThemesGrid.CellPadding=UDim2.new(0,10,0,10); ThemesGrid.CellSize=UDim2.new(0,125,0,40); ThemesGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
+            createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
+
+            -- Create a frame for Languages
+            local LangFrame = Instance.new("Frame", SettingsContainer)
+            LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
+            local LangListLayout = Instance.new("UIListLayout", LangFrame); LangListLayout.Padding = UDim.new(0, 5)
+            local LangLabel = Instance.new("TextLabel", LangFrame); LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
+            local LangButtonsContainer = Instance.new("Frame", LangFrame); LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); LangGrid.CellPadding=UDim2.new(0,10,0,10); LangGrid.CellSize=UDim2.new(0,125,0,40); LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
+            createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
         end
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
@@ -906,12 +1011,12 @@ end)
 -- 3. АНИМАЦИЯ ЗАГРУЗКИ
 applyLanguage(settings.language)
 local loadDuration=3
-local langCode = languageMap[settings.language] or "en"
-local baseLoadingText = translations.loading[langCode] or translations.loading.en
 for i=0,100 do 
     local progress=i/100
     local numDots=math.floor(i/12)%4
     if LoadingLabel and LoadingLabel.Parent then
+		local langCode = languageMap[settings.language] or "en"
+		local baseLoadingText = translations.loading[langCode] or translations.loading.en
         LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
     end
     PercentageLabel.Text=i.." %"
