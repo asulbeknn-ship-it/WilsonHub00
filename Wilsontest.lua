@@ -179,24 +179,51 @@ local translations = {
     notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді." },
     notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі" },
     notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s." },
-    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады." }
+    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады." },
+    notif_skin_loading_text = { en = "Loading appearance for %s...", ru = "Загрузка внешности %s...", kz = "%s келбеті жүктелуде..." },
+    notif_skin_load_fail_text = { en = "Failed to load appearance for %s. User may have privacy settings enabled.", ru = "Не удалось загрузить внешность %s. Возможно, у пользователя включены настройки приватности.", kz = "%s келбетін жүктеу мүмкін болмады. Ойыншының приват настройкалары қосулы болуы мүмкін." },
+    notif_skin_apply_fail_text = { en = "Failed to apply appearance to your character.", ru = "Не удалось применить внешность к вашему персонажу.", kz = "Кейіпкеріңізге келбетті қолдану мүмкін болмады." }
 }
 
 local themableObjects = {}
 local translatableObjects = {}
 
--- [[ НОВАЯ ФУНКЦИЯ КОПИРОВАНИЯ СКИНА ]]
+-- [[ НОВАЯ УЛУЧШЕННАЯ ФУНКЦИЯ КОПИРОВАНИЯ СКИНА ]]
 local function copyAvatarFromUsername(username)
     if not username or username:gsub("%s", "") == "" then return end
-    local localHumanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if not localHumanoid then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5); return end
-    local s, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
-    if not s or not targetUserId then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username}); return end
-    local s2, humanoidDesc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, targetUserId)
-    if not s2 or not humanoidDesc then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username}); return end
-    pcall(localHumanoid.ApplyDescription, localHumanoid, humanoidDesc)
+    
+    local character = player.Character
+    local localHumanoid = character and character:FindFirstChildOfClass("Humanoid")
+    
+    if not localHumanoid then 
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5)
+        return 
+    end
+
+    sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_loading_text", 3, nil, {username})
+
+    local success_get_id, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
+    if not success_get_id or not targetUserId then 
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username})
+        return 
+    end
+    
+    local success_get_desc, humanoidDesc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, targetUserId)
+    if not success_get_desc or not humanoidDesc then 
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_load_fail_text", 7, nil, {username})
+        return 
+    end
+    
+    local success_apply, errormsg = pcall(localHumanoid.ApplyDescription, localHumanoid, humanoidDesc)
+    if not success_apply then
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_apply_fail_text", 5)
+        warn("WilsonHub Skin Error: ApplyDescription failed!", errormsg) -- Техническая ошибка в консоль
+        return
+    end
+
     sendTranslatedNotification("notif_skin_copy_success_title", "notif_skin_copy_success_text", 5, nil, {username})
 end
+-- [[ КОНЕЦ НОВОЙ ФУНКЦИИ ]]
 
 
 -- Forward declare
