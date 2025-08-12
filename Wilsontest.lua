@@ -1,7 +1,7 @@
 --[[
 Made by @Nurgazy_21 tg: nurr_wilson
 Script name: WilsonHub
-version script: 1.2.2 (Major Bug Fixes & Layout Improvements)
+version script: 1.2.3 (Skins Tab Added)
 ]]
 
 -- Основные сервисы
@@ -50,6 +50,7 @@ end
 
 local currentTheme = Themes[settings.theme] or Themes.Red
 local player = Players.LocalPlayer
+local originalPlayerDescription = nil -- Used for the Skins tab
 
 -- [[ LANGUAGE SYSTEM ]]
 local languageMap = { English = "en", Russian = "ru", Kazakh = "kz", Chinese = "zh", French = "fr" }
@@ -65,11 +66,12 @@ local translations = {
     -- LOADING SCREEN
     loading = { en = "Loading", ru = "Загрузка", kz = "Жүктелуде", zh = "加载中", fr = "Chargement" },
     -- MAIN GUI
-    main_title = { en = "HACK WILSONHUB SCRIPTS FOR ROBLOX (V1.2.2)", ru = "HACK WILSONHUB SCRIPTS ДЛЯ ROBLOX (V1.2.2)", kz = "ROBLOX ҮШІН WILSONHUB SCRIPTS ХАГЫ (V1.2.2)", zh = "ROBLOX版WILSONHUB脚本黑客工具 (V1.2.2)", fr = "HACK WILSONHUB SCRIPTS POUR ROBLOX (V1.2.2)" },
+    main_title = { en = "HACK WILSONHUB SCRIPTS FOR ROBLOX (V1.2.3)", ru = "HACK WILSONHUB SCRIPTS ДЛЯ ROBLOX (V1.2.3)", kz = "ROBLOX ҮШІН WILSONHUB SCRIPTS ХАГЫ (V1.2.3)", zh = "ROBLOX版WILSONHUB脚本黑客工具 (V1.2.3)", fr = "HACK WILSONHUB SCRIPTS POUR ROBLOX (V1.2.3)" },
     close_button = { en = "X", ru = "X", kz = "X", zh = "X", fr = "X" },
     -- TABS
     tab_home = { en = "HOME", ru = "ГЛАВНАЯ", kz = "БАСТЫ", zh = "主页", fr = "ACCUEIL" },
     tab_scripts = { en = "SCRIPT'S", ru = "СКРИПТЫ", kz = "СКРИПТТЕР", zh = "脚本", fr = "SCRIPTS" },
+    tab_skins = { en = "SKINS", ru = "СКИНЫ", kz = "СКИНДЕР", zh = "皮肤", fr = "SKINS" },
     tab_info = { en = "INFO", ru = "ИНФО", kz = "АҚПАРАТ", zh = "信息", fr = "INFOS" },
     tab_guimods = { en = "GUI MODS", ru = "МОДЫ GUI", kz = "GUI МОДТАРЫ", zh = "界面模组", fr = "MODS GUI" },
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
@@ -91,6 +93,18 @@ local translations = {
     home_ip_loading = { en = "IP-address: Loading...", ru = "IP-адрес: Загрузка...", kz = "IP-мекенжайы: Жүктелуде...", zh = "IP地址: 加载中...", fr = "Adresse IP: Chargement..." },
     home_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
     home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },
+    -- SKINS PAGE
+    skins_title = { en = "Player Skins", ru = "Скины Игроков", kz = "Ойыншы Скиндері", zh = "玩家皮肤", fr = "Skins de Joueur" },
+    skins_userid_placeholder = { en = "Enter User ID...", ru = "Введите ID игрока...", kz = "Ойыншы ID-ін енгізіңіз...", zh = "输入用户ID...", fr = "Entrez l'ID utilisateur..." },
+    skins_apply_button = { en = "Apply Skin", ru = "Применить скин", kz = "Скинді қолдану", zh = "应用皮肤", fr = "Appliquer le Skin" },
+    skins_reset_button = { en = "Reset Skin", ru = "Сбросить скин", kz = "Скинді тастау", zh = "重置皮肤", fr = "Réinitialiser le Skin" },
+    skins_preset_korblox = { en = "Korblox Skin", ru = "Скин Корблокс", kz = "Корблокс Скині", zh = "Korblox皮肤", fr = "Skin Korblox" },
+    skins_preset_headless = { en = "Headless Skin", ru = "Скин Без Головы", kz = "Бассыз Скин", zh = "无头皮肤", fr = "Skin sans tête" },
+    notif_skin_applied_title = { en = "Skins", ru = "Скины", kz = "Скиндер", zh = "皮肤", fr = "Skins" },
+    notif_skin_applied_text = { en = "Skin from User ID %s applied!", ru = "Скин от ID %s применен!", kz = "%s ID-нен скин қолданылды!", zh = "已应用来自用户ID %s 的皮肤！", fr = "Skin de l'ID %s appliqué !" },
+    notif_skin_reset_text = { en = "Your original skin has been restored.", ru = "Ваш оригинальный скин восстановлен.", kz = "Бастапқы скиніңіз қалпына келтірілді.", zh = "您的原始皮肤已恢复。", fr = "Votre skin d'origine a été restauré." },
+    notif_skin_error_title = { en = "Skin Error", ru = "Ошибка скина", kz = "Скин қатесі", zh = "皮肤错误", fr = "Erreur de Skin" },
+    notif_skin_error_text = { en = "Could not apply skin. Error: %s", ru = "Не удалось применить скин. Ошибка: %s", kz = "Скинді қолдану мүмкін болмады. Қате: %s", zh = "无法应用皮肤。错误: %s", fr = "Impossible d'appliquer le skin. Erreur: %s" },
     -- INFO PAGE
     info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас, бастаушы хакер және скриптермін.\n Менің скриптерім сапалы\n әрі әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
     info_profile = { en = "MY PROFILE", ru = "МОЙ ПРОФИЛЬ", kz = "МЕНІҢ ПРОФИЛІМ", zh = "我的个人资料", fr = "MON PROFIL" },
@@ -518,6 +532,21 @@ end
 task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
+        
+        -- Save original character description for skin reset
+        if player.Character then
+            local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                originalPlayerDescription = humanoid:GetAppliedDescription()
+            end
+        end
+        player.CharacterAdded:Connect(function(char)
+            local humanoid = char:FindFirstChildOfClass("Humanoid")
+            if humanoid then
+                originalPlayerDescription = humanoid:GetAppliedDescription()
+            end
+        end)
+        
         local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; 
         
         MainFrame.Size = UDim2.new(0, 550, 0, 300); 
@@ -540,7 +569,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local SkinsButton=createTabButton("tab_skins"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -550,6 +579,7 @@ task.spawn(function()
         
         local HomePage=Instance.new("Frame",ContentContainer); HomePage.Size=UDim2.new(1,0,1,0); HomePage.BackgroundTransparency=1; HomePage.Visible=true
         local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false
+        local SkinsPage=Instance.new("Frame",ContentContainer); SkinsPage.Size=UDim2.new(1,0,1,0); SkinsPage.BackgroundTransparency=1; SkinsPage.Visible=false
         local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
         local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
@@ -598,6 +628,80 @@ task.spawn(function()
         task.spawn(function() pcall(function() local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/"..player.UserId)); local dateStr = r.created:sub(1,10); local langCode = languageMap[settings.language] or "en"; local format = translations.home_creationdate[langCode] or translations.home_creationdate.en; creationDateLabel.Text = string.format(format, dateStr); translatableObjects[#translatableObjects+1] = {object=creationDateLabel, property="Text", key="home_creationdate", dynamic_args={dateStr}} end) end)
         task.spawn(function() pcall(function() local r=HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")); local f=""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end; local ip = r.query or "N/A"; local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f; local langCode = languageMap[settings.language] or "en"; ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip); countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country); translatableObjects[#translatableObjects+1] = {object=ipInfoLabel, property="Text", key="home_ip", dynamic_args={ip}}; translatableObjects[#translatableObjects+1] = {object=countryLabel, property="Text", key="home_country", dynamic_args={country}} end) end)
         local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc"; local langCode=languageMap[settings.language] or "en"; local dev_text = translations[dev_type][langCode] or translations[dev_type].en; deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text); translatableObjects[#translatableObjects+1] = {object=deviceLabel, property="Text", key="home_device", dynamic_args={dev_text}}
+        -- #endregion
+
+        -- #region SKINS PAGE
+        local SkinsContainer = Instance.new("Frame", SkinsPage); SkinsContainer.Size = UDim2.new(1,-20,1,-10); SkinsContainer.Position = UDim2.new(0,10,0,5); SkinsContainer.BackgroundTransparency = 1;
+        local SkinsListLayout = Instance.new("UIListLayout", SkinsContainer); SkinsListLayout.Padding = UDim.new(0, 10)
+        local SkinsTitle = createInfoLabel("", SkinsContainer); SkinsTitle.TextSize = 18; SkinsTitle.Font = Enum.Font.SourceSansBold; table.insert(translatableObjects, {object=SkinsTitle, property="Text", key="skins_title"});
+        
+        local UserIDInput = Instance.new("TextBox", SkinsContainer); UserIDInput.Size = UDim2.new(1,0,0,35); UserIDInput.BackgroundColor3=Color3.fromRGB(45,45,45); UserIDInput.TextColor3=Color3.fromRGB(255,255,255); UserIDInput.Font=Enum.Font.SourceSans; UserIDInput.TextSize=14; Instance.new("UICorner", UserIDInput).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=UserIDInput, property="PlaceholderText", key="skins_userid_placeholder"});
+        local UserIDStroke = Instance.new("UIStroke", UserIDInput); UserIDStroke.Color = currentTheme.main; table.insert(themableObjects,{object=UserIDStroke, property="Color", colorType="main"});
+
+        local function applySkinFromUserId(userId)
+            local id = tonumber(userId)
+            if not id then
+                sendTranslatedNotification("notif_skin_error_title", "notif_skin_error_text", 5, nil, {"Invalid User ID."})
+                return
+            end
+
+            local success, description = pcall(function()
+                return Players:GetHumanoidDescriptionFromUserId(id)
+            end)
+
+            if success and description and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                humanoid:ApplyDescription(description)
+                sendTranslatedNotification("notif_skin_applied_title", "notif_skin_applied_text", 5, nil, {tostring(id)})
+            else
+                sendTranslatedNotification("notif_skin_error_title", "notif_skin_error_text", 5, nil, {tostring(description)})
+            end
+        end
+        
+        createFunctionButton("skins_apply_button", SkinsContainer, function() applySkinFromUserId(UserIDInput.Text) end).Size = UDim2.new(1,0,0,35)
+        
+        local PresetsContainer = Instance.new("Frame", SkinsContainer); PresetsContainer.Size = UDim2.new(1,0,0,35); PresetsContainer.BackgroundTransparency = 1;
+        local PresetsLayout = Instance.new("UIGridLayout", PresetsContainer); PresetsLayout.CellSize = UDim2.new(0.5, -5, 1, 0); PresetsLayout.CellPadding = UDim2.new(0, 10, 0, 0);
+
+        local function applyHeadless()
+            if player.Character and player.Character:FindFirstChild("Head") then
+                local head = player.Character.Head
+                for _,v in ipairs(head:GetChildren()) do
+                    if v:IsA("Mesh") or v.Name == "face" then
+                        v:Destroy()
+                    end
+                end
+                sendTranslatedNotification("notif_skin_applied_title", "Headless applied!", 5)
+            end
+        end
+        
+        local function applyKorblox()
+            if player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                local success, description = pcall(function() return humanoid:GetAppliedDescription() end)
+                if success then
+                    description.RightLeg = 283546422
+                    description.LeftLeg = 283546237
+                    humanoid:ApplyDescription(description)
+                    sendTranslatedNotification("notif_skin_applied_title", "Korblox applied!", 5)
+                end
+            end
+        end
+
+        createFunctionButton("skins_preset_headless", PresetsContainer, applyHeadless)
+        createFunctionButton("skins_preset_korblox", PresetsContainer, applyKorblox)
+
+        local function resetSkin()
+            if originalPlayerDescription and player.Character and player.Character:FindFirstChildOfClass("Humanoid") then
+                local humanoid = player.Character:FindFirstChildOfClass("Humanoid")
+                humanoid:ApplyDescription(originalPlayerDescription)
+                sendTranslatedNotification("notif_skin_applied_title", "notif_skin_reset_text", 5)
+            else
+                sendTranslatedNotification("notif_skin_error_title", "Could not find original skin to restore.", 5)
+            end
+        end
+        
+        createFunctionButton("skins_reset_button", SkinsContainer, resetSkin).Size = UDim2.new(1,0,0,35)
         -- #endregion
         
         -- #region INFO PAGE
@@ -959,75 +1063,4 @@ task.spawn(function()
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
-        
-        activeTab = HomeButton
-
-        for i,tab in ipairs(tabs) do tab.MouseButton1Click:Connect(function() 
-            if activeTab and activeTab.Parent then
-                activeTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
-            end
-            
-            activeTab = tab 
-
-            for _,p in ipairs(pages) do p.Visible=false end
-            pages[i].Visible=true
-            
-            if not rainbowThemeActive then
-                activeTab.BackgroundColor3 = currentTheme.main
-            end
-            
-            local was_chat_active = chat_state.is_active
-            chat_state.is_active = (tab == PlayersChatButton)
-            
-            if chat_state.is_active and not was_chat_active then
-                clearChat()
-                chat_state.last_timestamp = 0
-                fetchMessages(true)
-            end
-
-            if tab==PlayersButton then pcall(updatePlayerList) end 
-        end)end  
-        
-        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
-        Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
-        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible=false; IconFrame.Visible=true end)
-        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible=true; IconFrame.Visible=false end)
-        
-        if settings.theme == "Rainbow" then
-            activateRainbowTheme()
-        else
-            applyTheme(settings.theme)
-        end
-        applyLanguage(settings.language)
-    end)
-    if not success then  
-        sendTranslatedNotification("notif_fatal_error_title", "notif_fatal_error_text", 20, nil, {tostring(err)})
-        warn("WILSONHUB ERROR: "..tostring(err))
-    end
-end)
-
--- 3. АНИМАЦИЯ ЗАГРУЗКИ
-applyLanguage(settings.language)
-local loadDuration=3
-for i=0,100 do 
-    local progress=i/100
-    local numDots=math.floor(i/12)%4
-    if LoadingLabel and LoadingLabel.Parent then
-		local langCode = languageMap[settings.language] or "en"
-		local baseLoadingText = (translations.loading[langCode] or translations.loading.en) or "Loading"
-        LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
-    end
-    PercentageLabel.Text=i.." %"
-    ProgressBarFill.Size=UDim2.new(progress,0,1,0)
-    task.wait(loadDuration/100)
-end
-task.wait(0.2)
-
-
--- 4. ЗАВЕРШЕНИЕ
-LoadingGui:Destroy()
-local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
-if WilsonHubGui then WilsonHubGui.Enabled=true end
-sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
+        tabs = {HomeButton,MainButton,SkinsButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton
