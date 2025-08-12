@@ -190,16 +190,10 @@ local translations = {
 local themableObjects = {}
 local translatableObjects = {}
 
--- [[ ЖАҢА ҚАРАПАЙЫМ ФУНКЦИЯ (ТЕК КИІМ) ]]
+-- [[ ЕҢ БІРІНШІ, ЖҰМЫС ІСТЕГЕН ФУНКЦИЯ ]]
 local function copyAvatarFromUsername(username)
     if not username or username:gsub("%s", "") == "" then return end
     
-    local character = player.Character
-    if not character then
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5)
-        return
-    end
-
     sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_loading_text", 3, nil, {username})
 
     local success_get_id, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
@@ -208,39 +202,33 @@ local function copyAvatarFromUsername(username)
         return
     end
 
-    local success_get_avatar, avatarData = pcall(function()
-        return HttpService:JSONDecode(game:HttpGet("https://avatar.roproxy.com/v1/users/" .. targetUserId .. "/avatar"))
-    end)
-
-    if not success_get_avatar or not avatarData or not avatarData.assets then
+    local success_get_model, appearanceModel = pcall(Players.GetCharacterAppearanceAsync, Players, targetUserId)
+    if not success_get_model or not appearanceModel then
         sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_load_fail_text", 7, nil, {username})
         return
     end
 
-    -- Ескі киімді өшіру
-    if character:FindFirstChildOfClass("Shirt") then character:FindFirstChildOfClass("Shirt"):Destroy() end
-    if character:FindFirstChildOfClass("Pants") then character:FindFirstChildOfClass("Pants"):Destroy() end
+    local character = player.Character
+    if not character then
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5)
+        return
+    end
 
-    local shirtId, pantsId
-
-    for _, asset in ipairs(avatarData.assets) do
-        if asset.assetType.name == "Shirt" then
-            shirtId = asset.id
-        elseif asset.assetType.name == "Pants" then
-            pantsId = asset.id
+    -- Ескі заттарды тазалау
+    for _, child in pairs(character:GetChildren()) do
+        if child:IsA("Accessory") or child:IsA("Shirt") or child:IsA("Pants") or child:IsA("ShirtGraphic") or child:IsA("BodyColors") then
+            child:Destroy()
         end
     end
 
-    if shirtId then
-        local newShirt = Instance.new("Shirt", character)
-        newShirt.ShirtTemplate = "rbxassetid://" .. shirtId
+    -- Жаңа заттарды кигізу
+    for _, item in pairs(appearanceModel:GetChildren()) do
+        if item:IsA("Accessory") or item:IsA("Shirt") or item:IsA("Pants") or item:IsA("ShirtGraphic") or item:IsA("BodyColors") then
+            local newItem = item:Clone()
+            newItem.Parent = character
+        end
     end
 
-    if pantsId then
-        local newPants = Instance.new("Pants", character)
-        newPants.PantsTemplate = "rbxassetid://" .. pantsId
-    end
-    
     sendTranslatedNotification("notif_skin_copy_success_title", "notif_skin_copy_success_text", 5, nil, {username})
 end
 
