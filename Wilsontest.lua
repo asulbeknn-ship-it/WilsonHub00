@@ -78,10 +78,10 @@ local translations = {
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
     -- HOME PAGE
-    home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдің, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
+    home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдіңіз, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
     home_nickname = { en = "NickName: %s", ru = "Никнейм: %s", kz = "Лақап аты: %s", zh = "昵称: %s", fr = "Surnom: %s" },
     home_userid = { en = "ID account: %s", ru = "ID аккаунта: %s", kz = "Аккаунт ID: %s", zh = "账户ID: %s", fr = "ID du compte: %s" },
-    home_userage = { en = "lvl account: %s", ru = "Возраст аккаунта: %s", kz = "Аккаунт жасы: %s", zh = "账户年龄: %s", fr = "Âge du compte: %s" },
+    home_userage = { en = "Account Age: %s", ru = "Возраст аккаунта: %s", kz = "Аккаунт жасы: %s", zh = "账户年龄: %s", fr = "Âge du compte: %s" },
     home_creationdate = { en = "Creation Date: %s", ru = "Дата создания: %s", kz = "Құрылған күні: %s", zh = "创建日期: %s", fr = "Date de création: %s" },
     home_creationdate_loading = { en = "Creation Date: Loading...", ru = "Дата создания: Загрузка...", kz = "Құрылған күні: Жүктелуде...", zh = "创建日期: 加载中...", fr = "Date de création: Chargement..." },
     home_device = { en = "Device: %s", ru = "Устройство: %s", kz = "Құрылғы: %s", zh = "设备: %s", fr = "Appareil: %s" },
@@ -92,7 +92,7 @@ local translations = {
     home_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
     home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },
     -- INFO PAGE
-    info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас хакер әрі бастаушы скриптермін.\n Менің скриптерім сапалы\n және әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
+    info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас, бастаушы хакер және скриптермін.\n Менің скриптерім сапалы\n әрі әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
     info_profile = { en = "MY PROFILE", ru = "МОЙ ПРОФИЛЬ", kz = "МЕНІҢ ПРОФИЛІМ", zh = "我的个人资料", fr = "MON PROFIL" },
     info_discord = { en = "DISCORD", ru = "ДИСКОРД", kz = "ДИСКОРД", zh = "DISCORD", fr = "DISCORD" },
     info_channel = { en = "CHANNEL", ru = "КАНАЛ", kz = "АРНА", zh = "频道", fr = "CHAÎNE" },
@@ -139,12 +139,12 @@ local translations = {
     theme_green = { en = "Green", ru = "Зеленая", kz = "Жасыл", zh = "绿色", fr = "Vert" },
     theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
     theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
-    settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
-    lang_en = { en = "English", ru = "English", kz = "English", zh = "English", fr = "English" },
-    lang_ru = { en = "Russian", ru = "Русский", kz = "Русский", zh = "Русский", fr = "Русский" },
-    lang_kz = { en = "Kazakh", ru = "Казахский", kz = "Қазақша", zh = "Казахский", fr = "Казахский" },
-    lang_zh = { en = "Chinese", ru = "Китайский", kz = "Китайский", zh = "中文", fr = "Китайский" },
-    lang_fr = { en = "French", ru = "Французский", kz = "Французский", zh = "Французский", fr = "Français" },
+    settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
+    lang_en = { en = "English", ru = "Английский", kz = "Ағылшын", zh = "英语", fr = "Anglais" },
+    lang_ru = { en = "Russian", ru = "Русский", kz = "Орыс", zh = "俄语", fr = "Russe" },
+    lang_kz = { en = "Kazakh", ru = "Казахский", kz = "Қазақ", zh = "哈萨克语", fr = "Kazakh" },
+    lang_zh = { en = "Chinese", ru = "Китайский", kz = "Қытай", zh = "中文", fr = "Chinois" },
+    lang_fr = { en = "French", ru = "Французский", kz = "Француз", zh = "法语", fr = "Français" },
     -- EXECUTOR PAGE
     executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
     -- NOTIFICATIONS
@@ -800,23 +800,23 @@ task.spawn(function()
                     end
 
                     if p == player then 
-                        pingLabel.Text = string.format(translations.player_ping[langCode], math.floor(player:GetNetworkPing() * 1000))
-                        ipLabel.Text = translations.home_ip_loading[langCode]
-                        countryLabel.Text = translations.home_country_loading[langCode]
+                        pingLabel.Text = string.format(translations.player_ping[langCode] or "Ping: %s", math.floor(player:GetNetworkPing() * 1000))
+                        ipLabel.Text = translations.home_ip_loading[langCode] or "IP Address: Loading..."
+                        countryLabel.Text = translations.home_country_loading[langCode] or "Country: Loading..."
                         task.spawn(function()
                             local s,r = pcall(function() return HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")) end)
                             if s and r then 
                                 local f = ""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end
-                                ipLabel.Text = string.format(translations.player_ip[langCode], r.query or "Unknown")
-                                countryLabel.Text = string.format(translations.player_country[langCode], (r.country or "Unknown") .. " " .. f)
+                                ipLabel.Text = string.format(translations.player_ip[langCode] or "IP Address: %s", r.query or "Unknown")
+                                countryLabel.Text = string.format(translations.player_country[langCode] or "Country: %s", (r.country or "Unknown") .. " " .. f)
                             else 
                                 ipLabel.Text = "IP Address: Error"; countryLabel.Text = "Country: Error" 
                             end 
                         end)
                     else 
-                        pingLabel.Text = string.format(translations.player_ping[langCode], "~"..tostring(math.random(40,250)) .. " ms");
-                        ipLabel.Text = translations.player_ip_private[langCode]
-                        countryLabel.Text = translations.player_country_private[langCode]
+                        pingLabel.Text = string.format(translations.player_ping[langCode] or "Ping: %s", "~"..tostring(math.random(40,250)) .. " ms");
+                        ipLabel.Text = translations.player_ip_private[langCode] or "IP Address: Private"
+                        countryLabel.Text = translations.player_country_private[langCode] or "Country: Private"
                     end 
                 end 
             end; 
@@ -884,7 +884,7 @@ task.spawn(function()
             local nameLabel = Instance.new("TextLabel", textFrame); nameLabel.BackgroundTransparency = 1; nameLabel.Size = UDim2.new(1, 0, 0, 16); nameLabel.Font = Enum.Font.SourceSansBold; nameLabel.TextSize = 15; nameLabel.TextColor3 = currentTheme.accent; nameLabel.TextXAlignment = Enum.TextXAlignment.Left
             local contentLabel = Instance.new("TextLabel", textFrame); contentLabel.BackgroundTransparency = 1; contentLabel.Size = UDim2.new(1, 0, 0, 0); contentLabel.AutomaticSize = Enum.AutomaticSize.Y; contentLabel.Font = Enum.Font.SourceSans; contentLabel.TextSize = 14; contentLabel.TextColor3 = Color3.fromRGB(255, 255, 255); contentLabel.TextWrapped = true; contentLabel.RichText = true; contentLabel.TextXAlignment = Enum.TextXAlignment.Left
             if isSystemMessage then avatar.Visible = false; nameLabel.Visible = false; textFrame.Size = UDim2.new(1, -5, 0, 0); contentLabel.TextXAlignment = Enum.TextXAlignment.Center
-            else if tonumber(msgData.userid) == player.UserId then nameLabel.Text = translations.chat_you[langCode] else nameLabel.Text = msgData.username end; task.spawn(function() local s, thumb = pcall(Players.GetUserThumbnailAsync, Players, tonumber(msgData.userid), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size42x42); if s and avatar and avatar.Parent then avatar.Image = thumb end end); table.insert(themableObjects, {object=nameLabel, property="TextColor3", colorType="accent"}) end
+            else if tonumber(msgData.userid) == player.UserId then nameLabel.Text = (translations.chat_you[langCode] or "You") else nameLabel.Text = msgData.username end; task.spawn(function() local s, thumb = pcall(Players.GetUserThumbnailAsync, Players, tonumber(msgData.userid), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size42x42); if s and avatar and avatar.Parent then avatar.Image = thumb end end); table.insert(themableObjects, {object=nameLabel, property="TextColor3", colorType="accent"}) end
             contentLabel.Text = msgData.message
             task.delay(0.2, function() if MessagesContainer and MessagesLayout then MessagesContainer.CanvasSize = UDim2.fromOffset(0, MessagesLayout.AbsoluteContentSize.Y); MessagesContainer.CanvasPosition = Vector2.new(0, MessagesLayout.AbsoluteContentSize.Y) end end)
         end
@@ -892,18 +892,18 @@ task.spawn(function()
         local function fetchMessages(isInitial)
             local langCode = languageMap[settings.language] or "en"
             if chat_state.is_fetching then return end; chat_state.is_fetching = true
-            if isInitial then displayMessage({message=translations.chat_loading[langCode], timestamp=os.time()}, true) end
+            if isInitial then displayMessage({message=(translations.chat_loading[langCode] or "Loading..."), timestamp=os.time()}, true) end
             
             local success, response = try_request("GET", "/get?since="..tostring(chat_state.last_timestamp))
             if isInitial then clearChat() end
             
-            if not success then if isInitial then displayMessage({message = string.format(translations.chat_error_fetch[langCode], response), timestamp = os.time()}, true) end; chat_state.is_fetching = false; return end
+            if not success then if isInitial then displayMessage({message = string.format(translations.chat_error_fetch[langCode] or "Chat Error: %s", response), timestamp = os.time()}, true) end; chat_state.is_fetching = false; return end
             
             local s2, messages = pcall(HttpService.JSONDecode, HttpService, response)
-            if not s2 then if isInitial then displayMessage({message=translations.chat_error_decode[langCode], timestamp=os.time()}, true) end; chat_state.is_fetching = false; return end
+            if not s2 then if isInitial then displayMessage({message=(translations.chat_error_decode[langCode] or "Error decoding."), timestamp=os.time()}, true) end; chat_state.is_fetching = false; return end
             
             if type(messages) == "table" then
-                if #messages == 0 and isInitial then displayMessage({message=translations.chat_no_messages[langCode], timestamp=os.time()}, true) end
+                if #messages == 0 and isInitial then displayMessage({message=(translations.chat_no_messages[langCode] or "No new messages."), timestamp=os.time()}, true) end
                 for _, msgData in ipairs(messages) do displayMessage(msgData); chat_state.last_timestamp = math.max(chat_state.last_timestamp, msgData.timestamp or 0) end
             elseif isInitial then displayMessage({message="<font color='#FF5555'>Received invalid data from server.</font>", timestamp=os.time()}, true) end
             chat_state.is_fetching = false
@@ -912,10 +912,10 @@ task.spawn(function()
         local function sendMessage()
             local text = ChatInput.Text; if text:gsub("%s", "") == "" then return end
             local langCode = languageMap[settings.language] or "en"
-            local originalText = text; ChatInput.Text = translations.chat_sending[langCode]; ChatInput.Focusable = false
+            local originalText = text; ChatInput.Text = translations.chat_sending[langCode] or "Sending..."; ChatInput.Focusable = false
             local s,r = try_request("POST", "/send", HttpService:JSONEncode({ username = player.Name, userid = player.UserId, message = text }))
             ChatInput.Text = ""; ChatInput.Focusable = true
-            if not s then ChatInput.Text = originalText; displayMessage({message = string.format(translations.chat_error_send[langCode], r), timestamp = os.time()}, true) end
+            if not s then ChatInput.Text = originalText; displayMessage({message = string.format(translations.chat_error_send[langCode] or "Error sending: %s", r), timestamp = os.time()}, true) end
             task.wait(0.5); fetchMessages(false)
         end
 
@@ -1016,7 +1016,7 @@ for i=0,100 do
     local numDots=math.floor(i/12)%4
     if LoadingLabel and LoadingLabel.Parent then
 		local langCode = languageMap[settings.language] or "en"
-		local baseLoadingText = translations.loading[langCode] or translations.loading.en
+		local baseLoadingText = (translations.loading[langCode] or translations.loading.en) or "Loading"
         LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
     end
     PercentageLabel.Text=i.." %"
