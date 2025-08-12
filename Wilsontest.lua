@@ -173,57 +173,76 @@ local translations = {
     skins_nickname_placeholder = { en = "Enter nickname...", ru = "Введите никнейм...", kz = "Никнеймді енгізіңіз..." },
     skins_copy_button_label = { en = "Copy Avatar", ru = "Копировать", kz = "Көшіру" },
     skins_hacker_section_title = { en = "Hacker Skins", ru = "Скины хакеров", kz = "Хакер скин-дері" },
-    skin_c00lkidd = { en = "C00lkidd" }, skin_hacker_wilson = { en = "Hacker_Wilson" }, skin_tubers93 = { en = "tubers93" },
-    skin_1x1x1x1 = { en = "1x1x1x1" }, skin_error1545old = { en = "ERROR1545OLD" }, skin_johndoe = { en = "JOHN DOE" },
+    skin_c00lkidd = { en = "C00lkidd" },
+    skin_hacker_wilson = { en = "Hacker_Wilson" },
+    skin_1x1x1x1 = { en = "1x1x1x1" },
+    skin_error1545old = { en = "ERROR1545OLD" },
+    skin_johndoe = { en = "JOHN DOE" },
     notif_skin_copy_success_title = { en = "Avatar Copied", ru = "Аватар скопирован", kz = "Аватар көшірілді" },
     notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді." },
     notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі" },
     notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s." },
-    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады." },
+    notif_skin_char_fail_text = { en = "Your character was not found.", ru = "Ваш персонаж не найден.", kz = "Сіздің кейіпкеріңіз табылмады." },
     notif_skin_loading_text = { en = "Loading appearance for %s...", ru = "Загрузка внешности %s...", kz = "%s келбеті жүктелуде..." },
-    notif_skin_load_fail_text = { en = "Failed to load appearance for %s. User may have privacy settings enabled.", ru = "Не удалось загрузить внешность %s. Возможно, у пользователя включены настройки приватности.", kz = "%s келбетін жүктеу мүмкін болмады. Ойыншының приват настройкалары қосулы болуы мүмкін." },
-    notif_skin_apply_fail_text = { en = "Failed to apply appearance to your character.", ru = "Не удалось применить внешность к вашему персонажу.", kz = "Кейіпкеріңізге келбетті қолдану мүмкін болмады." }
+    notif_skin_load_fail_text = { en = "Failed to load appearance for %s. User may have privacy settings enabled.", ru = "Не удалось загрузить внешность %s. Возможно, у пользователя включены настройки приватности.", kz = "%s келбетін жүктеу мүмкін болмады. Ойыншының приват настройкалары қосулы болуы мүмкін." }
 }
 
 local themableObjects = {}
 local translatableObjects = {}
 
--- [[ НОВАЯ УЛУЧШЕННАЯ ФУНКЦИЯ КОПИРОВАНИЯ СКИНА ]]
+-- [[ ЖАҢА ҚАРАПАЙЫМ ФУНКЦИЯ (ТЕК КИІМ) ]]
 local function copyAvatarFromUsername(username)
     if not username or username:gsub("%s", "") == "" then return end
     
     local character = player.Character
-    local localHumanoid = character and character:FindFirstChildOfClass("Humanoid")
-    
-    if not localHumanoid then 
+    if not character then
         sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5)
-        return 
+        return
     end
 
     sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_loading_text", 3, nil, {username})
 
     local success_get_id, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
-    if not success_get_id or not targetUserId then 
+    if not success_get_id or not targetUserId then
         sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username})
-        return 
-    end
-    
-    local success_get_desc, humanoidDesc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, targetUserId)
-    if not success_get_desc or not humanoidDesc then 
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_load_fail_text", 7, nil, {username})
-        return 
-    end
-    
-    local success_apply, errormsg = pcall(localHumanoid.ApplyDescription, localHumanoid, humanoidDesc)
-    if not success_apply then
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_apply_fail_text", 5)
-        warn("WilsonHub Skin Error: ApplyDescription failed!", errormsg) -- Техническая ошибка в консоль
         return
     end
 
+    local success_get_avatar, avatarData = pcall(function()
+        return HttpService:JSONDecode(game:HttpGet("https://avatar.roproxy.com/v1/users/" .. targetUserId .. "/avatar"))
+    end)
+
+    if not success_get_avatar or not avatarData or not avatarData.assets then
+        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_load_fail_text", 7, nil, {username})
+        return
+    end
+
+    -- Ескі киімді өшіру
+    if character:FindFirstChildOfClass("Shirt") then character:FindFirstChildOfClass("Shirt"):Destroy() end
+    if character:FindFirstChildOfClass("Pants") then character:FindFirstChildOfClass("Pants"):Destroy() end
+
+    local shirtId, pantsId
+
+    for _, asset in ipairs(avatarData.assets) do
+        if asset.assetType.name == "Shirt" then
+            shirtId = asset.id
+        elseif asset.assetType.name == "Pants" then
+            pantsId = asset.id
+        end
+    end
+
+    if shirtId then
+        local newShirt = Instance.new("Shirt", character)
+        newShirt.ShirtTemplate = "rbxassetid://" .. shirtId
+    end
+
+    if pantsId then
+        local newPants = Instance.new("Pants", character)
+        newPants.PantsTemplate = "rbxassetid://" .. pantsId
+    end
+    
     sendTranslatedNotification("notif_skin_copy_success_title", "notif_skin_copy_success_text", 5, nil, {username})
 end
--- [[ КОНЕЦ НОВОЙ ФУНКЦИИ ]]
 
 
 -- Forward declare
@@ -1029,14 +1048,15 @@ task.spawn(function()
             local hackerGridFrame = Instance.new("Frame", hackerSectionFrame); hackerGridFrame.BackgroundTransparency = 1; hackerGridFrame.Size = UDim2.new(1, 0, 0, 120)
             local hackerGrid = Instance.new("UIGridLayout", hackerGridFrame); hackerGrid.CellPadding = UDim2.new(0,10,0,10); hackerGrid.CellSize = UDim2.new(0.333, -10, 0, 40);
             
+            -- tubers93 алынып тасталды
             createFunctionButton("skin_c00lkidd", hackerGridFrame, function() copyAvatarFromUsername("UlanB2210") end)
             createFunctionButton("skin_hacker_wilson", hackerGridFrame, function() copyAvatarFromUsername("Nurgazy_21") end)
-            createFunctionButton("skin_tubers93", hackerGridFrame, function() copyAvatarFromUsername("Krasav4ik_181") end)
             createFunctionButton("skin_1x1x1x1", hackerGridFrame, function() copyAvatarFromUsername("1x1x1x1svz") end)
             createFunctionButton("skin_error1545old", hackerGridFrame, function() copyAvatarFromUsername("Error1545OLD") end)
             createFunctionButton("skin_johndoe", hackerGridFrame, function() copyAvatarFromUsername("JohnDoe") end)
         end
         -- #endregion
+
 
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
