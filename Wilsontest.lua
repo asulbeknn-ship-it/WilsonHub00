@@ -91,6 +91,23 @@ local translations = {
     home_ip_loading = { en = "IP-address: Loading...", ru = "IP-адрес: Загрузка...", kz = "IP-мекенжайы: Жүктелуде...", zh = "IP地址: 加载中...", fr = "Adresse IP: Chargement..." },
     home_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
     home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },
+     -- НОВЫЕ ПЕРЕВОДЫ ДЛЯ СКИНОВ
+    tab_skins = { en = "SKINS", ru = "СКИНЫ", kz = "СКИНДЕР", zh = "皮肤", fr = "SKINS" },
+    skins_copy_section_title = { en = "Copy Player Avatar", ru = "Копировать аватар игрока", kz = "Ойыншы аватарын көшіру", zh = "复制玩家形象", fr = "Copier l'avatar du joueur" },
+    skins_nickname_placeholder = { en = "Enter nickname...", ru = "Введите никнейм...", kz = "Никнеймді енгізіңіз...", zh = "输入昵称...", fr = "Entrez le pseudo..." },
+    skins_copy_button_label = { en = "Copy Avatar", ru = "Копировать", kz = "Көшіру", zh = "复制形象", fr = "Copier" },
+    skins_hacker_section_title = { en = "Hacker Skins", ru = "Скины хакеров", kz = "Хакер скин-дері", zh = "黑客皮肤", fr = "Skins de hackers" },
+    skin_c00lkidd = { en = "C00lkidd" },
+    skin_hacker_wilson = { en = "Hacker_Wilson" },
+    skin_tubers93 = { en = "tubers93" },
+    skin_1x1x1x1 = { en = "1x1x1x1" },
+    skin_error1545old = { en = "ERROR1545OLD" },
+    skin_johndoe = { en = "JOHN DOE" },
+    notif_skin_copy_success_title = { en = "Avatar Copied", ru = "Аватар скопирован", kz = "Аватар көшірілді", zh = "形象已复制", fr = "Avatar copié" },
+    notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді.", zh = "已成功复制 %s 的形象。", fr = "Avatar de %s copié avec succès." },
+    notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі", zh = "形象复制失败", fr = "Échec de la copie" },
+    notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s.", zh = "找不到玩家: %s。", fr = "Impossible de trouver le joueur: %s." },
+    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады.", zh = "未找到您的角色或人形。", fr = "Votre personnage ou Humanoïde n'a pas été trouvé." },
     -- INFO PAGE
     info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас хакер әрі бастаушы скриптермін.\n Менің скриптерім сапалы\n және әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
     info_profile = { en = "MY PROFILE", ru = "МОЙ ПРОФИЛЬ", kz = "МЕНІҢ ПРОФИЛІМ", zh = "我的个人资料", fr = "MON PROFIL" },
@@ -168,27 +185,11 @@ local translations = {
     notif_welcome_text = { en = "This script is for Wilson hackers", ru = "Этот скрипт для хакеров Wilson", kz = "Бұл скрипт Wilson хакерлеріне арналған", zh = "此脚本适用于Wilson黑客", fr = "Ce script est pour les hackers de Wilson" },
     notif_welcome_button = { en = "Yes", ru = "Да", kz = "Иә", zh = "是", fr = "Oui" },
 }
-    -- SKINS
-    tab_skins = { en = "SKINS", ru = "СКИНЫ", kz = "СКИНДЕР", zh = "皮肤", fr = "SKINS" },
-    skins_copy_section_title = { en = "Copy Player Avatar", ru = "Копировать аватар игрока", kz = "Ойыншы аватарын көшіру", zh = "复制玩家形象", fr = "Copier l'avatar du joueur" },
-    skins_nickname_placeholder = { en = "Enter nickname...", ru = "Введите никнейм...", kz = "Никнеймді енгізіңіз...", zh = "输入昵称...", fr = "Entrez le pseudo..." },
-    skins_copy_button_label = { en = "Copy Avatar", ru = "Копировать", kz = "Көшіру", zh = "复制形象", fr = "Copier" },
-    skins_hacker_section_title = { en = "Hacker Skins", ru = "Скины хакеров", kz = "Хакер скин-дері", zh = "黑客皮肤", fr = "Skins de hackers" },
-    skin_c00lkidd = { en = "C00lkidd" },
-    skin_hacker_wilson = { en = "Hacker_Wilson" },
-    skin_tubers93 = { en = "tubers93" },
-    skin_1x1x1x1 = { en = "1x1x1x1" },
-    skin_error1545old = { en = "ERROR1545OLD" },
-    skin_johndoe = { en = "JOHN DOE" },
-    notif_skin_copy_success_title = { en = "Avatar Copied", ru = "Аватар скопирован", kz = "Аватар көшірілді", zh = "形象已复制", fr = "Avatar copié" },
-    notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді.", zh = "已成功复制 %s 的形象。", fr = "Avatar de %s copié avec succès." },
-    notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі", zh = "形象复制失败", fr = "Échec de la copie" },
-    notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s.", zh = "找不到玩家: %s。", fr = "Impossible de trouver le joueur: %s." },
-    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады.", zh = "未找到您的角色或人形。", fr = "Votre personnage ou Humanoïde n'a pas été trouvé." },
-
 
 local themableObjects = {}
 local translatableObjects = {}
+
+-- [[ НОВАЯ ФУНКЦИЯ КОПИРОВАНИЯ СКИНА ]]
 local function copyAvatarFromUsername(username)
     if not username or username:gsub("%s", "") == "" then return end
 
@@ -213,6 +214,7 @@ local function copyAvatarFromUsername(username)
     pcall(localHumanoid.ApplyDescription, localHumanoid, humanoidDesc)
     sendTranslatedNotification("notif_skin_copy_success_title", "notif_skin_copy_success_text", 5, nil, {username})
 end
+-- [[ КОНЕЦ НОВОЙ ФУНКЦИИ ]]
 
 
 -- Forward declare
@@ -583,8 +585,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local SkinsButton=createTabButton("tab_skins")
-
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local SkinsButton=createTabButton("tab_skins"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -594,9 +595,9 @@ task.spawn(function()
         
         local HomePage=Instance.new("Frame",ContentContainer); HomePage.Size=UDim2.new(1,0,1,0); HomePage.BackgroundTransparency=1; HomePage.Visible=true
         local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false
-        local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
-        local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false
         local SkinsPage=Instance.new("Frame",ContentContainer); SkinsPage.Name="SkinsPage"; SkinsPage.Size=UDim2.new(1,0,1,0); SkinsPage.BackgroundTransparency=1; SkinsPage.Visible=false
+        local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
+        local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false        
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
         local CommandsPage=Instance.new("Frame",ContentContainer); CommandsPage.Size=UDim2.new(1,0,1,0); CommandsPage.BackgroundTransparency=1; CommandsPage.Visible=false
         local PlayersChatPage=Instance.new("Frame",ContentContainer); PlayersChatPage.Size=UDim2.new(1,0,1,0); PlayersChatPage.BackgroundTransparency=1; PlayersChatPage.Visible=false
@@ -645,29 +646,7 @@ task.spawn(function()
         local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc"; local langCode=languageMap[settings.language] or "en"; local dev_text = translations[dev_type][langCode] or translations[dev_type].en; deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text); translatableObjects[#translatableObjects+1] = {object=deviceLabel, property="Text", key="home_device", dynamic_args={dev_text}}
         -- #endregion
         
-        -- #region INFO PAGE
-        local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
-        local NurgazyStroke=Instance.new("UIStroke",NurgazyImage); NurgazyStroke.Color=currentTheme.main;
-        local sE=Instance.new("TextLabel",NurgazyImage); sE.Size=UDim2.new(0,45,0,45); sE.Position=UDim2.new(1,-35,0,-10); sE.BackgroundTransparency=1; sE.Rotation=15; sE.Text="👑"; sE.TextScaled=true; 
-        local bioText=createInfoLabel("", InfoPage); bioText.Size=UDim2.new(1,-190,0,150); bioText.Position=UDim2.new(0,175,0,15); bioText.TextWrapped=true; bioText.TextXAlignment=Enum.TextXAlignment.Center; bioText.TextYAlignment=Enum.TextYAlignment.Top; table.insert(translatableObjects, {object=bioText, property="Text", key="info_bio"})
-        local MasterLinksContainer=Instance.new("Frame",InfoPage); MasterLinksContainer.Name="MasterLinksContainer"; MasterLinksContainer.Size=UDim2.new(1,-20,0,80); MasterLinksContainer.Position=UDim2.new(0,10,0,180); MasterLinksContainer.BackgroundTransparency=1;
-        local MasterListLayout=Instance.new("UIListLayout",MasterLinksContainer); MasterListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center; MasterListLayout.SortOrder=Enum.SortOrder.LayoutOrder; MasterListLayout.Padding=UDim.new(0,5);
-        local Row1=Instance.new("Frame",MasterLinksContainer); Row1.Name="Row1"; Row1.BackgroundTransparency=1; Row1.Size=UDim2.new(1,0,0,35); local Row1Layout=Instance.new("UIListLayout",Row1); Row1Layout.FillDirection=Enum.FillDirection.Horizontal; Row1Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row1Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row1Layout.Padding=UDim.new(0,10);
-        local Row2=Instance.new("Frame",MasterLinksContainer); Row2.Name="Row2"; Row2.BackgroundTransparency=1; Row2.Size=UDim2.new(1,0,0,35); local Row2Layout=Instance.new("UIListLayout",Row2); Row2Layout.FillDirection=Enum.FillDirection.Horizontal; Row2Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row2Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row2Layout.Padding=UDim.new(0,10);
-        local function copyToClipboard(link,name) if setclipboard then setclipboard(link); sendTranslatedNotification("notif_clipboard_title", "notif_clipboard_text", 3, nil, {name}) else sendTranslatedNotification("notif_clipboard_error", "notif_clipboard_error_text", 4) end end; 
-        createFunctionButton("info_profile", Row1); 
-        createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end); 
-        createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
-        createFunctionButton("info_vk", Row2, function() copyToClipboard("https://vk.com/wilsonhub_scripts", "VKontakte") end)
-        createFunctionButton("info_website", Row2, function() copyToClipboard("https://wilsonhub-scripts.hgweb.ru", "Website") end)
-        -- #endregion
-
-        -- #region GUI MODS PAGE
-        do 
-            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;
-            local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
-            
-         -- #region SKINS PAGE (NEW)
+        -- #region SKINS PAGE (NEW)
         do
             local page = SkinsPage -- Используем созданную страницу
             local pageLayout = Instance.new("UIListLayout", page); pageLayout.Padding = UDim.new(0, 15); pageLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -698,6 +677,28 @@ task.spawn(function()
         end
         -- #endregion
 
+        
+        -- #region INFO PAGE
+        local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
+        local NurgazyStroke=Instance.new("UIStroke",NurgazyImage); NurgazyStroke.Color=currentTheme.main;
+        local sE=Instance.new("TextLabel",NurgazyImage); sE.Size=UDim2.new(0,45,0,45); sE.Position=UDim2.new(1,-35,0,-10); sE.BackgroundTransparency=1; sE.Rotation=15; sE.Text="👑"; sE.TextScaled=true; 
+        local bioText=createInfoLabel("", InfoPage); bioText.Size=UDim2.new(1,-190,0,150); bioText.Position=UDim2.new(0,175,0,15); bioText.TextWrapped=true; bioText.TextXAlignment=Enum.TextXAlignment.Center; bioText.TextYAlignment=Enum.TextYAlignment.Top; table.insert(translatableObjects, {object=bioText, property="Text", key="info_bio"})
+        local MasterLinksContainer=Instance.new("Frame",InfoPage); MasterLinksContainer.Name="MasterLinksContainer"; MasterLinksContainer.Size=UDim2.new(1,-20,0,80); MasterLinksContainer.Position=UDim2.new(0,10,0,180); MasterLinksContainer.BackgroundTransparency=1;
+        local MasterListLayout=Instance.new("UIListLayout",MasterLinksContainer); MasterListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center; MasterListLayout.SortOrder=Enum.SortOrder.LayoutOrder; MasterListLayout.Padding=UDim.new(0,5);
+        local Row1=Instance.new("Frame",MasterLinksContainer); Row1.Name="Row1"; Row1.BackgroundTransparency=1; Row1.Size=UDim2.new(1,0,0,35); local Row1Layout=Instance.new("UIListLayout",Row1); Row1Layout.FillDirection=Enum.FillDirection.Horizontal; Row1Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row1Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row1Layout.Padding=UDim.new(0,10);
+        local Row2=Instance.new("Frame",MasterLinksContainer); Row2.Name="Row2"; Row2.BackgroundTransparency=1; Row2.Size=UDim2.new(1,0,0,35); local Row2Layout=Instance.new("UIListLayout",Row2); Row2Layout.FillDirection=Enum.FillDirection.Horizontal; Row2Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row2Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row2Layout.Padding=UDim.new(0,10);
+        local function copyToClipboard(link,name) if setclipboard then setclipboard(link); sendTranslatedNotification("notif_clipboard_title", "notif_clipboard_text", 3, nil, {name}) else sendTranslatedNotification("notif_clipboard_error", "notif_clipboard_error_text", 4) end end; 
+        createFunctionButton("info_profile", Row1); 
+        createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end); 
+        createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
+        createFunctionButton("info_vk", Row2, function() copyToClipboard("https://vk.com/wilsonhub_scripts", "VKontakte") end)
+        createFunctionButton("info_website", Row2, function() copyToClipboard("https://wilsonhub-scripts.hgweb.ru", "Website") end)
+        -- #endregion
+
+        -- #region GUI MODS PAGE
+        do 
+            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;
+            local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
             
             -- [[ FIX: Rewritten createToggle function for reliability ]]
             local function createToggle(textKey, order, callback)
@@ -1036,8 +1037,8 @@ task.spawn(function()
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,SkinsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,SkinsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,Skinsbutton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,SkinsPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
         
         activeTab = HomeButton
 
