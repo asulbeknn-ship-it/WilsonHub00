@@ -111,6 +111,9 @@ local translations = {
     script_wallhop = { en = "Wallhop ☑︎", ru = "Wallhop ☑︎", kz = "Wallhop ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
     script_clicktp = { en = "Click Teleport ☑︎", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
     script_playereesp = { en = "Player ESP ☑︎", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
+    skin_c00lkidd_btn = { en = "Skin C00lkidd", ru = "Скин C00lkidd", kz = "C00lkidd скині" },
+    skin_johndoe_btn = { en = "Skin JOHN DOE", ru = "Скин JOHN DOE", kz = "JOHN DOE скині" },
+    skin_hackerwilson_btn = { en = "Skin Hacker_Wilson", ru = "Скин Hacker_Wilson", kz = "Hacker_Wilson скині" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -171,6 +174,54 @@ local translations = {
 
 local themableObjects = {}
 local translatableObjects = {}
+
+-- [[ КИІМ КӨШІРЕТІН ҚАРАПАЙЫМ ФУНКЦИЯ ]]
+local function copyAvatarFromUsername(username)
+    if not username or username:gsub("%s", "") == "" then return end
+    
+    local character = player.Character
+    if not character then return end
+
+    local success_get_id, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
+    if not success_get_id or not targetUserId then
+        warn("WilsonHub Skin Error: Could not find player " .. username)
+        return
+    end
+
+    local success_get_avatar, avatarData = pcall(function()
+        return HttpService:JSONDecode(game:HttpGet("https://avatar.roproxy.com/v1/users/" .. targetUserId .. "/avatar"))
+    end)
+
+    if not success_get_avatar or not avatarData or not avatarData.assets then
+        warn("WilsonHub Skin Error: Could not load appearance for " .. username)
+        return
+    end
+
+    -- Ескі киімді өшіру
+    if character:FindFirstChildOfClass("Shirt") then character:FindFirstChildOfClass("Shirt"):Destroy() end
+    if character:FindFirstChildOfClass("Pants") then character:FindFirstChildOfClass("Pants"):Destroy() end
+
+    local shirtId, pantsId
+
+    for _, asset in ipairs(avatarData.assets) do
+        if asset.assetType.name == "Shirt" then
+            shirtId = asset.id
+        elseif asset.assetType.name == "Pants" then
+            pantsId = asset.id
+        end
+    end
+
+    if shirtId then
+        local newShirt = Instance.new("Shirt", character)
+        newShirt.ShirtTemplate = "rbxassetid://" .. shirtId
+    end
+
+    if pantsId then
+        local newPants = Instance.new("Pants", character)
+        newPants.PantsTemplate = "rbxassetid://" .. pantsId
+    end
+end
+
 
 -- Forward declare
 local applyTheme
@@ -708,6 +759,9 @@ task.spawn(function()
         createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
         createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
         createFunctionButton("script_clicktp", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
+        createFunctionButton("skin_c00lkidd_btn", ScriptsContainer, function() copyAvatarFromUsername("UlanB2210") end)
+        createFunctionButton("skin_johndoe_btn", ScriptsContainer, function() copyAvatarFromUsername("JohnDoe") end)
+        createFunctionButton("skin_hackerwilson_btn", ScriptsContainer, function() copyAvatarFromUsername("Nurgazy_21") end)
         createFunctionButton("script_playereesp", ScriptsContainer, function()
             local players = game:GetService("Players")
             local camera = workspace.CurrentCamera
