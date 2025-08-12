@@ -90,24 +90,7 @@ local translations = {
     home_ip = { en = "IP-address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
     home_ip_loading = { en = "IP-address: Loading...", ru = "IP-адрес: Загрузка...", kz = "IP-мекенжайы: Жүктелуде...", zh = "IP地址: 加载中...", fr = "Adresse IP: Chargement..." },
     home_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
-    home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },
-     -- НОВЫЕ ПЕРЕВОДЫ ДЛЯ СКИНОВ
-    tab_skins = { en = "SKINS", ru = "СКИНЫ", kz = "СКИНДЕР", zh = "皮肤", fr = "SKINS" },
-    skins_copy_section_title = { en = "Copy Player Avatar", ru = "Копировать аватар игрока", kz = "Ойыншы аватарын көшіру", zh = "复制玩家形象", fr = "Copier l'avatar du joueur" },
-    skins_nickname_placeholder = { en = "Enter nickname...", ru = "Введите никнейм...", kz = "Никнеймді енгізіңіз...", zh = "输入昵称...", fr = "Entrez le pseudo..." },
-    skins_copy_button_label = { en = "Copy Avatar", ru = "Копировать", kz = "Көшіру", zh = "复制形象", fr = "Copier" },
-    skins_hacker_section_title = { en = "Hacker Skins", ru = "Скины хакеров", kz = "Хакер скин-дері", zh = "黑客皮肤", fr = "Skins de hackers" },
-    skin_c00lkidd = { en = "C00lkidd" },
-    skin_hacker_wilson = { en = "Hacker_Wilson" },
-    skin_tubers93 = { en = "tubers93" },
-    skin_1x1x1x1 = { en = "1x1x1x1" },
-    skin_error1545old = { en = "ERROR1545OLD" },
-    skin_johndoe = { en = "JOHN DOE" },
-    notif_skin_copy_success_title = { en = "Avatar Copied", ru = "Аватар скопирован", kz = "Аватар көшірілді", zh = "形象已复制", fr = "Avatar copié" },
-    notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді.", zh = "已成功复制 %s 的形象。", fr = "Avatar de %s copié avec succès." },
-    notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі", zh = "形象复制失败", fr = "Échec de la copie" },
-    notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s.", zh = "找不到玩家: %s。", fr = "Impossible de trouver le joueur: %s." },
-    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады.", zh = "未找到您的角色或人形。", fr = "Votre personnage ou Humanoïde n'a pas été trouvé." },
+    home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },    
     -- INFO PAGE
     info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас хакер әрі бастаушы скриптермін.\n Менің скриптерім сапалы\n және әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
     info_profile = { en = "MY PROFILE", ru = "МОЙ ПРОФИЛЬ", kz = "МЕНІҢ ПРОФИЛІМ", zh = "我的个人资料", fr = "MON PROFIL" },
@@ -184,6 +167,19 @@ local translations = {
     notif_welcome_title = { en = "WILSON UPLOADED🎮!", ru = "WILSON ЗАГРУЖЕН🎮!", kz = "WILSON ЖҮКТЕЛДІ🎮!", zh = "WILSON 已加载🎮!", fr = "WILSON CHARGÉ🎮!" },
     notif_welcome_text = { en = "This script is for Wilson hackers", ru = "Этот скрипт для хакеров Wilson", kz = "Бұл скрипт Wilson хакерлеріне арналған", zh = "此脚本适用于Wilson黑客", fr = "Ce script est pour les hackers de Wilson" },
     notif_welcome_button = { en = "Yes", ru = "Да", kz = "Иә", zh = "是", fr = "Oui" },
+    -- НОВЫЕ ПЕРЕВОДЫ ДЛЯ СКИНОВ
+    tab_skins = { en = "SKINS", ru = "СКИНЫ", kz = "СКИНДЕР" },
+    skins_copy_section_title = { en = "Copy Player Avatar", ru = "Копировать аватар игрока", kz = "Ойыншы аватарын көшіру" },
+    skins_nickname_placeholder = { en = "Enter nickname...", ru = "Введите никнейм...", kz = "Никнеймді енгізіңіз..." },
+    skins_copy_button_label = { en = "Copy Avatar", ru = "Копировать", kz = "Көшіру" },
+    skins_hacker_section_title = { en = "Hacker Skins", ru = "Скины хакеров", kz = "Хакер скин-дері" },
+    skin_c00lkidd = { en = "C00lkidd" }, skin_hacker_wilson = { en = "Hacker_Wilson" }, skin_tubers93 = { en = "tubers93" },
+    skin_1x1x1x1 = { en = "1x1x1x1" }, skin_error1545old = { en = "ERROR1545OLD" }, skin_johndoe = { en = "JOHN DOE" },
+    notif_skin_copy_success_title = { en = "Avatar Copied", ru = "Аватар скопирован", kz = "Аватар көшірілді" },
+    notif_skin_copy_success_text = { en = "Successfully copied avatar from %s.", ru = "Аватар %s успешно скопирован.", kz = "%s аватары сәтті көшірілді." },
+    notif_skin_copy_fail_title = { en = "Avatar Copy Failed", ru = "Ошибка копирования", kz = "Көшіру қатесі" },
+    notif_skin_copy_fail_text = { en = "Could not find player: %s.", ru = "Не удалось найти игрока: %s.", kz = "Ойыншы табылмады: %s." },
+    notif_skin_char_fail_text = { en = "Your character or Humanoid not found.", ru = "Ваш персонаж или Humanoid не найден.", kz = "Сіздің кейіпкеріңіз немесе Humanoid табылмады." }
 }
 
 local themableObjects = {}
@@ -192,29 +188,15 @@ local translatableObjects = {}
 -- [[ НОВАЯ ФУНКЦИЯ КОПИРОВАНИЯ СКИНА ]]
 local function copyAvatarFromUsername(username)
     if not username or username:gsub("%s", "") == "" then return end
-
     local localHumanoid = player.Character and player.Character:FindFirstChildOfClass("Humanoid")
-    if not localHumanoid then
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5)
-        return
-    end
-
-    local success, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
-    if not success or not targetUserId then
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username})
-        return
-    end
-    
-    local success, humanoidDesc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, targetUserId)
-    if not success or not humanoidDesc then
-        sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username})
-        return
-    end
-    
+    if not localHumanoid then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_char_fail_text", 5); return end
+    local s, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
+    if not s or not targetUserId then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username}); return end
+    local s2, humanoidDesc = pcall(Players.GetHumanoidDescriptionFromUserId, Players, targetUserId)
+    if not s2 or not humanoidDesc then sendTranslatedNotification("notif_skin_copy_fail_title", "notif_skin_copy_fail_text", 5, nil, {username}); return end
     pcall(localHumanoid.ApplyDescription, localHumanoid, humanoidDesc)
     sendTranslatedNotification("notif_skin_copy_success_title", "notif_skin_copy_success_text", 5, nil, {username})
 end
--- [[ КОНЕЦ НОВОЙ ФУНКЦИИ ]]
 
 
 -- Forward declare
@@ -585,7 +567,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local SkinsButton=createTabButton("tab_skins"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local SkinsButton=createTabButton("tab_skins")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -594,8 +576,7 @@ task.spawn(function()
         end)
         
         local HomePage=Instance.new("Frame",ContentContainer); HomePage.Size=UDim2.new(1,0,1,0); HomePage.BackgroundTransparency=1; HomePage.Visible=true
-        local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false
-        local SkinsPage=Instance.new("Frame",ContentContainer); SkinsPage.Name="SkinsPage"; SkinsPage.Size=UDim2.new(1,0,1,0); SkinsPage.BackgroundTransparency=1; SkinsPage.Visible=false
+        local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false        
         local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
         local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false        
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
@@ -603,6 +584,7 @@ task.spawn(function()
         local PlayersChatPage=Instance.new("Frame",ContentContainer); PlayersChatPage.Size=UDim2.new(1,0,1,0); PlayersChatPage.BackgroundTransparency=1; PlayersChatPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
+        local SkinsPage=Instance.new("Frame",ContentContainer); SkinsPage.Name="SkinsPage"; SkinsPage.Size=UDim2.new(1,0,1,0); SkinsPage.BackgroundTransparency=1; SkinsPage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback) 
             local b = Instance.new("TextButton",parent)
@@ -645,38 +627,6 @@ task.spawn(function()
         task.spawn(function() pcall(function() local r=HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")); local f=""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end; local ip = r.query or "N/A"; local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f; local langCode = languageMap[settings.language] or "en"; ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip); countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country); translatableObjects[#translatableObjects+1] = {object=ipInfoLabel, property="Text", key="home_ip", dynamic_args={ip}}; translatableObjects[#translatableObjects+1] = {object=countryLabel, property="Text", key="home_country", dynamic_args={country}} end) end)
         local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc"; local langCode=languageMap[settings.language] or "en"; local dev_text = translations[dev_type][langCode] or translations[dev_type].en; deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text); translatableObjects[#translatableObjects+1] = {object=deviceLabel, property="Text", key="home_device", dynamic_args={dev_text}}
         -- #endregion
-        
-        -- #region SKINS PAGE (NEW)
-        do
-            local page = SkinsPage -- Используем созданную страницу
-            local pageLayout = Instance.new("UIListLayout", page); pageLayout.Padding = UDim.new(0, 15); pageLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-
-            -- Copy Section
-            local copySectionFrame = Instance.new("Frame", page); copySectionFrame.BackgroundTransparency = 1; copySectionFrame.Size = UDim2.new(1, -20, 0, 70)
-            local copySectionLayout = Instance.new("UIListLayout", copySectionFrame); copySectionLayout.Padding = UDim.new(0, 5)
-            local copyTitle = createInfoLabel("", copySectionFrame); copyTitle.Size = UDim2.new(1, 0, 0, 20); table.insert(translatableObjects, {object = copyTitle, property="Text", key="skins_copy_section_title"})
-            local copyInputFrame = Instance.new("Frame", copySectionFrame); copyInputFrame.BackgroundTransparency = 1; copyInputFrame.Size = UDim2.new(1, 0, 0, 40)
-            local copyInputLayout = Instance.new("UIListLayout", copyInputFrame); copyInputLayout.FillDirection = Enum.FillDirection.Horizontal; copyInputLayout.Padding = UDim.new(0, 10)
-            local nicknameInput = Instance.new("TextBox", copyInputFrame); nicknameInput.Size = UDim2.new(1, -140, 1, 0); nicknameInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45); nicknameInput.TextColor3 = Color3.fromRGB(255, 255, 255); nicknameInput.Font = Enum.Font.SourceSans; nicknameInput.TextSize = 16; Instance.new("UICorner", nicknameInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=nicknameInput, property="PlaceholderText", key="skins_nickname_placeholder"})
-            createFunctionButton("skins_copy_button_label", copyInputFrame, function() copyAvatarFromUsername(nicknameInput.Text) end).Size = UDim2.new(0, 120, 1, 0)
-            
-            -- Hacker Skins Section
-            local hackerSectionFrame = Instance.new("Frame", page); hackerSectionFrame.BackgroundTransparency = 1; hackerSectionFrame.Size = UDim2.new(1, -20, 0, 150)
-            local hackerSectionLayout = Instance.new("UIListLayout", hackerSectionFrame); hackerSectionLayout.Padding = UDim.new(0, 5)
-            local hackerTitle = createInfoLabel("", hackerSectionFrame); hackerTitle.Size = UDim2.new(1, 0, 0, 20); table.insert(translatableObjects, {object = hackerTitle, property="Text", key="skins_hacker_section_title"})
-            local hackerGridFrame = Instance.new("Frame", hackerSectionFrame); hackerGridFrame.BackgroundTransparency = 1; hackerGridFrame.Size = UDim2.new(1, 0, 0, 120)
-            local hackerGrid = Instance.new("UIGridLayout", hackerGridFrame); hackerGrid.CellPadding = UDim2.new(0,10,0,10); hackerGrid.CellSize = UDim2.new(0.333, -10, 0, 40);
-            
-            -- Исправленные кнопки для хакерских скинов
-            createFunctionButton("skin_c00lkidd", hackerGridFrame, function() copyAvatarFromUsername("UlanB2210") end)
-            createFunctionButton("skin_hacker_wilson", hackerGridFrame, function() copyAvatarFromUsername("Nurgazy_21") end)
-            createFunctionButton("skin_tubers93", hackerGridFrame, function() copyAvatarFromUsername("Krasav4ik_181") end)
-            createFunctionButton("skin_1x1x1x1", hackerGridFrame, function() copyAvatarFromUsername("1x1x1x1svz") end)
-            createFunctionButton("skin_error1545old", hackerGridFrame, function() copyAvatarFromUsername("Error1545OLD") end)
-            createFunctionButton("skin_johndoe", hackerGridFrame, function() copyAvatarFromUsername("JohnDoe") end)
-        end
-        -- #endregion
-
         
         -- #region INFO PAGE
         local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
@@ -1032,13 +982,41 @@ task.spawn(function()
         end
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
+        
+        -- #region SKINS PAGE (NEW)
+        do 
+            local page = SkinsPage 
+            local pageLayout = Instance.new("UIListLayout", page); pageLayout.Padding = UDim.new(0, 15); pageLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+            local copySectionFrame = Instance.new("Frame", page); copySectionFrame.BackgroundTransparency = 1; copySectionFrame.Size = UDim2.new(1, -20, 0, 70)
+            local copySectionLayout = Instance.new("UIListLayout", copySectionFrame); copySectionLayout.Padding = UDim.new(0, 5)
+            local copyTitle = createInfoLabel("", copySectionFrame); copyTitle.Size = UDim2.new(1, 0, 0, 20); table.insert(translatableObjects, {object = copyTitle, property="Text", key="skins_copy_section_title"})
+            local copyInputFrame = Instance.new("Frame", copySectionFrame); copyInputFrame.BackgroundTransparency = 1; copyInputFrame.Size = UDim2.new(1, 0, 0, 40)
+            local copyInputLayout = Instance.new("UIListLayout", copyInputFrame); copyInputLayout.FillDirection = Enum.FillDirection.Horizontal; copyInputLayout.Padding = UDim.new(0, 10)
+            local nicknameInput = Instance.new("TextBox", copyInputFrame); nicknameInput.Size = UDim2.new(1, -140, 1, 0); nicknameInput.BackgroundColor3 = Color3.fromRGB(45, 45, 45); nicknameInput.TextColor3 = Color3.fromRGB(255, 255, 255); nicknameInput.Font = Enum.Font.SourceSans; nicknameInput.TextSize = 16; Instance.new("UICorner", nicknameInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=nicknameInput, property="PlaceholderText", key="skins_nickname_placeholder"})
+            createFunctionButton("skins_copy_button_label", copyInputFrame, function() copyAvatarFromUsername(nicknameInput.Text) end).Size = UDim2.new(0, 120, 1, 0)
+            
+            local hackerSectionFrame = Instance.new("Frame", page); hackerSectionFrame.BackgroundTransparency = 1; hackerSectionFrame.Size = UDim2.new(1, -20, 0, 150)
+            local hackerSectionLayout = Instance.new("UIListLayout", hackerSectionFrame); hackerSectionLayout.Padding = UDim.new(0, 5)
+            local hackerTitle = createInfoLabel("", hackerSectionFrame); hackerTitle.Size = UDim2.new(1, 0, 0, 20); table.insert(translatableObjects, {object = hackerTitle, property="Text", key="skins_hacker_section_title"})
+            local hackerGridFrame = Instance.new("Frame", hackerSectionFrame); hackerGridFrame.BackgroundTransparency = 1; hackerGridFrame.Size = UDim2.new(1, 0, 0, 120)
+            local hackerGrid = Instance.new("UIGridLayout", hackerGridFrame); hackerGrid.CellPadding = UDim2.new(0,10,0,10); hackerGrid.CellSize = UDim2.new(0.333, -10, 0, 40);
+            
+            createFunctionButton("skin_c00lkidd", hackerGridFrame, function() copyAvatarFromUsername("UlanB2210") end)
+            createFunctionButton("skin_hacker_wilson", hackerGridFrame, function() copyAvatarFromUsername("Nurgazy_21") end)
+            createFunctionButton("skin_tubers93", hackerGridFrame, function() copyAvatarFromUsername("Krasav4ik_181") end)
+            createFunctionButton("skin_1x1x1x1", hackerGridFrame, function() copyAvatarFromUsername("1x1x1x1svz") end)
+            createFunctionButton("skin_error1545old", hackerGridFrame, function() copyAvatarFromUsername("Error1545OLD") end)
+            createFunctionButton("skin_johndoe", hackerGridFrame, function() copyAvatarFromUsername("JohnDoe") end)
+        end
+        -- #endregion
 
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,Skinsbutton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,SkinsPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton,SkinsButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage,SkinsPage}
         
         activeTab = HomeButton
 
