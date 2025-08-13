@@ -111,9 +111,6 @@ local translations = {
     script_wallhop = { en = "Wallhop ☑︎", ru = "Wallhop ☑︎", kz = "Wallhop ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
     script_clicktp = { en = "Click Teleport ☑︎", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
     script_playereesp = { en = "Player ESP ☑︎", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
-    skin_c00lkidd_btn = { en = "Skin C00lkidd", ru = "Скин C00lkidd", kz = "C00lkidd скині" },
-    skin_johndoe_btn = { en = "Skin JOHN DOE", ru = "Скин JOHN DOE", kz = "JOHN DOE скині" },
-    skin_hackerwilson_btn = { en = "Skin Hacker_Wilson", ru = "Скин Hacker_Wilson", kz = "Hacker_Wilson скині" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -170,58 +167,13 @@ local translations = {
     notif_welcome_title = { en = "WILSON UPLOADED🎮!", ru = "WILSON ЗАГРУЖЕН🎮!", kz = "WILSON ЖҮКТЕЛДІ🎮!", zh = "WILSON 已加载🎮!", fr = "WILSON CHARGÉ🎮!" },
     notif_welcome_text = { en = "This script is for Wilson hackers", ru = "Этот скрипт для хакеров Wilson", kz = "Бұл скрипт Wilson хакерлеріне арналған", zh = "此脚本适用于Wilson黑客", fr = "Ce script est pour les hackers de Wilson" },
     notif_welcome_button = { en = "Yes", ru = "Да", kz = "Иә", zh = "是", fr = "Oui" },
+    -- SKINS PAGE
+    search_placeholder = { en = "Search skins", ru = "Поиск скинов...", kz = "Скиндерді іздеу...", zh = "搜尋皮膚...", fr = "Rechercher des skins..." },
+    skins_fly = { en = "Skin tubers93", ru = "Скин Тубери93", kz = "Скин Туберлер93", zh = "皮膚結節93", fr = "Tubercules cutanés93" },
 }
 
 local themableObjects = {}
 local translatableObjects = {}
-
--- [[ КИІМ КӨШІРЕТІН ҚАРАПАЙЫМ ФУНКЦИЯ ]]
-local function copyAvatarFromUsername(username)
-    if not username or username:gsub("%s", "") == "" then return end
-    
-    local character = player.Character
-    if not character then return end
-
-    local success_get_id, targetUserId = pcall(Players.GetUserIdFromNameAsync, Players, username)
-    if not success_get_id or not targetUserId then
-        warn("WilsonHub Skin Error: Could not find player " .. username)
-        return
-    end
-
-    local success_get_avatar, avatarData = pcall(function()
-        return HttpService:JSONDecode(game:HttpGet("https://avatar.roproxy.com/v1/users/" .. targetUserId .. "/avatar"))
-    end)
-
-    if not success_get_avatar or not avatarData or not avatarData.assets then
-        warn("WilsonHub Skin Error: Could not load appearance for " .. username)
-        return
-    end
-
-    -- Ескі киімді өшіру
-    if character:FindFirstChildOfClass("Shirt") then character:FindFirstChildOfClass("Shirt"):Destroy() end
-    if character:FindFirstChildOfClass("Pants") then character:FindFirstChildOfClass("Pants"):Destroy() end
-
-    local shirtId, pantsId
-
-    for _, asset in ipairs(avatarData.assets) do
-        if asset.assetType.name == "Shirt" then
-            shirtId = asset.id
-        elseif asset.assetType.name == "Pants" then
-            pantsId = asset.id
-        end
-    end
-
-    if shirtId then
-        local newShirt = Instance.new("Shirt", character)
-        newShirt.ShirtTemplate = "rbxassetid://" .. shirtId
-    end
-
-    if pantsId then
-        local newPants = Instance.new("Pants", character)
-        newPants.PantsTemplate = "rbxassetid://" .. pantsId
-    end
-end
-
 
 -- Forward declare
 local applyTheme
@@ -591,7 +543,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local SkinsButton=createTabButton("tab_skins")        
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -608,6 +560,7 @@ task.spawn(function()
         local PlayersChatPage=Instance.new("Frame",ContentContainer); PlayersChatPage.Size=UDim2.new(1,0,1,0); PlayersChatPage.BackgroundTransparency=1; PlayersChatPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
+        local SkinsPage=Instance.new("Frame",ContentContainer); SkinsPage.Name="SkinsPage"; SkinsPage.Size=UDim2.new(1,0,1,0); SkinsPage.BackgroundTransparency=1; SkinsPage.Visible=false        
 
         local function createFunctionButton(textKey, parent, callback) 
             local b = Instance.new("TextButton",parent)
@@ -759,9 +712,6 @@ task.spawn(function()
         createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
         createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
         createFunctionButton("script_clicktp", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
-        createFunctionButton("skin_c00lkidd_btn", ScriptsContainer, function() copyAvatarFromUsername("UlanB2210") end)
-        createFunctionButton("skin_johndoe_btn", ScriptsContainer, function() copyAvatarFromUsername("JohnDoe") end)
-        createFunctionButton("skin_hackerwilson_btn", ScriptsContainer, function() copyAvatarFromUsername("Nurgazy_21") end)
         createFunctionButton("script_playereesp", ScriptsContainer, function()
             local players = game:GetService("Players")
             local camera = workspace.CurrentCamera
@@ -1009,12 +959,19 @@ task.spawn(function()
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
 
+        -- #region SCRIPTS PAGE
+        local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"}); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
+        local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6; 
+        local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+        createFunctionButton("skins_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))() end);
+        -- #endregion
+
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton,SkinsButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage,SkinsPage}
         
         activeTab = HomeButton
 
