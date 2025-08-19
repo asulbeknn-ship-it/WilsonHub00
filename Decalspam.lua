@@ -1,58 +1,70 @@
-local decalId = "rbxassetid://74363941489431"
-local musicId = "rbxassetid://1839246711"
-local batchSize = 50
-local delayBetweenBatches = 0.1
-
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
--- Ignore your own character parts
-local ignoreParts = {}
-for _, part in ipairs(character:GetDescendants()) do
-    if part:IsA("BasePart") then
-        ignoreParts[part] = true
-    end
-end
-
--- Set skybox to decal
-local sky = Instance.new("Sky")
-sky.SkyboxBk = decalId
-sky.SkyboxDn = decalId
-sky.SkyboxFt = decalId
-sky.SkyboxLf = decalId
-sky.SkyboxRt = decalId
-sky.SkyboxUp = decalId
-sky.Parent = game:GetService("Lighting")
-
--- Play new sound immediately (full sound playback)
-local sound = Instance.new("Sound")
-sound.SoundId = musicId
-sound.Volume = 10 -- Max volume in Studio
-sound.Pitch = 1 -- Normal pitch
-sound.Looped = true
-sound.Parent = workspace
-sound:Play()
-
--- Collect parts to apply decals (excluding self)
-local parts = {}
-for _, obj in ipairs(workspace:GetDescendants()) do
-    if obj:IsA("BasePart") and obj.Name ~= "Terrain" and not ignoreParts[obj] then
-        table.insert(parts, obj)
-    end
-end
-
--- Spam decals in batches
-local index = 1
-while index <= #parts do
-    for i = index, math.min(index + batchSize - 1, #parts) do
-        local part = parts[i]
-        for _, face in ipairs(Enum.NormalId:GetEnumItems()) do
-            local decal = Instance.new("Decal")
-            decal.Texture = decalId
-            decal.Face = face
-            decal.Parent = part
+decalID = 76297485870740
+function exPro(root)
+    for _, v in pairs(root:GetChildren()) do
+        if v:IsA("Decal") and v.Texture ~= "http://www.roblox.com/asset/?id="..decalID then
+            v.Parent = nil
+        elseif v:IsA("BasePart") then
+            v.Material = "Plastic"
+            v.Transparency = 0
+            local One = Instance.new("Decal", v)
+            local Two = Instance.new("Decal", v)
+            local Three = Instance.new("Decal", v)
+            local Four = Instance.new("Decal", v)
+            local Five = Instance.new("Decal", v)
+            local Six = Instance.new("Decal", v)
+            One.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Two.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Three.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Four.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Five.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Six.Texture = "http://www.roblox.com/asset/?id="..decalID
+            One.Face = "Front"
+            Two.Face = "Back"
+            Three.Face = "Right"
+            Four.Face = "Left"
+            Five.Face = "Top"
+            Six.Face = "Bottom"
         end
+        exPro(v)
     end
-    index += batchSize
-    task.wait(delayBetweenBatches)
+end
+
+function asdf(root)
+    for _, v in pairs(root:GetChildren()) do
+        asdf(v)
+    end
+end
+
+exPro(game.Workspace)
+asdf(game.Workspace)
+
+local s = Instance.new("Sky")
+s.Name = "Sky"
+s.Parent = game.Lighting
+local skyboxID = 76297485870740
+s.SkyboxBk = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxDn = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxFt = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxLf = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxRt = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxUp = "http://www.roblox.com/asset/?id="..skyboxID
+game.Lighting.TimeOfDay = 12    
+
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id=76297485870740"
+    emit.VelocitySpread = 20
+end
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id="
+    emit.VelocitySpread = 20
+end
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id="
+    emit.VelocitySpread = 20
 end
