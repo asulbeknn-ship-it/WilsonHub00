@@ -108,7 +108,7 @@ local translations = {
     script_fly = { en = "Fly gui ☑︎", ru = "Fly gui ☑︎", kz = "Fly gui ☑︎", zh = "飞行界面 ☑︎", fr = "Fly gui ☑︎" },
     script_fireblock = { en = "Fire Block ☑︎", ru = "Огненный Блок ☑︎", kz = "Отты Блок ☑︎", zh = "火焰方块 ☑︎", fr = "Bloc de feu ☑︎" },
     script_speed = { en = "Speed Hack ☑︎", ru = "Спидхак ☑︎", kz = "Жылдамдық хагы ☑︎", zh = "速度破解 ☑︎", fr = "Hack de vitesse ☑︎" },
-    script_wallhop = { en = "Wallhop ☑︎", ru = "Wallhop ☑︎", kz = "Wallhop ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
+    script_wallhop = { en = "Wallhop ☑︎", ru = "Прыжки с стеном ☑︎", kz = "Қабырғада секіру ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
     script_clicktp = { en = "Click Teleport", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
     script_playereesp = { en = "Player ESP", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
     script_grav = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" },
@@ -116,8 +116,10 @@ local translations = {
     script_infiniteyield= { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" },
     script_antislap = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" },
     script_autoslap = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" },
-    script_autoklicer = { en = "Auto Clicker", ru = "Авто кликер", kz = "Авто басу", zh = "自動答題器", fr = "Cliqueur automatique" },
     script_win = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" },
+    script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
+    script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
+    script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -711,14 +713,103 @@ task.spawn(function()
         local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"}); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
         local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6; 
         local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-        createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end); SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
+        createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end); SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
         createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
         createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
         createFunctionButton("script_clicktp", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
         createFunctionButton("script_grav", ScriptsContainer, function() workspace.Gravity = 30 end);
         createFunctionButton("script_afk", ScriptsContainer, function() local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
         createFunctionButton("script_infiniteyield", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
-        createFunctionButton("script_antislap", ScriptsContainer, function() spawn(function() while true do wait() if game.Players.LocalPlayer.Character and game.Players.LocalPlayer.Character:FindFirstChild("HumanoidRootPart") then game.Players.LocalPlayer.Character.HumanoidRootPart.Velocity = Vector3.new(0,0,0) end end end) end);
+        createFunctionButton("script_antislap", ScriptsContainer, function() spawn(function() local localplr = game.Players.LocalPlayer
+local drag = nil
+pcall(function()
+    drag = loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Drag-UI-SUPPORTS-MOBILE-22790"))()
+end)
+if drag == nil then -- your executor actually sucks if the script has to do this
+    drag = function(f) -- the drag loadstring is way longer than this function, this one is just a crappy replacement
+        if f then
+            f.Active = true
+            f.Draggable = true
+        end
+    end
+end
+gui2 = Instance.new("ScreenGui")
+gui2.Name = ""
+for i=1,50 do
+    gui2.Name = gui2.Name..tostring(math.random(1,9))
+end
+gui2.ResetOnSpawn = false
+gui2.Parent = game.CoreGui
+local mainframe2 = Instance.new("TextLabel")
+mainframe2.BackgroundColor3 = Color3.fromRGB(255,0,0)
+mainframe2.BorderColor3 = Color3.fromRGB(255,0,0)
+mainframe2.Size = UDim2.new(.1,0,.05,0)
+mainframe2.Position = UDim2.new(.45,0,.475,0)
+drag(mainframe2)
+mainframe2.Text = "MADE BY WILSONHUB"
+mainframe2.TextScaled = true
+mainframe2.TextColor3 = Color3.fromRGB(255,255,255)
+local textbutton = Instance.new("TextButton")
+textbutton.Position = UDim2.new(0,0,1,0)
+textbutton.Size = UDim2.new(1,0,2,0)
+textbutton.Text = "Anti-Slap: ON"
+textbutton.TextScaled = true
+textbutton.TextColor3 = Color3.fromRGB(255,255,255)
+textbutton.BackgroundColor3 = Color3.fromRGB(50,50,50)
+textbutton.BorderColor3 = Color3.fromRGB(255,255,255)
+textbutton.Parent = mainframe2
+local as = false
+function dobv(v,char)
+	local undo = false
+	if as then
+		if v:IsA("BodyAngularVelocity") then
+			undo = true
+			v:Destroy()
+		elseif v:IsA("BodyGyro") and v.MaxTorque ~= Vector3.new(8999999488, 8999999488, 8999999488) and v.D ~= 500 and v.D ~= 50 and v.P ~= 90000 then
+			undo = true
+			v:Destroy()
+		elseif v:IsA("BodyVelocity") and v.MaxForce ~= Vector3.new(8999999488, 8999999488, 8999999488) and v.Velocity ~= Vector3.new(0,0,0) then
+			undo = true
+			v:Destroy()
+		elseif v:IsA("BasePart") then
+			v.ChildAdded:Connect(function(v2)
+				dobv(v2,char)
+			end)
+		end
+		if undo and char and char:FindFirstChild("Humanoid") then
+			char.Humanoid.Sit = false
+			char.Humanoid.PlatformStand = false
+		end
+	end
+end
+textbutton.MouseButton1Click:Connect(function()
+	as = not as
+	if as then
+		textbutton.Text = "Anti-Slap: OFF"
+		if localplr.Character then
+			for i,v in pairs(localplr.Character:GetChildren()) do
+				dobv(v,localplr.Character)
+				for i,v in pairs(v:GetChildren()) do
+					dobv(v,localplr.Character)
+				end
+			end
+		end
+	else
+		textbutton.Text = "Anti-Slap: ON"
+	end
+end)
+function dc(c)
+	for i,v in pairs(c:GetChildren()) do
+		dobv(v,c)
+	end
+	c.ChildAdded:Connect(function(v)
+		dobv(v,c)
+	end)
+end
+if localplr.Character then
+	dc(localplr.Character)
+end
+mainframe2.Parent = gui2 end);
         createFunctionButton("script_autoslap", ScriptsContainer, function() spawn(function()
     while true do
         wait(0.5)
@@ -744,11 +835,245 @@ task.spawn(function()
         end
     end
 end) end);
-        createFunctionButton("script_autoklicer", ScriptsContainer, function() mouse = game.Players.LocalPlayer:GetMouse()  
-while wait() do  
-    mouse1click()  
+        createFunctionButton("script_autoklicer", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+        createFunctionButton("script_win", ScriptsContainer, function() -- Win Tower script (универсальный)
+local player = game.Players.LocalPlayer
+local char = player.Character or player.CharacterAdded:Wait()
+local winPart
+
+-- WinPad, WinPart, Finish, End, т.б. атауларын іздеу
+for _, v in pairs(workspace:GetDescendants()) do
+    if v:IsA("BasePart") and (
+        v.Name:lower():find("win") or
+        v.Name:lower():find("end") or
+        v.Name:lower():find("finish")
+    ) then
+        winPart = v
+        break
+    end
+end
+
+if winPart then
+    char:MoveTo(winPart.Position + Vector3.new(0, 5, 0))
+    print("WinTower: Teleported to the finish!")
+else
+    warn("WinTower: Win part not found.")
 end end);
-        createFunctionButton("script_win", ScriptsContainer, function() game.Players.LocalPlayer.Character.HumanoidRootPart.CFrame = game:GetService("Workspace").Map.Finish.Finish.CFrame end);
+        createFunctionButton("script_god", ScriptsContainer, function() local ScreenGui = Instance.new("ScreenGui")
+local Frame = Instance.new("Frame")
+local TextLabel = Instance.new("TextLabel")
+local TextButton = Instance.new("TextButton")
+
+--Properties:
+
+ScreenGui.Parent = game.Players.LocalPlayer:WaitForChild("PlayerGui")
+ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+ScreenGui.ResetOnSpawn = false
+
+Frame.Parent = ScreenGui
+Frame.BackgroundColor3 = Color3.fromRGB(42, 42, 42)
+Frame.BorderColor3 = Color3.fromRGB(0, 0, 0)
+Frame.BorderSizePixel = 0
+Frame.Position = UDim2.new(0.390366644, 0, 0.301782697, 0)
+Frame.Size = UDim2.new(0, 163, 0, 82)
+Frame.Active = true
+Frame.Draggable = true
+
+TextLabel.Parent = Frame
+TextLabel.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextLabel.BorderSizePixel = 0
+TextLabel.Size = UDim2.new(0, 163, 0, 23)
+TextLabel.Font = Enum.Font.SourceSansBold
+TextLabel.Text = "GOD MODE [Immortal]"
+TextLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+TextLabel.TextSize = 18.000
+
+TextButton.Parent = Frame
+TextButton.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+TextButton.BorderColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.BorderSizePixel = 0
+TextButton.Position = UDim2.new(0.175683141, 0, 0.408666462, 0)
+TextButton.Size = UDim2.new(0, 104, 0, 31)
+TextButton.Font = Enum.Font.SourceSansItalic
+TextButton.Text = "OFF"
+TextButton.TextColor3 = Color3.fromRGB(0, 0, 0)
+TextButton.TextSize = 15.000
+
+local function LILMOQ_fake_script() -- TextButton.LocalScript 
+ local script = Instance.new('LocalScript', TextButton)
+
+ local player = game:GetService("Players").LocalPlayer
+ local nega = true
+ 
+ local toggleButton = script.Parent
+ 
+ local function updateButtonText()
+  if nega then
+   toggleButton.Text = "ON"
+  else
+   toggleButton.Text = "OFF"
+  end
+ end
+ 
+ local function toggleFeature()
+  nega = not nega
+  updateButtonText()
+ end
+ 
+ toggleButton.MouseButton1Click:Connect(function()
+  toggleFeature()
+ end)
+ 
+ local function applyToggleEffect()
+  while task.wait() do
+   local character = player.Character or player.CharacterAdded:Wait()
+   local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+   local parts = workspace:GetPartBoundsInRadius(humanoidRootPart.Position, 10)
+   for _, part in ipairs(parts) do
+    part.CanTouch = nega
+   end
+  end
+ end
+ 
+ player.CharacterAdded:Connect(function()
+  applyToggleEffect()
+  updateButtonText()
+ end)
+ 
+ applyToggleEffect()
+ updateButtonText()
+ 
+end
+coroutine.wrap(LILMOQ_fake_script)() end);
+        createFunctionButton("script_spamdecal", ScriptsContainer, function() decalID = 76297485870740
+function exPro(root)
+    for _, v in pairs(root:GetChildren()) do
+        if v:IsA("Decal") and v.Texture ~= "http://www.roblox.com/asset/?id="..decalID then
+            v.Parent = nil
+        elseif v:IsA("BasePart") then
+            v.Material = "Plastic"
+            v.Transparency = 0
+            local One = Instance.new("Decal", v)
+            local Two = Instance.new("Decal", v)
+            local Three = Instance.new("Decal", v)
+            local Four = Instance.new("Decal", v)
+            local Five = Instance.new("Decal", v)
+            local Six = Instance.new("Decal", v)
+            One.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Two.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Three.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Four.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Five.Texture = "http://www.roblox.com/asset/?id="..decalID
+            Six.Texture = "http://www.roblox.com/asset/?id="..decalID
+            One.Face = "Front"
+            Two.Face = "Back"
+            Three.Face = "Right"
+            Four.Face = "Left"
+            Five.Face = "Top"
+            Six.Face = "Bottom"
+        end
+        exPro(v)
+    end
+end
+
+function asdf(root)
+    for _, v in pairs(root:GetChildren()) do
+        asdf(v)
+    end
+end
+
+exPro(game.Workspace)
+asdf(game.Workspace)
+
+local s = Instance.new("Sky")
+s.Name = "Sky"
+s.Parent = game.Lighting
+local skyboxID = 76297485870740
+s.SkyboxBk = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxDn = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxFt = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxLf = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxRt = "http://www.roblox.com/asset/?id="..skyboxID
+s.SkyboxUp = "http://www.roblox.com/asset/?id="..skyboxID
+game.Lighting.TimeOfDay = 12    
+
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id=76297485870740"
+    emit.VelocitySpread = 20
+end
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id="
+    emit.VelocitySpread = 20
+end
+for i, v in pairs(game.Players:GetChildren()) do
+    emit = Instance.new("ParticleEmitter")
+    emit.Parent = v.Character.Torso
+    emit.Texture = "http://www.roblox.com/asset/?id="
+    emit.VelocitySpread = 20
+end end);
+        createFunctionButton("script_skybox", ScriptsContainer, function() local decalId = "rbxassetid://74363941489431"
+local musicId = "rbxassetid://1839246711"
+local batchSize = 50
+local delayBetweenBatches = 0.1
+
+local player = game.Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+
+-- Ignore your own character parts
+local ignoreParts = {}
+for _, part in ipairs(character:GetDescendants()) do
+    if part:IsA("BasePart") then
+        ignoreParts[part] = true
+    end
+end
+
+-- Set skybox to decal
+local sky = Instance.new("Sky")
+sky.SkyboxBk = decalId
+sky.SkyboxDn = decalId
+sky.SkyboxFt = decalId
+sky.SkyboxLf = decalId
+sky.SkyboxRt = decalId
+sky.SkyboxUp = decalId
+sky.Parent = game:GetService("Lighting")
+
+-- Play new sound immediately (full sound playback)
+local sound = Instance.new("Sound")
+sound.SoundId = musicId
+sound.Volume = 10 -- Max volume in Studio
+sound.Pitch = 1 -- Normal pitch
+sound.Looped = true
+sound.Parent = workspace
+sound:Play()
+
+-- Collect parts to apply decals (excluding self)
+local parts = {}
+for _, obj in ipairs(workspace:GetDescendants()) do
+    if obj:IsA("BasePart") and obj.Name ~= "Terrain" and not ignoreParts[obj] then
+        table.insert(parts, obj)
+    end
+end
+
+-- Spam decals in batches
+local index = 1
+while index <= #parts do
+    for i = index, math.min(index + batchSize - 1, #parts) do
+        local part = parts[i]
+        for _, face in ipairs(Enum.NormalId:GetEnumItems()) do
+            local decal = Instance.new("Decal")
+            decal.Texture = decalId
+            decal.Face = face
+            decal.Parent = part
+        end
+    end
+    index += batchSize
+    task.wait(delayBetweenBatches)
+end end);
         createFunctionButton("script_playereesp", ScriptsContainer, function()
             local players = game:GetService("Players")
             local camera = workspace.CurrentCamera
