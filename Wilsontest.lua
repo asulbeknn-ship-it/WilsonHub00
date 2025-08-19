@@ -108,9 +108,18 @@ local translations = {
     script_fly = { en = "Fly gui ☑︎", ru = "Fly gui ☑︎", kz = "Fly gui ☑︎", zh = "飞行界面 ☑︎", fr = "Fly gui ☑︎" },
     script_fireblock = { en = "Fire Block ☑︎", ru = "Огненный Блок ☑︎", kz = "Отты Блок ☑︎", zh = "火焰方块 ☑︎", fr = "Bloc de feu ☑︎" },
     script_speed = { en = "Speed Hack ☑︎", ru = "Спидхак ☑︎", kz = "Жылдамдық хагы ☑︎", zh = "速度破解 ☑︎", fr = "Hack de vitesse ☑︎" },
-    script_wallhop = { en = "Wallhop ☑︎", ru = "Wallhop ☑︎", kz = "Wallhop ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
-    script_clicktp = { en = "Click Teleport ☑︎", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
-    script_playereesp = { en = "Player ESP ☑︎", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
+    script_wallhop = { en = "Wallhop ☑︎", ru = "Прыжки с стеном ☑︎", kz = "Қабырғада секіру ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
+    script_clicktp = { en = "Click Teleport", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
+    script_playereesp = { en = "Player ESP", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
+    script_grav = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" },
+    script_afk = { en = "Anti afk", ru = "Анти афк", kz = "Анти афк", zh = "反afk", fr = "Anti-afk" },
+    script_infiniteyield= { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" },
+    script_antislap = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" },
+    script_autoslap = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" },
+    script_win = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" },
+    script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
+    script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
+    script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -704,11 +713,20 @@ task.spawn(function()
         local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"}); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
         local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6; 
         local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-        createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end); SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
+        createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end); SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
         createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
         createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
         createFunctionButton("script_clicktp", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
-        createFunctionButton("script_playereesp", ScriptsContainer, function()
+        createFunctionButton("script_grav", ScriptsContainer, function() workspace.Gravity = 30 end);
+        createFunctionButton("script_afk", ScriptsContainer, function() local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
+        createFunctionButton("script_infiniteyield", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
+        createFunctionButton("script_antislap", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Antislap.lua"))() end);
+        createFunctionButton("script_autoslap", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+        createFunctionButton("script_win", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Win.lua"))() end);
+        createFunctionButton("script_god", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
+        createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
+        createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+        createFunctionButton("script_playereesp", ScriptsContainer, function()  end);
             local players = game:GetService("Players")
             local camera = workspace.CurrentCamera
             local localPlayer = players.LocalPlayer
