@@ -115,8 +115,8 @@ local translations = {
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
     player_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
-    player_ip_private = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址：%s", fr = "Adresse IP: %s" },
-    player_country_private = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家：%s", fr = "Pays: %s" },
+    player_ip_private = { en = "IP Address: Private", ru = "IP-адрес: Скрыт", kz = "IP-мекенжайы: Жасырын", zh = "IP地址：私密", fr = "Adresse IP: Privée" },
+    player_country_private = { en = "Country: Private", ru = "Страна: Скрыта", kz = "Ел: Жасырын", zh = "国家：私密", fr = "Pays: Privé" },
     player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
     player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
     -- COMMANDS PAGE
@@ -555,7 +555,7 @@ task.spawn(function()
         local CommandsPage=Instance.new("Frame",ContentContainer); CommandsPage.Size=UDim2.new(1,0,1,0); CommandsPage.BackgroundTransparency=1; CommandsPage.Visible=false
         local PlayersChatPage=Instance.new("Frame",ContentContainer); PlayersChatPage.Size=UDim2.new(1,0,1,0); PlayersChatPage.BackgroundTransparency=1; PlayersChatPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
-        local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
+        local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false        
 
         local function createFunctionButton(textKey, parent, callback) 
             local b = Instance.new("TextButton",parent)
@@ -953,6 +953,7 @@ task.spawn(function()
         end
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
+
 
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
