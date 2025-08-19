@@ -720,7 +720,7 @@ task.spawn(function()
         createFunctionButton("script_grav", ScriptsContainer, function() workspace.Gravity = 30 end);
         createFunctionButton("script_afk", ScriptsContainer, function() local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
         createFunctionButton("script_infiniteyield", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
-        createFunctionButton("script_antislap", ScriptsContainer, function() spawn(function() local localplr = game.Players.LocalPlayer
+        createFunctionButton("script_antislap", ScriptsContainer, function() local localplr = game.Players.LocalPlayer
 local drag = nil
 pcall(function()
     drag = loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Drag-UI-SUPPORTS-MOBILE-22790"))()
@@ -752,7 +752,7 @@ mainframe2.TextColor3 = Color3.fromRGB(255,255,255)
 local textbutton = Instance.new("TextButton")
 textbutton.Position = UDim2.new(0,0,1,0)
 textbutton.Size = UDim2.new(1,0,2,0)
-textbutton.Text = "Anti-Slap: ON"
+textbutton.Text = "Anti-Slap: OFF"
 textbutton.TextScaled = true
 textbutton.TextColor3 = Color3.fromRGB(255,255,255)
 textbutton.BackgroundColor3 = Color3.fromRGB(50,50,50)
@@ -785,7 +785,7 @@ end
 textbutton.MouseButton1Click:Connect(function()
 	as = not as
 	if as then
-		textbutton.Text = "Anti-Slap: OFF"
+		textbutton.Text = "Anti-Slap: ON"
 		if localplr.Character then
 			for i,v in pairs(localplr.Character:GetChildren()) do
 				dobv(v,localplr.Character)
@@ -795,46 +795,11 @@ textbutton.MouseButton1Click:Connect(function()
 			end
 		end
 	else
-		textbutton.Text = "Anti-Slap: ON"
+		textbutton.Text = "Anti-Slap: OFF"
 	end
 end)
-function dc(c)
-	for i,v in pairs(c:GetChildren()) do
-		dobv(v,c)
-	end
-	c.ChildAdded:Connect(function(v)
-		dobv(v,c)
-	end)
-end
-if localplr.Character then
-	dc(localplr.Character)
-end
 mainframe2.Parent = gui2 end);
-        createFunctionButton("script_autoslap", ScriptsContainer, function() spawn(function()
-    while true do
-        wait(0.5)
-        local closestPlayer = nil
-        local shortestDist = math.huge
-        local localPlayer = game.Players.LocalPlayer
-        
-        for _, player in pairs(game.Players:GetPlayers()) do
-            if player ~= localPlayer and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
-                local dist = (localPlayer.Character.HumanoidRootPart.Position - player.Character.HumanoidRootPart.Position).magnitude
-                if dist < shortestDist then
-                    shortestDist = dist
-                    closestPlayer = player
-                end
-            end
-        end
-        
-        if closestPlayer and shortestDist < 20 then
-            local a = {
-                [1] = closestPlayer.Character.Head
-            }
-            game:GetService("ReplicatedStorage").DefaultRemotes.slap:FireServer(a)
-        end
-    end
-end) end);
+        createFunctionButton("script_autoslap", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
         createFunctionButton("script_autoklicer", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
         createFunctionButton("script_win", ScriptsContainer, function() -- Win Tower script (универсальный)
 local player = game.Players.LocalPlayer
@@ -885,8 +850,8 @@ TextLabel.BorderColor3 = Color3.fromRGB(0, 0, 0)
 TextLabel.BorderSizePixel = 0
 TextLabel.Size = UDim2.new(0, 163, 0, 23)
 TextLabel.Font = Enum.Font.SourceSansBold
-TextLabel.Text = "GOD MODE [Immortal]"
-TextLabel.TextColor3 = Color3.fromRGB(255, 0, 0)
+TextLabel.Text = "Killbrick toggle"
+TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 TextLabel.TextSize = 18.000
 
 TextButton.Parent = Frame
@@ -910,9 +875,9 @@ local function LILMOQ_fake_script() -- TextButton.LocalScript
  
  local function updateButtonText()
   if nega then
-   toggleButton.Text = "ON"
-  else
    toggleButton.Text = "OFF"
+  else
+   toggleButton.Text = "ON"
   end
  end
  
@@ -946,135 +911,9 @@ local function LILMOQ_fake_script() -- TextButton.LocalScript
  
 end
 coroutine.wrap(LILMOQ_fake_script)() end);
-        createFunctionButton("script_spamdecal", ScriptsContainer, function() decalID = 76297485870740
-function exPro(root)
-    for _, v in pairs(root:GetChildren()) do
-        if v:IsA("Decal") and v.Texture ~= "http://www.roblox.com/asset/?id="..decalID then
-            v.Parent = nil
-        elseif v:IsA("BasePart") then
-            v.Material = "Plastic"
-            v.Transparency = 0
-            local One = Instance.new("Decal", v)
-            local Two = Instance.new("Decal", v)
-            local Three = Instance.new("Decal", v)
-            local Four = Instance.new("Decal", v)
-            local Five = Instance.new("Decal", v)
-            local Six = Instance.new("Decal", v)
-            One.Texture = "http://www.roblox.com/asset/?id="..decalID
-            Two.Texture = "http://www.roblox.com/asset/?id="..decalID
-            Three.Texture = "http://www.roblox.com/asset/?id="..decalID
-            Four.Texture = "http://www.roblox.com/asset/?id="..decalID
-            Five.Texture = "http://www.roblox.com/asset/?id="..decalID
-            Six.Texture = "http://www.roblox.com/asset/?id="..decalID
-            One.Face = "Front"
-            Two.Face = "Back"
-            Three.Face = "Right"
-            Four.Face = "Left"
-            Five.Face = "Top"
-            Six.Face = "Bottom"
-        end
-        exPro(v)
-    end
-end
-
-function asdf(root)
-    for _, v in pairs(root:GetChildren()) do
-        asdf(v)
-    end
-end
-
-exPro(game.Workspace)
-asdf(game.Workspace)
-
-local s = Instance.new("Sky")
-s.Name = "Sky"
-s.Parent = game.Lighting
-local skyboxID = 76297485870740
-s.SkyboxBk = "http://www.roblox.com/asset/?id="..skyboxID
-s.SkyboxDn = "http://www.roblox.com/asset/?id="..skyboxID
-s.SkyboxFt = "http://www.roblox.com/asset/?id="..skyboxID
-s.SkyboxLf = "http://www.roblox.com/asset/?id="..skyboxID
-s.SkyboxRt = "http://www.roblox.com/asset/?id="..skyboxID
-s.SkyboxUp = "http://www.roblox.com/asset/?id="..skyboxID
-game.Lighting.TimeOfDay = 12    
-
-for i, v in pairs(game.Players:GetChildren()) do
-    emit = Instance.new("ParticleEmitter")
-    emit.Parent = v.Character.Torso
-    emit.Texture = "http://www.roblox.com/asset/?id=76297485870740"
-    emit.VelocitySpread = 20
-end
-for i, v in pairs(game.Players:GetChildren()) do
-    emit = Instance.new("ParticleEmitter")
-    emit.Parent = v.Character.Torso
-    emit.Texture = "http://www.roblox.com/asset/?id="
-    emit.VelocitySpread = 20
-end
-for i, v in pairs(game.Players:GetChildren()) do
-    emit = Instance.new("ParticleEmitter")
-    emit.Parent = v.Character.Torso
-    emit.Texture = "http://www.roblox.com/asset/?id="
-    emit.VelocitySpread = 20
-end end);
-        createFunctionButton("script_skybox", ScriptsContainer, function() local decalId = "rbxassetid://74363941489431"
-local musicId = "rbxassetid://1839246711"
-local batchSize = 50
-local delayBetweenBatches = 0.1
-
-local player = game.Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-
--- Ignore your own character parts
-local ignoreParts = {}
-for _, part in ipairs(character:GetDescendants()) do
-    if part:IsA("BasePart") then
-        ignoreParts[part] = true
-    end
-end
-
--- Set skybox to decal
-local sky = Instance.new("Sky")
-sky.SkyboxBk = decalId
-sky.SkyboxDn = decalId
-sky.SkyboxFt = decalId
-sky.SkyboxLf = decalId
-sky.SkyboxRt = decalId
-sky.SkyboxUp = decalId
-sky.Parent = game:GetService("Lighting")
-
--- Play new sound immediately (full sound playback)
-local sound = Instance.new("Sound")
-sound.SoundId = musicId
-sound.Volume = 10 -- Max volume in Studio
-sound.Pitch = 1 -- Normal pitch
-sound.Looped = true
-sound.Parent = workspace
-sound:Play()
-
--- Collect parts to apply decals (excluding self)
-local parts = {}
-for _, obj in ipairs(workspace:GetDescendants()) do
-    if obj:IsA("BasePart") and obj.Name ~= "Terrain" and not ignoreParts[obj] then
-        table.insert(parts, obj)
-    end
-end
-
--- Spam decals in batches
-local index = 1
-while index <= #parts do
-    for i = index, math.min(index + batchSize - 1, #parts) do
-        local part = parts[i]
-        for _, face in ipairs(Enum.NormalId:GetEnumItems()) do
-            local decal = Instance.new("Decal")
-            decal.Texture = decalId
-            decal.Face = face
-            decal.Parent = part
-        end
-    end
-    index += batchSize
-    task.wait(delayBetweenBatches)
-end end);
-        createFunctionButton("script_playereesp", ScriptsContainer, function()
+        createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+        createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+        createFunctionButton("script_playereesp", ScriptsContainer, function()  end);
             local players = game:GetService("Players")
             local camera = workspace.CurrentCamera
             local localPlayer = players.LocalPlayer
