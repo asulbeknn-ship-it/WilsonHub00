@@ -119,7 +119,6 @@ local translations = {
     script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
     script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
     script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
-    script_playereesp = { en = "Player ESP", ru = "ЕСП Игроков ☑︎", kz = "Ойыншы ESP ☑︎", zh = "玩家透视 ☑︎", fr = "ESP Joueur ☑︎" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -726,70 +725,6 @@ task.spawn(function()
         createFunctionButton("script_god", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
         createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
         createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
-        createFunctionButton("script_playereesp", ScriptsContainer, function()  end);
-            local players = game:GetService("Players")
-            local camera = workspace.CurrentCamera
-            local localPlayer = players.LocalPlayer
-            local runService = game:GetService("RunService")
-
-            local espEnabled = true
-            local connections = {}
-
-            local function createESP(player)
-                if not espEnabled then return end
-
-                local character = player.Character
-                if not character or player == localPlayer then return end
-
-                local head = character:FindFirstChild("Head")
-                if not head then return end
-                
-                if connections[player] and connections[player].gui then
-                     connections[player].gui:Destroy()
-                end
-
-                local espGui = Instance.new("BillboardGui", head)
-                espGui.Name = "ESP_GUI"
-                espGui.AlwaysOnTop = true
-                espGui.Size = UDim2.new(0, 100, 0, 50)
-                espGui.StudsOffset = Vector3.new(0, 2, 0)
-                
-                local textLabel = Instance.new("TextLabel", espGui)
-                textLabel.BackgroundTransparency = 1
-                textLabel.Size = UDim2.new(1, 0, 1, 0)
-                textLabel.Font = Enum.Font.SourceSans
-                textLabel.TextSize = 14
-                textLabel.TextColor3 = Color3.new(1, 1, 0) 
-                
-                local function update()
-                    if not (player and character and head and head.Parent and espGui and espGui.Parent) then
-                        espGui:Destroy()
-                        if connections[player] and connections[player].updateConnection then
-                            connections[player].updateConnection:Disconnect()
-                        end
-                        return
-                    end
-                    local distance = (head.Position - camera.CFrame.Position).Magnitude
-                    textLabel.Text = player.Name .. "\n[" .. math.floor(distance) .. "m]"
-                end
-                
-                connections[player] = {
-                    gui = espGui,
-                    updateConnection = runService.RenderStepped:Connect(update)
-                }
-            end
-            
-            for _, player in ipairs(players:GetPlayers()) do
-                createESP(player)
-                if player.Character then
-                    connections[player.Character] = player.CharacterAdded:Connect(function(char) createESP(player) end)
-                end
-            end
-
-            connections.playerAdded = players.PlayerAdded:Connect(createESP)
-
-            sendTranslatedNotification("notif_esp_legacy_title", "notif_esp_legacy_text", 5)
-        end)
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
