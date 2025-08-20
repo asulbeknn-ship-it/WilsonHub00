@@ -124,7 +124,6 @@ local translations = {
     script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
     script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
     script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
-    script_spamchat = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -736,7 +735,6 @@ task.spawn(function()
         createFunctionButton("script_johndoe", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
         createFunctionButton("script_avatarcopy", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
         createFunctionButton("script_jerk", ScriptsContainer, function() loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
-        createFunctionButton("script_spamchat", ScriptsContainer, function() local TextChatService = game:GetService("TextChatService") task.spawn(function() local chatChannel = TextChatService:WaitForChild("TextChannels"):WaitForChild("RBXGeneral") while true do chatChannel:SendAsync("I'm Wilson join my team ☠️🤫") task.wait(math.random(9)) end end) print("Script de spam modificado iniciado.") end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
