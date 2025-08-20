@@ -120,7 +120,7 @@ local translations = {
     script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
     script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
     script_ak47 = { en = "AK-47 ☑︎", ru = "Автомат АК-47 ☑︎", kz = "АК-47 ☑︎", zh = "AK-47 ☑︎", fr = "AK-47 ☑︎" },
-    script_lasergun = { en = "FE Laser gun ☑︎", ru = "Лазерной оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
+    script_lasergun = { en = "FE Laser gun ☑︎", ru = "FE Лазерной оружие ☑︎", kz = " FE Лазерлі қару ☑︎", zh = "FE 雷射武器 ☑︎", fr = "FE armes laser ☑︎" },
     script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
     script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
     script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
@@ -128,8 +128,8 @@ local translations = {
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
     player_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
-    player_ip_private = { en = "IP Address: private", ru = "IP-адрес: приватный, kz = "IP-мекенжайы: жабық", zh = "IP地址：私人的", fr = "Adresse IP: privé" },
-    player_country_private = { en = "Country: private", ru = "Страна: приватный", kz = "Ел: жабық", zh = "国家：私人的", fr = "Pays: privé" },
+    player_ip_private = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址：%s", fr = "Adresse IP: %s" },
+    player_country_private = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家：%s", fr = "Pays: %s" },
     player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
     player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
     -- COMMANDS PAGE
@@ -993,4 +993,4 @@ task.wait(0.2)
 LoadingGui:Destroy()
 local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
-sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button");
+sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
