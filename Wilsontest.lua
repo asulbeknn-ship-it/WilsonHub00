@@ -119,12 +119,18 @@ local translations = {
     script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
     script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
     script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
+    script_ak47 = { en = "AK-47 ☑︎", ru = "Автомат АК-47 ☑︎", kz = "АК-47 ☑︎", zh = "AK-47 ☑︎", fr = "AK-47 ☑︎" },
+    script_lasergun = { en = "FE Laser gun ☑︎", ru = "Лазерной оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
+    script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
+    script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
+    script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
+    script_spamchat = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
     player_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
-    player_ip_private = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址：%s", fr = "Adresse IP: %s" },
-    player_country_private = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家：%s", fr = "Pays: %s" },
+    player_ip_private = { en = "IP Address: private", ru = "IP-адрес: приватный, kz = "IP-мекенжайы: жабық", zh = "IP地址：私人的", fr = "Adresse IP: privé" },
+    player_country_private = { en = "Country: private", ru = "Страна: приватный", kz = "Ел: жабық", zh = "国家：私人的", fr = "Pays: privé" },
     player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
     player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
     -- COMMANDS PAGE
@@ -725,6 +731,12 @@ task.spawn(function()
         createFunctionButton("script_god", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
         createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
         createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+        createFunctionButton("script_ak47", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
+        createFunctionButton("script_lasergun", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
+        createFunctionButton("script_johndoe", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
+        createFunctionButton("script_avatarcopy", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
+        createFunctionButton("script_jerk", ScriptsContainer, function() loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
+        createFunctionButton("script_spamchat", ScriptsContainer, function() local TextChatService = game:GetService("TextChatService") task.spawn(function() local chatChannel = TextChatService:WaitForChild("TextChannels"):WaitForChild("RBXGeneral") while true do chatChannel:SendAsync("I'm Wilson join my team ☠️🤫") task.wait(math.random(9)) end end) print("Script de spam modificado iniciado.") end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
