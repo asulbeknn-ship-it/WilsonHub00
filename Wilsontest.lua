@@ -92,7 +92,7 @@ local translations = {
     home_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
     home_country_loading = { en = "Country: Loading...", ru = "Страна: Загрузка...", kz = "Ел: Жүктелуде...", zh = "国家: 加载中...", fr = "Pays: Chargement..." },
     -- INFO PAGE
-    info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful. Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые. Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас хакер әрі бастаушы скриптермін.\n Менің скриптерім сапалы\n және әдемі. Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux. Tout est réel." },
+    info_bio = { en = "👋Hello, my name is Nurgazy,\n I live in Kazakhstan, and\n I am a young hacker and scripter\n who is just starting out.\n My scripts are high-quality\n and beautiful.\n Everything is real.", ru = "👋Привет, меня зовут Нургазы,\n я живу в Казахстане, и\n я молодой начинающий хакер и скриптер.\n Мои скрипты качественные\n и красивые.\n Все по-настоящему.", kz = "👋Сәлем, менің атым Нұрғазы,\n мен Қазақстанда тұрамын, және\n мен жас хакер әрі бастаушы скриптермін.\n Менің скриптерім сапалы\n және әдемі.\n Барлығы шынайы.", zh = "👋你好，我叫Nurgazy，\n我住在哈萨克斯坦，\n我是一个刚起步的年轻黑客和脚本编写者。\n我的脚本质量高且美观。\n一切都是真实的。", fr = "👋Bonjour, je m'appelle Nurgazy,\n j'habite au Kazakhstan, et\n je suis un jeune hacker et scripteur\n qui débute à peine.\n Mes scripts sont de haute qualité\n et beaux.\n Tout est réel." },
     info_profile = { en = "MY PROFILE", ru = "МОЙ ПРОФИЛЬ", kz = "МЕНІҢ ПРОФИЛІМ", zh = "我的个人资料", fr = "MON PROFIL" },
     info_discord = { en = "DISCORD", ru = "ДИСКОРД", kz = "ДИСКОРД", zh = "DISCORD", fr = "DISCORD" },
     info_channel = { en = "CHANNEL", ru = "КАНАЛ", kz = "АРНА", zh = "频道", fr = "CHAÎNE" },
@@ -119,11 +119,16 @@ local translations = {
     script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
     script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
     script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
+    script_ak47 = { en = "AK-47 ☑︎", ru = "Автомат АК-47 ☑︎", kz = "АК-47 ☑︎", zh = "AK-47 ☑︎", fr = "AK-47 ☑︎" },
+    script_lasergun = { en = "FE Laser gun ☑︎", ru = "Лазерное оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
+    script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
+    script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
+    script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
     player_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
-    player_ip_private = { en = "IP Address: private", ru = "IP-адрес: приватный, kz = "IP-мекенжайы: жабық", zh = "IP地址：私人的", fr = "Adresse IP: privé" },
+    player_ip_private = { en = "IP Address: private", ru = "IP-адрес: приватный", kz = "IP-мекенжайы: жабық", zh = "IP地址：私人的", fr = "Adresse IP: privé" },
     player_country_private = { en = "Country: private", ru = "Страна: приватный", kz = "Ел: жабық", zh = "国家：私人的", fr = "Pays: privé" },
     player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
     player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
@@ -200,7 +205,7 @@ applyLanguage = function(langName)
                 if item.dynamic_args then
                      pcall(function() item.object[item.property] = string.format(translatedText, unpack(item.dynamic_args)) end)
                 else
-                     item.object[item.property] = translatedText
+                    item.object[item.property] = translatedText
                 end
             end
         end
@@ -493,13 +498,104 @@ function createStatsDisplay()
 end
 
 -- ================================================================= --
--- PLAYER ESP (НОВАЯ ФУНКЦИЯ)
+-- PLAYER ESP (КОД ТҮЗЕТІЛДІ ЖӘНЕ ФОРМАТТАЛДЫ)
 -- ================================================================= --
 local espData = { enabled = false, connections = {}, guis = {} }
-local function cleanupEspForPlayer(targetPlayer) if espData.guis[targetPlayer] then if espData.guis[targetPlayer].gui and espData.guis[targetPlayer].gui.Parent then espData.guis[targetPlayer].gui:Destroy() end; if espData.guis[targetPlayer].updateConn then espData.guis[targetPlayer].updateConn:Disconnect() end; espData.guis[targetPlayer] = nil end end
-local function cleanupAllEsp() for targetPlayer, _ in pairs(espData.guis) do cleanupEspForPlayer(targetPlayer) end; for _, conn in pairs(espData.connections) do conn:Disconnect() end; espData.connections = {}; espData.guis = {} end
-local function createEspForPlayer(targetPlayer) if not espData.enabled or targetPlayer == player then return end; local character=targetPlayer.Character; if not character then return end; local head=character:WaitForChild("Head", 1); if not head then return end; cleanupEspForPlayer(targetPlayer); local espGui=Instance.new("BillboardGui", head); espGui.Name="PLAYER_ESP_GUI"; espGui.AlwaysOnTop=true; espGui.Size=UDim2.new(2,0,1.5,0); espGui.StudsOffset=Vector3.new(0,2.5,0); espGui.LightInfluence=0; local mainFrame=Instance.new("Frame", espGui); mainFrame.BackgroundTransparency=1; mainFrame.Size=UDim2.new(1,0,1,0); local box=Instance.new("Frame", mainFrame); box.BackgroundColor3=Color3.fromRGB(255,255,0); box.BackgroundTransparency=0.5; box.BorderSizePixel=0; box.Size=UDim2.new(1,0,1,0); Instance.new("UICorner",box).CornerRadius=UDim.new(0,3); local innerBox=Instance.new("Frame",box); innerBox.BackgroundColor3=Color3.fromRGB(0,0,0); innerBox.BackgroundTransparency=0.3; innerBox.BorderSizePixel=0; innerBox.Size=UDim2.new(1,-2,1,-2); innerBox.Position=UDim2.new(0.5,-innerBox.AbsoluteSize.X/2,0.5,-innerBox.AbsoluteSize.Y/2); Instance.new("UICorner",innerBox).CornerRadius=UDim.new(0,2); local textLabel=Instance.new("TextLabel",mainFrame); textLabel.BackgroundTransparency=1; textLabel.Size=UDim2.new(1,0,1,0); textLabel.Font=Enum.Font.SourceSans; textLabel.TextSize=14; textLabel.TextColor3=Color3.new(1,1,1); textLabel.TextStrokeColor3=Color3.fromRGB(0,0,0); textLabel.TextStrokeTransparency=0; local function update() if not targetPlayer or not targetPlayer.Parent or not character or not character.Parent or not head or not head.Parent then cleanupEspForPlayer(targetPlayer); return end; local distance=(head.Position - workspace.CurrentCamera.CFrame.Position).Magnitude; textLabel.Text = targetPlayer.Name .. "\n[" .. math.floor(distance) .. "m]" end; espData.guis[targetPlayer] = { gui = espGui, updateConn = RunService.RenderStepped:Connect(update) } end
-function togglePlayerEsp(state) espData.enabled=state; if espData.enabled then cleanupAllEsp(); for _,p in ipairs(Players:GetPlayers())do createEspForPlayer(p)end; espData.connections.playerAdded=Players.PlayerAdded:Connect(createEspForPlayer); espData.connections.playerRemoving=Players.PlayerRemoving:Connect(cleanupEspForPlayer); sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5) else cleanupAllEsp(); sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5) end end
+
+local function cleanupEspForPlayer(targetPlayer)
+    if espData.guis[targetPlayer] then
+        if espData.guis[targetPlayer].gui and espData.guis[targetPlayer].gui.Parent then
+            espData.guis[targetPlayer].gui:Destroy()
+        end
+        if espData.guis[targetPlayer].updateConn then
+            espData.guis[targetPlayer].updateConn:Disconnect()
+        end
+        espData.guis[targetPlayer] = nil
+    end
+end
+
+local function cleanupAllEsp()
+    for targetPlayer, _ in pairs(espData.guis) do
+        cleanupEspForPlayer(targetPlayer)
+    end
+    for _, conn in pairs(espData.connections) do
+        conn:Disconnect()
+    end
+    espData.connections = {}
+    espData.guis = {}
+end
+
+local function createEspForPlayer(targetPlayer)
+    if not espData.enabled or targetPlayer == player then return end
+    local character = targetPlayer.Character
+    if not character then return end
+    local head = character:WaitForChild("Head", 1)
+    if not head then return end
+
+    cleanupEspForPlayer(targetPlayer)
+
+    local espGui = Instance.new("BillboardGui", head)
+    espGui.Name = "PLAYER_ESP_GUI"
+    espGui.AlwaysOnTop = true
+    espGui.Size = UDim2.new(2, 0, 1.5, 0)
+    espGui.StudsOffset = Vector3.new(0, 2.5, 0)
+    espGui.LightInfluence = 0
+
+    local mainFrame = Instance.new("Frame", espGui)
+    mainFrame.BackgroundTransparency = 1
+    mainFrame.Size = UDim2.new(1, 0, 1, 0)
+
+    local box = Instance.new("Frame", mainFrame)
+    box.BackgroundColor3 = Color3.fromRGB(255, 255, 0)
+    box.BackgroundTransparency = 0.5
+    box.BorderSizePixel = 0
+    box.Size = UDim2.new(1, 0, 1, 0)
+    Instance.new("UICorner", box).CornerRadius = UDim.new(0, 3)
+
+    local innerBox = Instance.new("Frame", box)
+    innerBox.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    innerBox.BackgroundTransparency = 0.3
+    innerBox.BorderSizePixel = 0
+    innerBox.Size = UDim2.new(1, -2, 1, -2)
+    innerBox.Position = UDim2.new(0.5, -innerBox.AbsoluteSize.X / 2, 0.5, -innerBox.AbsoluteSize.Y / 2)
+    Instance.new("UICorner", innerBox).CornerRadius = UDim.new(0, 2)
+
+    local textLabel = Instance.new("TextLabel", mainFrame)
+    textLabel.BackgroundTransparency = 1
+    textLabel.Size = UDim2.new(1, 0, 1, 0)
+    textLabel.Font = Enum.Font.SourceSans
+    textLabel.TextSize = 14
+    textLabel.TextColor3 = Color3.new(1, 1, 1)
+    textLabel.TextStrokeColor3 = Color3.fromRGB(0, 0, 0)
+    textLabel.TextStrokeTransparency = 0
+
+    local function update()
+        if not targetPlayer or not targetPlayer.Parent or not character or not character.Parent or not head or not head.Parent then
+            cleanupEspForPlayer(targetPlayer)
+            return
+        end
+        local distance = (head.Position - workspace.CurrentCamera.CFrame.Position).Magnitude
+        textLabel.Text = targetPlayer.Name .. "\n[" .. math.floor(distance) .. "m]"
+    end
+
+    espData.guis[targetPlayer] = { gui = espGui, updateConn = RunService.RenderStepped:Connect(update) }
+end
+
+function togglePlayerEsp(state)
+    espData.enabled = state
+    if espData.enabled then
+        cleanupAllEsp()
+        for _, p in ipairs(Players:GetPlayers()) do
+            createEspForPlayer(p)
+        end
+        espData.connections.playerAdded = Players.PlayerAdded:Connect(createEspForPlayer)
+        espData.connections.playerRemoving = Players.PlayerRemoving:Connect(cleanupEspForPlayer)
+        sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5)
+    else
+        cleanupAllEsp()
+        sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5)
+    end
+end
 
 -- 1. ЭКРАН ЗАГРУЗКИ
 local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
@@ -526,11 +622,8 @@ end
 task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
-        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; 
-        
-        MainFrame.Size = UDim2.new(0, 550, 0, 300); 
+        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.Size = UDim2.new(0, 550, 0, 300); 
         MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
-        
         MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)  
         local IconFrame = Instance.new("TextButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 100, 0, 40); IconFrame.Position = UDim2.new(0, 10, 0, 10); IconFrame.BorderSizePixel = 0; IconFrame.Text = ""; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 8)  
         local iconEmoji = Instance.new("TextLabel", IconFrame); iconEmoji.Size = UDim2.new(1, 0, 0.6, 0); iconEmoji.BackgroundTransparency = 1; iconEmoji.Text = "🔥"; iconEmoji.TextColor3 = Color3.fromRGB(255, 255, 255); iconEmoji.Font = Enum.Font.SourceSansBold; iconEmoji.TextSize = 24  
@@ -619,16 +712,14 @@ task.spawn(function()
         local Row2=Instance.new("Frame",MasterLinksContainer); Row2.Name="Row2"; Row2.BackgroundTransparency=1; Row2.Size=UDim2.new(1,0,0,35); local Row2Layout=Instance.new("UIListLayout",Row2); Row2Layout.FillDirection=Enum.FillDirection.Horizontal; Row2Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row2Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row2Layout.Padding=UDim.new(0,10);
         local function copyToClipboard(link,name) if setclipboard then setclipboard(link); sendTranslatedNotification("notif_clipboard_title", "notif_clipboard_text", 3, nil, {name}) else sendTranslatedNotification("notif_clipboard_error", "notif_clipboard_error_text", 4) end end; 
         createFunctionButton("info_profile", Row1); 
-        createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end); 
-        createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
+        createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end); createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
         createFunctionButton("info_vk", Row2, function() copyToClipboard("https://vk.com/wilsonhub_scripts", "VKontakte") end)
         createFunctionButton("info_website", Row2, function() copyToClipboard("https://wilsonhub-scripts.hgweb.ru", "Website") end)
         -- #endregion
 
         -- #region GUI MODS PAGE
         do 
-            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;
-            local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
+            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6; local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
             
             -- [[ FIX: Rewritten createToggle function for reliability ]]
             local function createToggle(textKey, order, callback)
@@ -701,8 +792,7 @@ task.spawn(function()
                 return btn
             end
 
-            createToggle("mod_healthbar",1,toggleCustomHealthbar);
-            createToggle("mod_fpsping",2,toggleFpsPing);
+            createToggle("mod_healthbar",1,toggleCustomHealthbar); createToggle("mod_fpsping",2,toggleFpsPing);
             
             local colorChangerContainer=Instance.new("Frame",GuiModsContainer);colorChangerContainer.Size=UDim2.new(1,-20,0,200);colorChangerContainer.BackgroundTransparency=1;colorChangerContainer.LayoutOrder=3;local colorList=Instance.new("UIListLayout",colorChangerContainer);colorList.Padding=UDim.new(0,5);local title=Instance.new("TextLabel",colorChangerContainer);title.Size=UDim2.new(1,0,0,20);title.BackgroundTransparency=1;title.Font=Enum.Font.SourceSansBold;title.TextColor3=Color3.new(1,1,1);title.TextSize=18;table.insert(translatableObjects,{object=title,property="Text",key="mod_worldcolor"});local colorPreview=Instance.new("Frame",colorChangerContainer);colorPreview.Size=UDim2.new(1,0,0,30);colorPreview.BackgroundColor3=selectedColor;Instance.new("UICorner",colorPreview).CornerRadius=UDim.new(0,6);local function createSlider(label,parent,callback) local sliderFrame=Instance.new("Frame",parent);sliderFrame.Size=UDim2.new(1,0,0,30);sliderFrame.BackgroundTransparency=1;local textLabel=Instance.new("TextLabel",sliderFrame);textLabel.Size=UDim2.new(0.2,0,1,0);textLabel.BackgroundTransparency=1;textLabel.Font=Enum.Font.SourceSansBold;textLabel.Text=label;textLabel.TextColor3=Color3.new(1,1,1);textLabel.TextSize=18;local bar=Instance.new("Frame",sliderFrame);bar.Size=UDim2.new(0.8,-10,0,10);bar.Position=UDim2.new(0.2,0,0.5,-5);bar.BackgroundColor3=Color3.fromRGB(30,30,30);Instance.new("UICorner",bar).CornerRadius=UDim.new(1,0);local handle=Instance.new("TextButton",bar);handle.Size=UDim2.new(0,12,1,4);handle.BackgroundColor3=currentTheme.main;handle.Text="";handle.AnchorPoint=Vector2.new(0.5,0.5);Instance.new("UICorner",handle).CornerRadius=UDim.new(1,0);table.insert(themableObjects,{object=handle,property="BackgroundColor3",colorType="main"});local inputChangedConn,inputEndedConn;handle.InputBegan:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end;inputChangedConn=UserInputService.InputChanged:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseMovement or inputObj.UserInputType==Enum.UserInputType.Touch then local pos=inputObj.Position.X-bar.AbsolutePosition.X;local percentage=math.clamp(pos/bar.AbsoluteSize.X,0,1);handle.Position=UDim2.fromScale(percentage,0.5);pcall(callback,percentage)end end);inputEndedConn=UserInputService.InputEnded:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseButton1 or inputObj.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end end end)end end);return handle end;local r,g,b=selectedColor.r,selectedColor.g,selectedColor.b;createSlider("R",colorChangerContainer,function(p)r=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(r,0.5);createSlider("G",colorChangerContainer,function(p)g=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(g,0.5);createSlider("B",colorChangerContainer,function(p)b=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(b,0.5);local buttonContainer=Instance.new("Frame",colorChangerContainer);buttonContainer.Size=UDim2.new(1,0,0,40);buttonContainer.BackgroundTransparency=1;buttonContainer.LayoutOrder=4;local btnLayout=Instance.new("UIGridLayout",buttonContainer);btnLayout.CellSize=UDim2.new(0.333,-5,1,0);btnLayout.CellPadding=UDim2.new(0,5,0,0);local rainbowToggle;createFunctionButton("apply",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;applyWorldColor(selectedColor)end);rainbowToggle=createToggle("mod_rainbow",0,function(state)toggleRainbowMode(state)end);rainbowToggle.Parent=buttonContainer;rainbowToggle.Name="RainbowToggle";createFunctionButton("reset",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;resetWorldColors()end)
         end
@@ -710,8 +800,7 @@ task.spawn(function()
 
         -- #region SCRIPTS PAGE
         local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"}); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
-        local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6; 
-        local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+        local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6; local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
         createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end); SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
         createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
         createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
@@ -725,12 +814,16 @@ task.spawn(function()
         createFunctionButton("script_god", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
         createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
         createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+        createFunctionButton("script_ak47", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
+        createFunctionButton("script_lasergun", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
+        createFunctionButton("script_johndoe", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
+        createFunctionButton("script_avatarcopy", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
+        createFunctionButton("script_jerk", ScriptsContainer, function() loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
         local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); 
-        local PlayersListLayout = Instance.new("UIListLayout", PlayersList); PlayersListLayout.Padding = UDim.new(0, 5); PlayersListLayout.SortOrder = Enum.SortOrder.LayoutOrder; 
-        
+        local PlayersListLayout = Instance.new("UIListLayout", PlayersList); PlayersListLayout.Padding = UDim.new(0, 5); PlayersListLayout.SortOrder = Enum.SortOrder.LayoutOrder;
         local function updatePlayerList() 
             for _, v in ipairs(PlayersList:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end
             local camera = workspace.CurrentCamera
@@ -772,8 +865,7 @@ task.spawn(function()
                         countryLabel.Text = translations.player_country_private[langCode]
                     end 
                 end 
-            end; 
-            PlayersList.CanvasSize = UDim2.fromOffset(0, PlayersListLayout.AbsoluteContentSize.Y) 
+            end; PlayersList.CanvasSize = UDim2.fromOffset(0, PlayersListLayout.AbsoluteContentSize.Y) 
         end
         -- #endregion
         
@@ -895,7 +987,6 @@ task.spawn(function()
             local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame); ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
             local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer); ThemesGrid.CellPadding=UDim2.new(0,10,0,10); ThemesGrid.CellSize=UDim2.new(0,125,0,40); ThemesGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
             createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
-
             -- Create a frame for Languages
             local LangFrame = Instance.new("Frame", SettingsContainer)
             LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
@@ -905,12 +996,13 @@ task.spawn(function()
             local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); LangGrid.CellPadding=UDim2.new(0,10,0,10); LangGrid.CellSize=UDim2.new(0,125,0,40); LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
             createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
         end
-        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
+        local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45);
+        local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
 
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
-        
         -- MAIN LOGIC
         tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
         local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
@@ -943,7 +1035,7 @@ task.spawn(function()
             if tab==PlayersButton then pcall(updatePlayerList) end 
         end)end  
         
-        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
+        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end) 
         Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
         CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible=false; IconFrame.Visible=true end)
         IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible=true; IconFrame.Visible=false end)
