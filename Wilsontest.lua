@@ -620,33 +620,21 @@ end
 
 -- 2. СОЗДАНИЕ ГЛАВНОГО GUI
 task.spawn(function()
-            local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame";
-        MainFrame.Size = UDim2.new(0, 550, 0, 300); 
+    local success, err = pcall(function()
+        local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
+        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.Size = UDim2.new(0, 550, 0, 300); 
         MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
-        MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0;
-        MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)  
-        
-        local IconFrame = Instance.new("TextButton", WilsonHubGui);
-        IconFrame.Name = "IconFrame"; 
-        IconFrame.Size = UDim2.new(0, 120, 0, 50); -- Суретке ыңғайлы болу үшін размерін сәл өзгерттім
-        IconFrame.Position = UDim2.new(0, 10, 0, 10); 
-        IconFrame.Text = ""; 
-        IconFrame.Visible = false; 
-        IconFrame.Active = true; 
-        IconFrame.Draggable = true;
-        IconFrame.BackgroundTransparency = 1; -- Фонды толықтай мөлдір қылдым
-        
-        -- Ескі от пен жазудың орнына жаңа суретті қосамыз
-        local iconImage = Instance.new("ImageLabel", IconFrame)
-        iconImage.Name = "TeamWilsonIcon"
-        iconImage.Size = UDim2.new(1, 0, 1, 0) -- Батырманы толықтай жауып тұрады
-        iconImage.BackgroundTransparency = 1
-        iconImage.Image = "rbxassetid://109184764779051" -- МІНЕ СЕНІҢ ЖАҢА СУРЕТІҢНІҢ ID-і
-
-        local Header = Instance.new("Frame", MainFrame);
+        MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)  
+        local IconFrame = Instance.new("TextButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 100, 0, 40); IconFrame.Position = UDim2.new(0, 10, 0, 10); IconFrame.BorderSizePixel = 0; IconFrame.Text = ""; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 8)  
+        local iconEmoji = Instance.new("TextLabel", IconFrame); iconEmoji.Size = UDim2.new(1, 0, 0.6, 0); iconEmoji.BackgroundTransparency = 1; iconEmoji.Text = "🔥"; iconEmoji.TextColor3 = Color3.fromRGB(255, 255, 255); iconEmoji.Font = Enum.Font.SourceSansBold; iconEmoji.TextSize = 24  
+        local iconText = Instance.new("TextLabel", IconFrame); iconText.Size = UDim2.new(1, 0, 0.4, 0); iconText.Position = UDim2.new(0, 0, 0.6, 0); iconText.BackgroundTransparency = 1; iconText.Text = "WILSONHUB"; iconText.TextColor3 = Color3.fromRGB(255, 255, 255); iconText.Font = Enum.Font.SourceSansBold; iconText.TextSize = 12  
+        local Header = Instance.new("Frame", MainFrame); Header.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 8)  
+        local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
+        local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
         
         local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
         TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4
+        table.insert(themableObjects, {object = TabsContainer, property = "ScrollBarImageColor3", colorType = "main"})
 
         local ContentContainer = Instance.new("Frame", MainFrame); ContentContainer.Name = "ContentContainer"; ContentContainer.Size = UDim2.new(1, -120, 1, -40); ContentContainer.Position = UDim2.new(0, 120, 0, 40); ContentContainer.BackgroundTransparency = 1
         
