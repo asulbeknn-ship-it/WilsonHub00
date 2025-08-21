@@ -124,6 +124,15 @@ local translations = {
     script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
     script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
     script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
+    script_spamchat = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" },
+    script_dance = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" },
+    script_hummer = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" },
+    script_snake = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " },
+    script_r6 = { en = "FE R7", ru = "FE R7 ☑︎", kz = "FE R7 ☑︎", zh = "FE R7 ☑︎", fr = "FE R7 ☑︎" },
+    script_metiorid = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" },
+    script_thomas = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " },
+    script_spider = { en = "Spiderman ☑︎", ru = "Человек паук ☑︎", kz = "Өрмекші адам ☑︎", zh = "蜘蛛人 ☑︎", fr = "Spider-Man ☑︎" },
+    script_playertp = { en = "Player tp", ru = "Тп на игрок", kz = "Ойыншыға тп", zh = "玩家傳送", fr = "Player teleport " },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -819,6 +828,15 @@ task.spawn(function()
         createFunctionButton("script_johndoe", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
         createFunctionButton("script_avatarcopy", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
         createFunctionButton("script_jerk", ScriptsContainer, function() loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
+        createFunctionButton("script_spamchat", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/spamchat.lua"))() end);
+        createFunctionButton("script_dance", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/dance.lua"))() end);
+        createFunctionButton("script_hummer", ScriptsContainer, function() loadstring(game:HttpGet("https://pastebin.com/raw/h9NvY2PD"))() end);
+        createFunctionButton("script_snake", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))() end);
+        createFunctionButton("script_r6", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/CoreGui/Scripts/main/RC7"))() end);
+        createFunctionButton("script_metiorid", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Meteor.lua"))() end);
+        createFunctionButton("script_thomas", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-g00lxploiter-thomas-12611"))() end);
+        createFunctionButton("script_spider", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Tp.lua"))() end);
+        createFunctionButton("script_playertp", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spiderman.lua"))() end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
