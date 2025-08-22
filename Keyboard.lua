@@ -2421,7 +2421,7 @@ G2L["155"]["Name"] = [[Shifting]];
 -- StarterGui.DeltaKeyboard.FloatingIcon
 G2L["156"] = Instance.new("ImageButton", G2L["1"]);
 G2L["156"]["BackgroundColor3"] = Color3.fromRGB(30, 30, 30);
-G2L["156"]["Image"] = [[rbxassetid://13501536441]];
+G2L["156"]["Image"] = [[rbxassetid://109184764779051]];
 G2L["156"]["Size"] = UDim2.new(0, 40, 0, 40);
 G2L["156"]["Name"] = [[FloatingIcon]];
 G2L["156"]["Visible"] = false;
