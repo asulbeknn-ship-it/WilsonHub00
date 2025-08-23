@@ -1,9 +1,3 @@
---[[
-Made by @Nurgazy_21 tg: nurr_wilson
-Script name: WilsonHub
-version script: 1.1.0
-]]
-
 -- Основные сервисы
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -11,10 +5,6 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
--- ================================================================= --
--- КОНФИГУРАЦИЯ ЧАТА
--- Добавлено 3 резервных сервера для стабильной работы 24/7.
--- ================================================================= --
 local CHAT_SETTINGS = {
     API_BACKENDS = {
         "https://wilson-hub-chat-backend.glitch.me",
