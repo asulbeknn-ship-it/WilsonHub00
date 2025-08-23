@@ -1,3 +1,9 @@
+--[[
+Made by @Nurgazy_21 tg: nurr_wilson
+Script name: WilsonHub
+version script: 1.1.0
+]]
+
 -- Основные сервисы
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -5,16 +11,22 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
+-- ================================================================= --
+-- КОНФИГУРАЦИЯ ЧАТА
+-- Добавлено 3 резервных сервера для стабильной работы 24/7.
+-- ================================================================= --
 local CHAT_SETTINGS = {
     API_BACKENDS = {
         "https://wilson-hub-chat-backend.glitch.me",
         "https://wilson-hub-chat-mirror1.glitch.me",
         "https://wilson-hub-chat-mirror2.glitch.me"
     },
-    PollRate = 5
+    PollRate = 5 -- Частота обновления чата в секундах
 }
 local current_backend_index = 1
+-- ================================================================= --
 
+-- [[ THEMES, LANGUAGES & SETTINGS ]]
 local Themes = {
     Red = { main = Color3.fromRGB(200, 0, 0), accent = Color3.fromRGB(255, 0, 0), text = Color3.fromRGB(255, 255, 255) },
     Yellow = { main = Color3.fromRGB(255, 190, 0), accent = Color3.fromRGB(255, 220, 50), text = Color3.fromRGB(0,0,0) },
@@ -25,9 +37,9 @@ local Themes = {
 local settings = { theme = "Red", language = "English" }
 
 -- ЗАГРУЗКА НАСТРОЕК
-if isfile and isfile("WILSONHUBSETTINGS.json") then
+if isfile and isfile("WilsonHubSettings.json") then
     pcall(function() 
-        local decoded_settings = HttpService:JSONDecode(readfile("WILSONHUBSETTINGS.json"))
+        local decoded_settings = HttpService:JSONDecode(readfile("WilsonHubSettings.json"))
         if type(decoded_settings) == "table" then
             for k, v in pairs(decoded_settings) do
                 settings[k] = v
@@ -39,6 +51,7 @@ end
 local currentTheme = Themes[settings.theme] or Themes.Red
 local player = Players.LocalPlayer
 
+-- [[ LANGUAGE SYSTEM ]]
 local languageMap = { English = "en", Russian = "ru", Kazakh = "kz", Chinese = "zh", French = "fr" }
 local translations = {
     -- GENERAL & COMMON BUTTONS
@@ -191,6 +204,7 @@ local translations = {
 local themableObjects = {}
 local translatableObjects = {}
 
+-- Forward declare
 local applyTheme
 local activateRainbowTheme
 local applyLanguage
@@ -387,6 +401,9 @@ function createCustomHealthbar(character)
 	updateHealthbar()
 end
 
+-- ================================================================= --
+-- WORLD COLOR CHANGER
+-- ================================================================= --
 local originalColors = {}
 local rainbowConnection = nil
 local selectedColor = Color3.fromRGB(255, 0, 255)
@@ -441,6 +458,9 @@ function toggleRainbowMode(state)
 	end
 end
 
+-- ================================================================= --
+-- FPS/PING DISPLAY
+-- ================================================================= --
 local statsGui = nil
 local statsUpdateConnection = nil
 
@@ -496,6 +516,9 @@ function createStatsDisplay()
 	end)
 end
 
+-- ================================================================= --
+-- PLAYER ESP (КОД ТҮЗЕТІЛДІ ЖӘНЕ ФОРМАТТАЛДЫ)
+-- ================================================================= --
 local espData = { enabled = false, connections = {}, guis = {} }
 
 local function cleanupEspForPlayer(targetPlayer)
@@ -911,6 +934,12 @@ task.spawn(function()
         registerCommand("fly",{},"","Enables flying.",function()loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))()end)
         registerCommand("speed",{"walkspeed","ws"},"[player] [value]","Changes walkspeed.",function(a)local t=findPlayers(a[1]or"me");local s=tonumber(a[2]or 100);if not s then logToConsole("Invalid speed.",Color3.new(1,.4,.4))return end;for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.WalkSpeed=s end end end)
         registerCommand("jp",{"jumppower"},"[player] [value]","Changes jump power.",function(a)local t=findPlayers(a[1]or"me");local p=tonumber(a[2]or 100);if not p then logToConsole("Invalid power.",Color3.new(1,.4,.4))return end;for _,plr in ipairs(t)do if plr.Character and plr.Character:FindFirstChild("Humanoid")then plr.Character.Humanoid.JumpPower=p end end end)
+        registerCommand("kill",{},"[player]","Kills the player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.Health=0 end end end)
+        registerCommand("tp",{"teleport"},"[player_to]","Teleports to player.",function(a)if not a[1]then logToConsole("Usage: /tp [target]",Color3.new(1,.4,.4))return end;local t=findPlayers(a[1]);if #t==0 then logToConsole("Target not found.",Color3.new(1,.4,.4))return end;local cF=player.Character;local cT=t[1].Character;if cF and cT and cF:FindFirstChild("HumanoidRootPart")and cT:FindFirstChild("HumanoidRootPart")then cF.HumanoidRootPart.CFrame=cT.HumanoidRootPart.CFrame end end)
+        registerCommand("jerk",{},"[player]","Makes a player spin.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;r.Anchored=true;local j=Instance.new("BodyAngularVelocity",r);j.Name="JERK_EFFECT";j.MaxTorque=Vector3.new(math.huge,math.huge,math.huge);j.AngularVelocity=Vector3.new(100,100,100)end end end)
+        registerCommand("unjerk",{},"[player]","Stops the jerk effect.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;local j=r:FindFirstChild("JERK_EFFECT");if j then j:Destroy()end;r.Anchored=false end end end)
+        registerCommand("bang",{},"[player]","Flings a player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(math.random(-200,200),200,math.random(-200,200))end end end end end)
+        registerCommand("unbang",{},"[player]","Resets velocity after bang.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(0,0,0)end end end end end)
         registerCommand("clear",{"cls"},"","Clears the console.",function()for _,v in ipairs(ConsoleOutput:GetChildren())do if v.Name=="ConsoleLog"then v:Destroy()end end end)
         logToConsole("WilsonHub Commands:",currentTheme.accent);local sC={};for n,d in pairs(Commands)do table.insert(sC,d)end;table.sort(sC,function(a,b)return a.Name<b.Name end);for _,d in ipairs(sC)do logToConsole(string.format("/%s %s - %s",d.Name,d.Args,d.Description),Color3.new(.8,.8,.8))end
         -- #endregion
