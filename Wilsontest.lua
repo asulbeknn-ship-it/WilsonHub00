@@ -870,7 +870,7 @@ task.spawn(function()
         createFunctionButton("script_jump", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
         createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
         createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
-        createFunctionButton("script_invisible2", ScriptsContainer, function() loadstring(game:HttpGet('https://abre.ai/invisible-v2'))(); end);
+        createFunctionButton("script_invisible2", ScriptsContainer, function() loadstring(game:HttpGet('https://abre.ai/invisible-v2'))() end);
         -- #endregion
 
 
