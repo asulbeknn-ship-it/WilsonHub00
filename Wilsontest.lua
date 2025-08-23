@@ -1,9 +1,3 @@
---[[
-Made by @Nurgazy_21 tg: nurr_wilson
-Script name: WilsonHub
-version script: 1.1.0
-]]
-
 -- Основные сервисы
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -11,22 +5,16 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
--- ================================================================= --
--- КОНФИГУРАЦИЯ ЧАТА
--- Добавлено 3 резервных сервера для стабильной работы 24/7.
--- ================================================================= --
 local CHAT_SETTINGS = {
     API_BACKENDS = {
         "https://wilson-hub-chat-backend.glitch.me",
         "https://wilson-hub-chat-mirror1.glitch.me",
         "https://wilson-hub-chat-mirror2.glitch.me"
     },
-    PollRate = 5 -- Частота обновления чата в секундах
+    PollRate = 5
 }
 local current_backend_index = 1
--- ================================================================= --
 
--- [[ THEMES, LANGUAGES & SETTINGS ]]
 local Themes = {
     Red = { main = Color3.fromRGB(200, 0, 0), accent = Color3.fromRGB(255, 0, 0), text = Color3.fromRGB(255, 255, 255) },
     Yellow = { main = Color3.fromRGB(255, 190, 0), accent = Color3.fromRGB(255, 220, 50), text = Color3.fromRGB(0,0,0) },
@@ -37,9 +25,9 @@ local Themes = {
 local settings = { theme = "Red", language = "English" }
 
 -- ЗАГРУЗКА НАСТРОЕК
-if isfile and isfile("WilsonHubSettings.json") then
+if isfile and isfile("WILSONHUBSETTINGS.json") then
     pcall(function() 
-        local decoded_settings = HttpService:JSONDecode(readfile("WilsonHubSettings.json"))
+        local decoded_settings = HttpService:JSONDecode(readfile("WILSONHUBSETTINGS.json"))
         if type(decoded_settings) == "table" then
             for k, v in pairs(decoded_settings) do
                 settings[k] = v
@@ -51,7 +39,6 @@ end
 local currentTheme = Themes[settings.theme] or Themes.Red
 local player = Players.LocalPlayer
 
--- [[ LANGUAGE SYSTEM ]]
 local languageMap = { English = "en", Russian = "ru", Kazakh = "kz", Chinese = "zh", French = "fr" }
 local translations = {
     -- GENERAL & COMMON BUTTONS
@@ -105,7 +92,7 @@ local translations = {
     mod_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
     -- SCRIPTS PAGE
     search_placeholder = { en = "Search scripts...", ru = "Поиск скриптов...", kz = "Скрипттерді іздеу...", zh = "搜索脚本...", fr = "Rechercher des scripts..." },
-    script_fly = { en = "Fly gui ☑︎", ru = "Fly gui ☑︎", kz = "Fly gui ☑︎", zh = "飞行界面 ☑︎", fr = "Fly gui ☑︎" },
+    script_fly = { en = "Fly gui ☑︎", ru = "Летать гуи ☑︎", kz = "Ұшу гуи ☑︎", zh = "飞行界面 ☑︎", fr = "Fly gui ☑︎" },
     script_fireblock = { en = "Fire Block ☑︎", ru = "Огненный Блок ☑︎", kz = "Отты Блок ☑︎", zh = "火焰方块 ☑︎", fr = "Bloc de feu ☑︎" },
     script_speed = { en = "Speed Hack ☑︎", ru = "Спидхак ☑︎", kz = "Жылдамдық хагы ☑︎", zh = "速度破解 ☑︎", fr = "Hack de vitesse ☑︎" },
     script_wallhop = { en = "Wallhop ☑︎", ru = "Прыжки с стеном ☑︎", kz = "Қабырғада секіру ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
@@ -120,7 +107,7 @@ local translations = {
     script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
     script_skybox = { en = "WilsonSpamDecal ☑︎", ru = "УилсонСпамДетал ☑︎", kz = "WilsonSpamDecal ☑︎", zh = "威爾遜垃圾郵件貼紙 ☑︎", fr = "WilsonSpamDecal ☑︎" },
     script_ak47 = { en = "AK-47 ☑︎", ru = "Автомат АК-47 ☑︎", kz = "АК-47 ☑︎", zh = "AK-47 ☑︎", fr = "AK-47 ☑︎" },
-    script_lasergun = { en = "FE Laser gun ☑︎", ru = "Лазерное оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
+    script_lasergun = { en = "Laser gun ☑︎", ru = "Лазерное оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
     script_johndoe = { en = "AVATAR JOHNDOE", ru = "Аватар JOHNDOE", kz = "Аватар JOHNDOE", zh = "阿凡達約翰多", fr = "AVATAR JOHNDOE" },
     script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
     script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
@@ -128,7 +115,7 @@ local translations = {
     script_dance = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" },
     script_hummer = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" },
     script_snake = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " },
-    script_r6 = { en = "FE R7", ru = "FE R7 ☑︎", kz = "FE R7 ☑︎", zh = "FE R7 ☑︎", fr = "FE R7 ☑︎" },
+    script_r6 = { en = "R7", ru = "R7 ☑︎", kz = "R7 ☑︎", zh = "R7 ☑︎", fr = "R7 ☑︎" },
     script_metiorid = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" },
     script_thomas = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " },
     script_spider = { en = "Spiderman ☑︎", ru = "Человек паук ☑︎", kz = "Өрмекші адам ☑︎", zh = "蜘蛛人 ☑︎", fr = "Spider-Man ☑︎" },
@@ -136,7 +123,13 @@ local translations = {
     script_board = { en = "Keyboard ☑︎", ru = "Клавиатура ☑︎", kz = "Пернетақта ☑︎", zh = "鍵盤 ☑︎", fr = "Clavier ☑︎" },
     script_xester = { en = "Xester ☑︎", ru = "Xester ☑︎", kz = "Xester ☑︎", zh = "克斯特 ☑︎", fr = "Xester ☑︎" },
     script_rpg = { en = "Rocket", ru = "Ракета", kz = "Зымыран", zh = "火箭", fr = "Fusée" },
-    script_object = { en = "FE BTool ☑︎", ru = "FE Btool ☑︎", kz = "FE Btool ☑︎", zh = "工具 ☑︎", fr = "FE Btool ☑︎" },
+    script_object = { en = "BTool ☑︎", ru = "Btool ☑︎", kz = "Btool ☑︎", zh = "工具 ☑︎", fr = "Btool ☑︎" },
+    script_killall = { en = "Kill all ☑︎", ru = "Убить всех ☑︎", kz = "Барлығын өлтіру ☑︎", zh = "全部殺死 ☑︎", fr = "Tuez tout le monde ☑︎" },
+    script_head = { en = "Big head", ru = "Большой голова", kz = "Үлкен бас", zh = "大頭", fr = "Grosse tête " },
+    script_jump = { en = "Infinite jump", ru = "Большой прыжок", kz = "Ұзын секіру", zh = "無限跳躍", fr = "Saut infini " },
+    script_firepart = { en = "Fireparts tool", ru = "Fireparts tool ☑︎", kz = "Fireparts tool ☑︎", zh = "Fireparts 工具 ☑︎", fr = "Outil Fireparts ☑︎" },
+    script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
+    script_invisible2 = { en = "invisible 2", ru = "Невидимка 2", kz = "Көрінбейтін 2", zh = "隱形2", fr = "Invisible 2" },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -198,7 +191,6 @@ local translations = {
 local themableObjects = {}
 local translatableObjects = {}
 
--- Forward declare
 local applyTheme
 local activateRainbowTheme
 local applyLanguage
@@ -395,9 +387,6 @@ function createCustomHealthbar(character)
 	updateHealthbar()
 end
 
--- ================================================================= --
--- WORLD COLOR CHANGER
--- ================================================================= --
 local originalColors = {}
 local rainbowConnection = nil
 local selectedColor = Color3.fromRGB(255, 0, 255)
@@ -452,9 +441,6 @@ function toggleRainbowMode(state)
 	end
 end
 
--- ================================================================= --
--- FPS/PING DISPLAY
--- ================================================================= --
 local statsGui = nil
 local statsUpdateConnection = nil
 
@@ -510,9 +496,6 @@ function createStatsDisplay()
 	end)
 end
 
--- ================================================================= --
--- PLAYER ESP (КОД ТҮЗЕТІЛДІ ЖӘНЕ ФОРМАТТАЛДЫ)
--- ================================================================= --
 local espData = { enabled = false, connections = {}, guis = {} }
 
 local function cleanupEspForPlayer(targetPlayer)
@@ -812,31 +795,20 @@ task.spawn(function()
         -- #endregion
 
         -- #region SCRIPTS PAGE
-        local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
+        local SearchBox = Instance.new("Search", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
         local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
         local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6;
         local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
         
-        -- ================================================================= --
-        -- >>> ОСЫ ЖЕРГЕ ТҮЗЕТУ ЕНГІЗІЛДІ (БАСЫ) <<<
-        -- ================================================================= --
-        -- Бұл код ScriptsGrid ішіндегі элементтердің жалпы биіктігі өзгерген кезде
-        -- ScriptsContainer-дің айналдыру аумағын (CanvasSize) автоматты түрде жаңартып отырады.
-        -- Осының арқасында барлық скрипттер соңына дейін көрінетін болады.
         local function updateScriptsCanvasSize()
             -- AbsoluteContentSize Y-ті CanvasSize-ға орнатамыз
             ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y)
         end
         
-        -- ScriptsGrid мазмұнының өлшемі өзгергенде функцияны шақыру
         ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize)
         
-        -- Алғашқы рет қолмен жаңарту
-        task.wait(0.1) -- Элементтердің орналасуын күту
+        task.wait(0.1) 
         updateScriptsCanvasSize()
-        -- ================================================================= --
-        -- >>> ТҮЗЕТУ АЯҚТАЛДЫ <<<
-        -- ================================================================= --
 
         createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
         SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
@@ -870,6 +842,12 @@ task.spawn(function()
         createFunctionButton("script_xester", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Xester-18937"))() end);
         createFunctionButton("script_rpg", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/Scripts/main/rocketLauncher.lua"))() end);
         createFunctionButton("script_object", ScriptsContainer, function() loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)() end);
+        createFunctionButton("script_killall", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FEKILLALL.lua"))() end);
+        createFunctionButton("script_head", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Head.lua"))() end);
+        createFunctionButton("script_jump", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
+        createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
+        createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
+        createFunctionButton("script_invisible2", ScriptsContainer, function() loadstring(game:HttpGet('https://abre.ai/invisible-v2'))(); end);
         -- #endregion
 
 
@@ -933,12 +911,6 @@ task.spawn(function()
         registerCommand("fly",{},"","Enables flying.",function()loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))()end)
         registerCommand("speed",{"walkspeed","ws"},"[player] [value]","Changes walkspeed.",function(a)local t=findPlayers(a[1]or"me");local s=tonumber(a[2]or 100);if not s then logToConsole("Invalid speed.",Color3.new(1,.4,.4))return end;for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.WalkSpeed=s end end end)
         registerCommand("jp",{"jumppower"},"[player] [value]","Changes jump power.",function(a)local t=findPlayers(a[1]or"me");local p=tonumber(a[2]or 100);if not p then logToConsole("Invalid power.",Color3.new(1,.4,.4))return end;for _,plr in ipairs(t)do if plr.Character and plr.Character:FindFirstChild("Humanoid")then plr.Character.Humanoid.JumpPower=p end end end)
-        registerCommand("kill",{},"[player]","Kills the player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.Health=0 end end end)
-        registerCommand("tp",{"teleport"},"[player_to]","Teleports to player.",function(a)if not a[1]then logToConsole("Usage: /tp [target]",Color3.new(1,.4,.4))return end;local t=findPlayers(a[1]);if #t==0 then logToConsole("Target not found.",Color3.new(1,.4,.4))return end;local cF=player.Character;local cT=t[1].Character;if cF and cT and cF:FindFirstChild("HumanoidRootPart")and cT:FindFirstChild("HumanoidRootPart")then cF.HumanoidRootPart.CFrame=cT.HumanoidRootPart.CFrame end end)
-        registerCommand("jerk",{},"[player]","Makes a player spin.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;r.Anchored=true;local j=Instance.new("BodyAngularVelocity",r);j.Name="JERK_EFFECT";j.MaxTorque=Vector3.new(math.huge,math.huge,math.huge);j.AngularVelocity=Vector3.new(100,100,100)end end end)
-        registerCommand("unjerk",{},"[player]","Stops the jerk effect.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;local j=r:FindFirstChild("JERK_EFFECT");if j then j:Destroy()end;r.Anchored=false end end end)
-        registerCommand("bang",{},"[player]","Flings a player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(math.random(-200,200),200,math.random(-200,200))end end end end end)
-        registerCommand("unbang",{},"[player]","Resets velocity after bang.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(0,0,0)end end end end end)
         registerCommand("clear",{"cls"},"","Clears the console.",function()for _,v in ipairs(ConsoleOutput:GetChildren())do if v.Name=="ConsoleLog"then v:Destroy()end end end)
         logToConsole("WilsonHub Commands:",currentTheme.accent);local sC={};for n,d in pairs(Commands)do table.insert(sC,d)end;table.sort(sC,function(a,b)return a.Name<b.Name end);for _,d in ipairs(sC)do logToConsole(string.format("/%s %s - %s",d.Name,d.Args,d.Description),Color3.new(.8,.8,.8))end
         -- #endregion
@@ -948,7 +920,7 @@ task.spawn(function()
         local ChatTitle = createInfoLabel("", PlayersChatPage); ChatTitle.Position=UDim2.new(0,10,0,5); ChatTitle.Font=Enum.Font.SourceSansBold; ChatTitle.TextSize=18; table.insert(themableObjects,{object=ChatTitle, property="TextColor3", colorType="accent"}); table.insert(translatableObjects, {object=ChatTitle, property="Text", key="chat_title"})
         local MessagesContainer = Instance.new("ScrollingFrame", PlayersChatPage); MessagesContainer.Size=UDim2.new(1,-20,1,-85); MessagesContainer.Position=UDim2.new(0,10,0,35); MessagesContainer.BackgroundColor3=Color3.fromRGB(45,45,45); MessagesContainer.ScrollBarThickness=6; Instance.new("UICorner",MessagesContainer).CornerRadius=UDim.new(0,6);
         local MessagesLayout = Instance.new("UIListLayout", MessagesContainer); MessagesLayout.Padding=UDim.new(0,8); MessagesLayout.SortOrder=Enum.SortOrder.LayoutOrder;
-        local ChatInput = Instance.new("TextBox", PlayersChatPage); ChatInput.Size=UDim2.new(1,-90,0,40); ChatInput.Position=UDim2.new(0,10,1,-45); ChatInput.BackgroundColor3=Color3.fromRGB(45,45,45); ChatInput.TextColor3=Color3.new(1,1,1); ChatInput.Font=Enum.Font.SourceSans; ChatInput.TextSize=14; Instance.new("UICorner",ChatInput).CornerRadius=UDim.new(0,6); table.insert(translatableObjects, {object=ChatInput, property="PlaceholderText", key="chat_placeholder"})
+        local ChatInput = Instance.new("text message", PlayersChatPage); ChatInput.Size=UDim2.new(1,-90,0,40); ChatInput.Position=UDim2.new(0,10,1,-45); ChatInput.BackgroundColor3=Color3.fromRGB(45,45,45); ChatInput.TextColor3=Color3.new(1,1,1); ChatInput.Font=Enum.Font.SourceSans; ChatInput.TextSize=14; Instance.new("UICorner",ChatInput).CornerRadius=UDim.new(0,6); table.insert(translatableObjects, {object=ChatInput, property="PlaceholderText", key="chat_placeholder"})
         local SendButton = createFunctionButton("send", PlayersChatPage); SendButton.Size=UDim2.new(0,60,0,40); SendButton.Position=UDim2.new(1,-70,1,-45);
         
         local function try_request(method, endpoint, payload)
@@ -1048,7 +1020,7 @@ task.spawn(function()
             local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); LangGrid.CellPadding=UDim2.new(0,10,0,10); LangGrid.CellSize=UDim2.new(0,125,0,40); LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
             createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
         end
-        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
+        local ExecutorInput = Instance.new("print("hello world!")", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
         local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45);
         local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
