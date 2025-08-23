@@ -4,7 +4,7 @@ task.spawn(function()
     local chatChannel = TextChatService:WaitForChild("TextChannels"):WaitForChild("RBXGeneral")
     
     while true do
-        chatChannel:SendAsync("I'm Wilson join my team тШая╕ПЁЯдл")
+        chatChannel:SendAsync("I'm Wilson join my team 🔥🤫")
         task.wait(math.random(9))
     end
 end)
