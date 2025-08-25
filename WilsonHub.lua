@@ -138,11 +138,11 @@ local translations = {
     theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
     theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
     settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
-    lang_en = { en = "English", ru = "English", kz = "English", zh = "English", fr = "English" },
-    lang_ru = { en = "Russian", ru = "Русский", kz = "Русский", zh = "Русский", fr = "Русский" },
-    lang_kz = { en = "Kazakh", ru = "Казахский", kz = "Қазақша", zh = "Казахский", fr = "Казахский" },
-    lang_zh = { en = "Chinese", ru = "Китайский", kz = "Китайский", zh = "中文", fr = "Китайский" },
-    lang_fr = { en = "French", ru = "Французский", kz = "Французский", zh = "Французский", fr = "Français" },
+    lang_en = { en = "English", ru = "Английский", kz = "Ағылшынша", zh = "英語", fr = "Anglais " },
+    lang_ru = { en = "Russian", ru = "Русский", kz = "Орысша", zh = "俄文", fr = "Russe " },
+    lang_kz = { en = "Kazakh", ru = "Казахский", kz = "Қазақша", zh = "哈薩克", fr = "Kazakh " },
+    lang_zh = { en = "Chinese", ru = "Китайский", kz = "Қытайша", zh = "中文", fr = "Chinois " },
+    lang_fr = { en = "French", ru = "Французский", kz = "Французша", zh = "法語", fr = "Français" },
     -- EXECUTOR PAGE
     executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
     -- NOTIFICATIONS
@@ -516,7 +516,9 @@ end
 task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
-        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; 
+        local BackgroundOverlay = Instance.new("Frame", WilsonHubGui) BackgroundOverlay.Name = "BackgroundOverlay" BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0) -- Экранды толық жабу BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Түсі (қара) BackgroundOverlay.BackgroundTransparency = 0.5 -- Мөлдірлігі (0-ден 1-ге дейін) BackgroundOverlay.BorderSizePixel = 0 BackgroundOverlay.ZIndex = 1 BackgroundOverlay.Visible = false
+
+        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.ZIndex = 2 
         
         MainFrame.Size = UDim2.new(0, 550, 0, 300); 
         MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
@@ -861,8 +863,7 @@ task.spawn(function()
         
         Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
         Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
-        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible=false; IconFrame.Visible=true end)
-        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible=true; IconFrame.Visible=false end)
+        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false IconFrame.Visible = true BackgroundOverlay.Visible = false end) IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true IconFrame.Visible = false BackgroundOverlay.Visible = true end)
         
         if settings.theme == "Rainbow" then
             activateRainbowTheme()
