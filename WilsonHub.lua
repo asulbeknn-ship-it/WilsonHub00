@@ -516,6 +516,7 @@ end
 task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
+        WilsonHubGui.IgnoreGuiInset = true
         local BackgroundOverlay = Instance.new("Frame", WilsonHubGui) BackgroundOverlay.Name = "BackgroundOverlay" BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0) BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0) BackgroundOverlay.BackgroundTransparency = 0.5 BackgroundOverlay.BorderSizePixel = 0 BackgroundOverlay.ZIndex = 1 BackgroundOverlay.Visible = true
 
         local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.ZIndex = 2 
