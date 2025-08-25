@@ -11,20 +11,6 @@ local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
 
--- ================================================================= --
--- КОНФИГУРАЦИЯ ЧАТА
--- Добавлено 3 резервных сервера для стабильной работы 24/7.
--- ================================================================= --
-local CHAT_SETTINGS = {
-    API_BACKENDS = {
-        "https://wilson-hub-chat-backend.glitch.me",
-        "https://wilson-hub-chat-mirror1.glitch.me",
-        "https://wilson-hub-chat-mirror2.glitch.me"
-    },
-    PollRate = 5 -- Частота обновления чата в секундах
-}
-local current_backend_index = 1
--- ================================================================= --
 
 -- [[ THEMES, LANGUAGES & SETTINGS ]]
 local Themes = {
@@ -73,8 +59,6 @@ local translations = {
     tab_info = { en = "INFO", ru = "ИНФО", kz = "АҚПАРАТ", zh = "信息", fr = "INFOS" },
     tab_guimods = { en = "GUI MODS", ru = "МОДЫ GUI", kz = "GUI МОДТАРЫ", zh = "界面模组", fr = "MODS GUI" },
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
-    tab_commands = { en = "COMMANDS", ru = "КОМАНДЫ", kz = "КОМАНДАЛАР", zh = "命令", fr = "COMMANDES" },
-    tab_chat = { en = "PLAYERS CHAT", ru = "ЧАТ ИГРОКОВ", kz = "ОЙЫНШЫЛАР ЧАТЫ", zh = "玩家聊天", fr = "CHAT JOUEURS" },
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
     -- HOME PAGE
@@ -151,18 +135,6 @@ local translations = {
     player_country_private = { en = "Country: Private", ru = "Страна: Приватный", kz = "Ел: Жабық", zh = "国家：私人的", fr = "Pays: privé" },
     player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
     player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
-    -- COMMANDS PAGE
-    commands_placeholder = { en = "/command [target] [args]", ru = "/команда [цель] [аргументы]", kz = "/команда [нысана] [аргументтер]", zh = "/命令 [目标] [参数]", fr = "/commande [cible] [args]" },
-    -- CHAT PAGE
-    chat_title = { en = "Global Chat", ru = "Глобальный Чат", kz = "Жалпы Чат", zh = "全球聊天", fr = "Chat Mondial" },
-    chat_placeholder = { en = "Enter message...", ru = "Введите сообщение...", kz = "Хабарламаны енгізіңіз...", zh = "输入消息...", fr = "Entrez votre message..." },
-    chat_sending = { en = "Sending...", ru = "Отправка...", kz = "Жіберілуде...", zh = "发送中...", fr = "Envoi..." },
-    chat_you = { en = "You", ru = "Вы", kz = "Сіз", zh = "你", fr = "Vous" },
-    chat_loading = { en = "<font color='#AAAAAA'><i>Loading messages...</i></font>", ru = "<font color='#AAAAAA'><i>Загрузка сообщений...</i></font>", kz = "<font color='#AAAAAA'><i>Хабарламалар жүктелуде...</i></font>", zh = "<font color='#AAAAAA'><i>加载消息中...</i></font>", fr = "<font color='#AAAAAA'><i>Chargement des messages...</i></font>" },
-    chat_error_fetch = { en = "<font color='#FF5555'>Chat Error: %s</font>", ru = "<font color='#FF5555'>Ошибка чата: %s</font>", kz = "<font color='#FF5555'>Чат қатесі: %s</font>", zh = "<font color='#FF5555'>聊天错误: %s</font>", fr = "<font color='#FF5555'>Erreur du chat: %s</font>" },
-    chat_error_decode = { en = "<font color='#FF5555'>Error decoding server response.</font>", ru = "<font color='#FF5555'>Ошибка декодирования ответа сервера.</font>", kz = "<font color='#FF5555'>Сервер жауабын декодтау қатесі.</font>", zh = "<font color='#FF5555'>解码服务器响应时出错。</font>", fr = "<font color='#FF5555'>Erreur de décodage de la réponse du serveur.</font>" },
-    chat_no_messages = { en = "<font color='#AAAAAA'><i>No new messages. Say hi!</i></font>", ru = "<font color='#AAAAAA'><i>Нет новых сообщений. Поздоровайтесь!</i></font>", kz = "<font color='#AAAAAA'><i>Жаңа хабарламалар жоқ. Сәлемдесіңіз!</i></font>", zh = "<font color='#AAAAAA'><i>没有新消息。打个招呼吧！</i></font>", fr = "<font color='#AAAAAA'><i>Aucun nouveau message. Dites bonjour !</i></font>" },
-    chat_error_send = { en = "<font color='#FF5555'>Error: Could not send message. %s</font>", ru = "<font color='#FF5555'>Ошибка: Не удалось отправить сообщение. %s</font>", kz = "<font color='#FF5555'>Қате: Хабарламаны жіберу мүмкін болмады. %s</font>", zh = "<font color='#FF5555'>错误：无法发送消息。 %s</font>", fr = "<font color='#FF5555'>Erreur: Impossible d'envoyer le message. %s</font>" },
     -- SETTINGS PAGE
     settings_themes_title = { en = "Themes", ru = "Темы", kz = "Тақырыптар", zh = "主题", fr = "Thèmes" },
     theme_red = { en = "Red (Default)", ru = "Красная (По умолч.)", kz = "Қызыл (Стандартты)", zh = "红色（默认）", fr = "Rouge (Défaut)" },
@@ -572,7 +544,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local CommandsButton = createTabButton("tab_commands"); local PlayersChatButton = createTabButton("tab_chat"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -585,8 +557,6 @@ task.spawn(function()
         local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
         local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
-        local CommandsPage=Instance.new("Frame",ContentContainer); CommandsPage.Size=UDim2.new(1,0,1,0); CommandsPage.BackgroundTransparency=1; CommandsPage.Visible=false
-        local PlayersChatPage=Instance.new("Frame",ContentContainer); PlayersChatPage.Size=UDim2.new(1,0,1,0); PlayersChatPage.BackgroundTransparency=1; PlayersChatPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
 
@@ -837,106 +807,6 @@ task.spawn(function()
             PlayersList.CanvasSize = UDim2.fromOffset(0, PlayersListLayout.AbsoluteContentSize.Y) 
         end
         -- #endregion
-        
-        -- #region COMMANDS PAGE
-        local Commands = {}
-        local CommandAliases = {}
-        local ConsoleOutput = nil
-        local function logToConsole(text, color) if not ConsoleOutput or not ConsoleOutput.Parent then return end; local label=Instance.new("TextLabel"); label.Name="ConsoleLog"; label.Text=tostring(text); label.TextColor3=color or Color3.new(1,1,1); label.Font=Enum.Font.Code; label.TextSize=14; label.TextXAlignment=Enum.TextXAlignment.Left; label.BackgroundTransparency=1; label.TextWrapped=true; label.Size=UDim2.new(1,-10,0,0); label.AutomaticSize=Enum.AutomaticSize.Y; label.Parent=ConsoleOutput end
-        local function findPlayers(query) query=query:lower(); local f={}; if query=="all"then return Players:GetPlayers()elseif query=="others"then for _,p in ipairs(Players:GetPlayers())do if p~=player then table.insert(f,p)end end;return f elseif query=="me"then return{player}elseif query=="random"then local a=Players:GetPlayers();if #a>0 then return{a[math.random(1,#a)]}end;return{}end; for _,p in ipairs(Players:GetPlayers())do if p.Name:lower():sub(1,#query)==query then table.insert(f,p)end end;return f end
-        local function registerCommand(name,aliases,args,desc,func) local d={Name=name:lower(),Aliases=aliases,Args=args,Description=desc,Function=func};Commands[d.Name]=d;for _,a in ipairs(aliases)do CommandAliases[a:lower()]=d.Name end end
-        local function processCommand(fullCommand) if not fullCommand:find("^/")then logToConsole("Error: Commands must start with /",Color3.new(1,.4,.4));return end; local noPrefix=fullCommand:sub(2);local args={};for arg in noPrefix:gmatch("[^%s]+")do table.insert(args,arg)end; if #args==0 then return end; local cmdName=table.remove(args,1):lower();local cmdData=Commands[cmdName]or Commands[CommandAliases[cmdName]];if cmdData then logToConsole("Executing: "..fullCommand,Color3.new(.4,1,.4));pcall(cmdData.Function,args)else logToConsole("Error: Command not found: "..cmdName,Color3.new(1,.4,.4))end end
-        local ConsoleFrame=Instance.new("Frame",CommandsPage);ConsoleFrame.Size=UDim2.new(1,-20,1,-10);ConsoleFrame.Position=UDim2.new(0,10,0,5);ConsoleFrame.BackgroundColor3=Color3.fromRGB(25,25,25);ConsoleFrame.BorderSizePixel=0;Instance.new("UICorner",ConsoleFrame).CornerRadius=UDim.new(0,6);ConsoleOutput=Instance.new("ScrollingFrame",ConsoleFrame);ConsoleOutput.Size=UDim2.new(1,0,1,-40);ConsoleOutput.BackgroundColor3=Color3.fromRGB(30,30,30);ConsoleOutput.BorderSizePixel=0;ConsoleOutput.ScrollBarThickness=6;local oL=Instance.new("UIListLayout",ConsoleOutput);oL.Padding=UDim.new(0,5);oL.SortOrder=Enum.SortOrder.LayoutOrder;local CommandInput=Instance.new("TextBox",ConsoleFrame);CommandInput.Size=UDim2.new(1,0,0,40);CommandInput.Position=UDim2.new(0,0,1,-40);CommandInput.BackgroundColor3=Color3.fromRGB(45,45,45);CommandInput.TextColor3=Color3.new(1,1,1);CommandInput.Font=Enum.Font.Code;CommandInput.TextSize=16;table.insert(translatableObjects, {object=CommandInput, property="PlaceholderText", key="commands_placeholder"});CommandInput.ClearTextOnFocus=false;CommandInput.FocusLost:Connect(function(e)if e then local t=CommandInput.Text;if #t>0 then processCommand(t);CommandInput.Text=""end end end)
-        registerCommand("fly",{},"","Enables flying.",function()loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/WilsonFly"))()end)
-        registerCommand("speed",{"walkspeed","ws"},"[player] [value]","Changes walkspeed.",function(a)local t=findPlayers(a[1]or"me");local s=tonumber(a[2]or 100);if not s then logToConsole("Invalid speed.",Color3.new(1,.4,.4))return end;for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.WalkSpeed=s end end end)
-        registerCommand("jp",{"jumppower"},"[player] [value]","Changes jump power.",function(a)local t=findPlayers(a[1]or"me");local p=tonumber(a[2]or 100);if not p then logToConsole("Invalid power.",Color3.new(1,.4,.4))return end;for _,plr in ipairs(t)do if plr.Character and plr.Character:FindFirstChild("Humanoid")then plr.Character.Humanoid.JumpPower=p end end end)
-        registerCommand("kill",{},"[player]","Kills the player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do if p.Character and p.Character:FindFirstChild("Humanoid")then p.Character.Humanoid.Health=0 end end end)
-        registerCommand("tp",{"teleport"},"[player_to]","Teleports to player.",function(a)if not a[1]then logToConsole("Usage: /tp [target]",Color3.new(1,.4,.4))return end;local t=findPlayers(a[1]);if #t==0 then logToConsole("Target not found.",Color3.new(1,.4,.4))return end;local cF=player.Character;local cT=t[1].Character;if cF and cT and cF:FindFirstChild("HumanoidRootPart")and cT:FindFirstChild("HumanoidRootPart")then cF.HumanoidRootPart.CFrame=cT.HumanoidRootPart.CFrame end end)
-        registerCommand("jerk",{},"[player]","Makes a player spin.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;r.Anchored=true;local j=Instance.new("BodyAngularVelocity",r);j.Name="JERK_EFFECT";j.MaxTorque=Vector3.new(math.huge,math.huge,math.huge);j.AngularVelocity=Vector3.new(100,100,100)end end end)
-        registerCommand("unjerk",{},"[player]","Stops the jerk effect.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c and c:FindFirstChild("HumanoidRootPart")then local r=c.HumanoidRootPart;local j=r:FindFirstChild("JERK_EFFECT");if j then j:Destroy()end;r.Anchored=false end end end)
-        registerCommand("bang",{},"[player]","Flings a player.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(math.random(-200,200),200,math.random(-200,200))end end end end end)
-        registerCommand("unbang",{},"[player]","Resets velocity after bang.",function(a)local t=findPlayers(a[1]or"me");for _,p in ipairs(t)do local c=p.Character;if c then for _,prt in ipairs(c:GetDescendants())do if prt:IsA("BasePart")then prt.AssemblyLinearVelocity=Vector3.new(0,0,0)end end end end end)
-        registerCommand("clear",{"cls"},"","Clears the console.",function()for _,v in ipairs(ConsoleOutput:GetChildren())do if v.Name=="ConsoleLog"then v:Destroy()end end end)
-        logToConsole("WilsonHub Commands:",currentTheme.accent);local sC={};for n,d in pairs(Commands)do table.insert(sC,d)end;table.sort(sC,function(a,b)return a.Name<b.Name end);for _,d in ipairs(sC)do logToConsole(string.format("/%s %s - %s",d.Name,d.Args,d.Description),Color3.new(.8,.8,.8))end
-        -- #endregion
-
-        -- #region PLAYERS CHAT PAGE (СЕНІМДІЛІК ҮШІН ЖАҢАРТЫЛДЫ)
-        local chat_state = { is_active = false, last_timestamp = 0, is_fetching = false }
-        local ChatTitle = createInfoLabel("", PlayersChatPage); ChatTitle.Position=UDim2.new(0,10,0,5); ChatTitle.Font=Enum.Font.SourceSansBold; ChatTitle.TextSize=18; table.insert(themableObjects,{object=ChatTitle, property="TextColor3", colorType="accent"}); table.insert(translatableObjects, {object=ChatTitle, property="Text", key="chat_title"})
-        local MessagesContainer = Instance.new("ScrollingFrame", PlayersChatPage); MessagesContainer.Size=UDim2.new(1,-20,1,-85); MessagesContainer.Position=UDim2.new(0,10,0,35); MessagesContainer.BackgroundColor3=Color3.fromRGB(45,45,45); MessagesContainer.ScrollBarThickness=6; Instance.new("UICorner",MessagesContainer).CornerRadius=UDim.new(0,6);
-        local MessagesLayout = Instance.new("UIListLayout", MessagesContainer); MessagesLayout.Padding=UDim.new(0,8); MessagesLayout.SortOrder=Enum.SortOrder.LayoutOrder;
-        local ChatInput = Instance.new("TextBox", PlayersChatPage); ChatInput.Size=UDim2.new(1,-90,0,40); ChatInput.Position=UDim2.new(0,10,1,-45); ChatInput.BackgroundColor3=Color3.fromRGB(45,45,45); ChatInput.TextColor3=Color3.new(1,1,1); ChatInput.Font=Enum.Font.SourceSans; ChatInput.TextSize=14; Instance.new("UICorner",ChatInput).CornerRadius=UDim.new(0,6); table.insert(translatableObjects, {object=ChatInput, property="PlaceholderText", key="chat_placeholder"})
-        local SendButton = createFunctionButton("send", PlayersChatPage); SendButton.Size=UDim2.new(0,60,0,40); SendButton.Position=UDim2.new(1,-70,1,-45);
-        
-        local function try_request(method, endpoint, payload)
-            local last_error = "All chat servers are unavailable."
-            for i = 1, #CHAT_SETTINGS.API_BACKENDS do
-                local url = CHAT_SETTINGS.API_BACKENDS[current_backend_index] .. endpoint
-                local success, response
-                if method == "GET" then
-                    success, response = pcall(game.HttpGet, game, url, true)
-                else
-                    success, response = pcall(HttpService.PostAsync, HttpService, url, payload, Enum.HttpContentType.ApplicationJson)
-                end
-                if success then return true, response end
-                last_error = tostring(response)
-                current_backend_index = (current_backend_index % #CHAT_SETTINGS.API_BACKENDS) + 1
-                task.wait(0.2)
-            end
-            return false, last_error
-        end
-        
-        local function clearChat() for _,v in ipairs(MessagesContainer:GetChildren()) do if v.Name == "MessageFrame" then v:Destroy() end end end
-        
-        local function displayMessage(msgData, isSystemMessage)
-            local langCode = languageMap[settings.language] or "en"
-            local msgFrame = Instance.new("Frame", MessagesContainer); msgFrame.Name = "MessageFrame"; msgFrame.BackgroundTransparency = 1; msgFrame.Size = UDim2.new(1, 0, 0, 0); msgFrame.AutomaticSize = Enum.AutomaticSize.Y; msgFrame.LayoutOrder = msgData.timestamp
-            local hLayout = Instance.new("UIListLayout", msgFrame); hLayout.FillDirection = Enum.FillDirection.Horizontal; hLayout.VerticalAlignment = Enum.VerticalAlignment.Top; hLayout.Padding = UDim.new(0, 8)
-            local avatar = Instance.new("ImageLabel", msgFrame); avatar.Size = UDim2.new(0, 40, 0, 40); avatar.BackgroundColor3 = Color3.fromRGB(25, 25, 25); Instance.new("UICorner", avatar).CornerRadius = UDim.new(1, 0)
-            local textFrame = Instance.new("Frame", msgFrame); textFrame.BackgroundTransparency = 1; textFrame.Size = UDim2.new(1, -50, 0, 0); textFrame.AutomaticSize = Enum.AutomaticSize.Y
-            local vLayout = Instance.new("UIListLayout", textFrame); vLayout.Padding = UDim.new(0, 2)
-            local nameLabel = Instance.new("TextLabel", textFrame); nameLabel.BackgroundTransparency = 1; nameLabel.Size = UDim2.new(1, 0, 0, 16); nameLabel.Font = Enum.Font.SourceSansBold; nameLabel.TextSize = 15; nameLabel.TextColor3 = currentTheme.accent; nameLabel.TextXAlignment = Enum.TextXAlignment.Left
-            local contentLabel = Instance.new("TextLabel", textFrame); contentLabel.BackgroundTransparency = 1; contentLabel.Size = UDim2.new(1, 0, 0, 0); contentLabel.AutomaticSize = Enum.AutomaticSize.Y; contentLabel.Font = Enum.Font.SourceSans; contentLabel.TextSize = 14; contentLabel.TextColor3 = Color3.fromRGB(255, 255, 255); contentLabel.TextWrapped = true; contentLabel.RichText = true; contentLabel.TextXAlignment = Enum.TextXAlignment.Left
-            if isSystemMessage then avatar.Visible = false; nameLabel.Visible = false; textFrame.Size = UDim2.new(1, -5, 0, 0); contentLabel.TextXAlignment = Enum.TextXAlignment.Center
-            else if tonumber(msgData.userid) == player.UserId then nameLabel.Text = translations.chat_you[langCode] else nameLabel.Text = msgData.username end; task.spawn(function() local s, thumb = pcall(Players.GetUserThumbnailAsync, Players, tonumber(msgData.userid), Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size42x42); if s and avatar and avatar.Parent then avatar.Image = thumb end end); table.insert(themableObjects, {object=nameLabel, property="TextColor3", colorType="accent"}) end
-            contentLabel.Text = msgData.message
-            task.delay(0.2, function() if MessagesContainer and MessagesLayout then MessagesContainer.CanvasSize = UDim2.fromOffset(0, MessagesLayout.AbsoluteContentSize.Y); MessagesContainer.CanvasPosition = Vector2.new(0, MessagesLayout.AbsoluteContentSize.Y) end end)
-        end
-        
-        local function fetchMessages(isInitial)
-            local langCode = languageMap[settings.language] or "en"
-            if chat_state.is_fetching then return end; chat_state.is_fetching = true
-            if isInitial then displayMessage({message=translations.chat_loading[langCode], timestamp=os.time()}, true) end
-            
-            local success, response = try_request("GET", "/get?since="..tostring(chat_state.last_timestamp))
-            if isInitial then clearChat() end
-            
-            if not success then if isInitial then displayMessage({message = string.format(translations.chat_error_fetch[langCode], response), timestamp = os.time()}, true) end; chat_state.is_fetching = false; return end
-            
-            local s2, messages = pcall(HttpService.JSONDecode, HttpService, response)
-            if not s2 then if isInitial then displayMessage({message=translations.chat_error_decode[langCode], timestamp=os.time()}, true) end; chat_state.is_fetching = false; return end
-            
-            if type(messages) == "table" then
-                if #messages == 0 and isInitial then displayMessage({message=translations.chat_no_messages[langCode], timestamp=os.time()}, true) end
-                for _, msgData in ipairs(messages) do displayMessage(msgData); chat_state.last_timestamp = math.max(chat_state.last_timestamp, msgData.timestamp or 0) end
-            elseif isInitial then displayMessage({message="<font color='#FF5555'>Received invalid data from server.</font>", timestamp=os.time()}, true) end
-            chat_state.is_fetching = false
-        end
-
-        local function sendMessage()
-            local text = ChatInput.Text; if text:gsub("%s", "") == "" then return end
-            local langCode = languageMap[settings.language] or "en"
-            local originalText = text; ChatInput.Text = translations.chat_sending[langCode]; ChatInput.Focusable = false
-            local s,r = try_request("POST", "/send", HttpService:JSONEncode({ username = player.Name, userid = player.UserId, message = text }))
-            ChatInput.Text = ""; ChatInput.Focusable = true
-            if not s then ChatInput.Text = originalText; displayMessage({message = string.format(translations.chat_error_send[langCode], r), timestamp = os.time()}, true) end
-            task.wait(0.5); fetchMessages(false)
-        end
-
-        SendButton.MouseButton1Click:Connect(sendMessage)
-        ChatInput.FocusLost:Connect(function(e) if e then sendMessage() end end)
-        task.spawn(function() while task.wait(CHAT_SETTINGS.PollRate) do if chat_state.is_active then fetchMessages(false) end end end)
-        -- #endregion
 
         -- #region SETTINGS & EXECUTOR
         do 
@@ -973,8 +843,8 @@ task.spawn(function()
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,CommandsButton,PlayersChatButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,CommandsPage,PlayersChatPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
         
         activeTab = HomeButton
 
@@ -990,15 +860,6 @@ task.spawn(function()
             
             if not rainbowThemeActive then
                 activeTab.BackgroundColor3 = currentTheme.main
-            end
-            
-            local was_chat_active = chat_state.is_active
-            chat_state.is_active = (tab == PlayersChatButton)
-            
-            if chat_state.is_active and not was_chat_active then
-                clearChat()
-                chat_state.last_timestamp = 0
-                fetchMessages(true)
             end
 
             if tab==PlayersButton then pcall(updatePlayerList) end 
