@@ -833,50 +833,7 @@ task.spawn(function()
             local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); LangGrid.CellPadding=UDim2.new(0,10,0,10); LangGrid.CellSize=UDim2.new(0,125,0,40); LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
             createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
         end
-         local SYNTAX_COLORS = {
-        keyword = Color3.fromRGB(255, 85, 85),   -- Қызыл (if, function, local)
-        string = Color3.fromRGB(130, 255, 130), -- Жасыл ("text")
-        number = Color3.fromRGB(255, 170, 0),   -- Сары (123)
-        comment = Color3.fromRGB(150, 150, 150),-- Сұр (-- comment)
-        global = Color3.fromRGB(85, 170, 255),  -- Көк (game, workspace)
-        default = Color3.fromRGB(255, 255, 255) -- Ақ
-    }
-    local KEYWORDS = {"and", "break", "do", "else", "elseif", "end", "false", "for", "function", "if", "in", "local", "nil", "not", "or", "repeat", "return", "then", "true", "until", "while"}
-    local GLOBALS = {"game", "workspace", "script", "shared", "plugin", "print", "wait", "pcall", "ypcall", "Instance", "Vector3", "Color3", "UDim2", "CFrame", "Enum", "Players", "HttpService", "loadstring"}
-
-    local function highlightSyntax(text)
-        local coloredText = text
-        coloredText = coloredText:gsub('"(.-)"', function(str) return '<font color="#'..SYNTAX_COLORS.string:ToHex()..'">"'..str..'"</font>' end)
-        coloredText = coloredText:gsub("'(.-)'", function(str) return "<font color='#"..SYNTAX_COLORS.string:ToHex().."'>'"..str.."'</font>" end)
-        coloredText = coloredText:gsub('%-%-.-\n', '<font color="#'..SYNTAX_COLORS.comment:ToHex()..'">%0</font>\n')
-        coloredText = coloredText:gsub('(%d+)', '<font color="#'..SYNTAX_COLORS.number:ToHex()..'">%1</font>')
-        for _, keyword in ipairs(KEYWORDS) do
-            coloredText = coloredText:gsub('%f[%w]'..keyword..'%f[%W]', '<font color="#'..SYNTAX_COLORS.keyword:ToHex()..'">'..keyword..'</font>')
-        end
-        for _, global in ipairs(GLOBALS) do
-            coloredText = coloredText:gsub('%f[%w]'..global..'%f[%W]', '<font color="#'..SYNTAX_COLORS.global:ToHex()..'">'..global..'</font>')
-        end
-        return coloredText
-    end
-
-    local ExecutorContainer = Instance.new("Frame", ExecutorPage); ExecutorContainer.Size = UDim2.new(1, -20, 1, -60); ExecutorContainer.Position = UDim2.new(0, 10, 0, 10); ExecutorContainer.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorContainer.ClipsDescendants = true; Instance.new("UICorner", ExecutorContainer).CornerRadius = UDim.new(0, 6);
-    local ExecutorStroke = Instance.new("UIStroke", ExecutorContainer); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
-
-    local Highlighter = Instance.new("TextLabel", ExecutorContainer); Highlighter.Size = UDim2.new(1, -10, 1, -10); Highlighter.Position = UDim2.new(0, 5, 0, 5); Highlighter.BackgroundTransparency = 1; Highlighter.Font = Enum.Font.Code; Highlighter.TextSize = 14; Highlighter.TextColor3 = SYNTAX_COLORS.default; Highlighter.TextXAlignment = Enum.TextXAlignment.Left; Highlighter.TextYAlignment = Enum.TextYAlignment.Top; Highlighter.RichText = true;
-
-    local ExecutorInput = Instance.new("TextBox", ExecutorContainer); ExecutorInput.Size = UDim2.new(1, 0, 1, 0); ExecutorInput.BackgroundTransparency = 1; ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextColor3 = Color3.new(1,1,1); ExecutorInput.TextTransparency = 1; ExecutorInput.ClearTextOnFocus = false; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top;
-
-    ExecutorInput:GetPropertyChangedSignal("Text"):Connect(function()
-        local text = ExecutorInput.Text
-        if text == "" then
-            local langCode = languageMap[settings.language] or "en"
-            Highlighter.Text = translations.executor_placeholder[langCode] or translations.executor_placeholder.en
-        else
-            Highlighter.Text = highlightSyntax(text)
-        end
-    end)
-
-    table.insert(translatableObjects, {object=Highlighter, property="Text", key="executor_placeholder"});lder"});
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)lder"});lder"});
         -- #endregion
 
         -- THEME REGISTRATION
