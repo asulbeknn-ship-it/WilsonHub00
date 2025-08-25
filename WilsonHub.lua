@@ -121,6 +121,7 @@ local translations = {
     script_firepart = { en = "Fireparts tool", ru = "Fireparts tool ☑︎", kz = "Fireparts tool ☑︎", zh = "Fireparts 工具 ☑︎", fr = "Outil Fireparts ☑︎" },
     script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
     script_invisible2 = { en = "invisible 2", ru = "Невидимка 2", kz = "Көрінбейтін 2", zh = "隱形2", fr = "Invisible 2" },
+    script_toggle = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "ÉCLAIRGUI " },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -778,6 +779,7 @@ end
         createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
         createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
         createFunctionButton("script_invisible2", ScriptsContainer, function() loadstring(game:HttpGet('https://abre.ai/invisible-v2'))() end);
+        createFunctionButton("script_toggle", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
