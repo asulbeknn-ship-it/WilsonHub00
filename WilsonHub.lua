@@ -121,7 +121,6 @@ local translations = {
     script_firepart = { en = "Fireparts tool", ru = "Fireparts tool ☑︎", kz = "Fireparts tool ☑︎", zh = "Fireparts 工具 ☑︎", fr = "Outil Fireparts ☑︎" },
     script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
     script_invisible2 = { en = "invisible 2", ru = "Невидимка 2", kz = "Көрінбейтін 2", zh = "隱形2", fr = "Invisible 2" },
-    script_toggle = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "ÉCLAIRGUI " },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -518,31 +517,6 @@ end
 -- 2. СОЗДАНИЕ ГЛАВНОГО GUI
 task.spawn(function()
     local success, err = pcall(function()
-    local NotificationGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")) NotificationGui.Name = "ExecutionNotificationGui" NotificationGui.ResetOnSpawn = false NotificationGui.ZIndexBehavior = Enum.ZIndexBehavior.Global NotificationGui.IgnoreGuiInset = true
-    local NotificationFrame = Instance.new("Frame", NotificationGui) NotificationFrame.Name = "NotificationFrame" NotificationFrame.Size = UDim2.new(0, 200, 0, 45) NotificationFrame.Position = UDim2.new(0.5, 0, 0, -50) NotificationFrame.AnchorPoint = Vector2.new(0.5, 0) NotificationFrame.BackgroundColor3 = Color3.fromRGB(25, 30, 27) NotificationFrame.BorderSizePixel = 1 NotificationFrame.BorderColor3 = Color3.fromRGB(80, 200, 120) NotificationFrame.Visible = false Instance.new("UICorner", NotificationFrame).CornerRadius = UDim.new(0, 12)
-    local UIListLayout = Instance.new("UIListLayout", NotificationFrame) UIListLayout.FillDirection = Enum.FillDirection.Horizontal UIListLayout.VerticalAlignment = Enum.VerticalAlignment.Center UIListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center UIListLayout.SortOrder = Enum.SortOrder.LayoutOrder UIListLayout.Padding = UDim.new(0, 10)
-    local Checkmark = Instance.new("ImageLabel", NotificationFrame) Checkmark.Image = "rbxassetid://3926305904" Checkmark.ImageColor3 = Color3.fromRGB(80, 200, 120) Checkmark.Size = UDim2.new(0, 24, 0, 24) Checkmark.BackgroundTransparency = 1 Checkmark.LayoutOrder = 1
-    local NotifyText = Instance.new("TextLabel", NotificationFrame) NotifyText.Text = "Script Executed!" NotifyText.TextColor3 = Color3.fromRGB(240, 240, 240) NotifyText.Font = Enum.Font.SourceSansBold NotifyText.TextSize = 18 NotifyText.Size = UDim2.new(0, 140, 1, 0) NotifyText.BackgroundTransparency = 1 NotifyText.TextXAlignment = Enum.TextXAlignment.Left NotifyText.LayoutOrder = 2
-    local TweenService = game:GetService("TweenService")
-    local isNotificationShowing = false
-    local function showScriptExecutedNotification() if isNotificationShowing then return end isNotificationShowing = true NotificationFrame.Visible = true
-    local tweenInfoIn = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tweenIn = TweenService:Create(NotificationFrame, tweenInfoIn, {Position = UDim2.new(0.5, 0, 0, 15)})tweenIn:Play()
-    
-    task.wait(1.5) -- 1.5 секунд күту
-    
-    -- Анимациямен жоғалуы
-    local tweenInfoOut = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-    local tweenOut = TweenService:Create(NotificationFrame, tweenInfoOut, {Position = UDim2.new(0.5, 0, 0, -50)})
-    tweenOut:Play()
-    
-    tweenOut.Completed:Wait()
-    NotificationFrame.Visible = false
-    isNotificationShowing = false
-end
-
--- <<-- КОДТЫҢ СОҢЫ -->>
-    
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
         WilsonHubGui.IgnoreGuiInset = true
         local BackgroundOverlay = Instance.new("Frame", WilsonHubGui) BackgroundOverlay.Name = "BackgroundOverlay" BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0) BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0) BackgroundOverlay.BackgroundTransparency = 0.5 BackgroundOverlay.BorderSizePixel = 0 BackgroundOverlay.ZIndex = 1 BackgroundOverlay.Visible = true
@@ -552,10 +526,9 @@ end
         MainFrame.Size = UDim2.new(0, 550, 0, 300); 
         MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
         
-
-        MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8) -- БАРЛЫҚ БҰРЫШТЫ ДӨҢГЕЛЕКТЕЙДІ
-        local IconFrame = Instance.new("ImageButton", WilsonHubGui); IconFrame.Name = "IconFrame";
-        local Header = Instance.new("Frame", MainFrame); Header.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 8) -- БАРЛЫҚ БҰРЫШТЫ ДӨҢГЕЛЕКТЕЙДІ
+        MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(12, 12)
+        local IconFrame = Instance.new("ImageButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 60, 0, 60); IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0); IconFrame.AnchorPoint = Vector2.new(0.5, 0.5); IconFrame.Image = "rbxassetid://121928953984347"; IconFrame.BackgroundTransparency = 1; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 10);
+        local Header = Instance.new("Frame", MainFrame); Header.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Header).CornerRadius = UDim.new(12, 12)  
         local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
         local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
         
@@ -780,7 +753,6 @@ end
         createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
         createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
         createFunctionButton("script_invisible2", ScriptsContainer, function() loadstring(game:HttpGet('https://abre.ai/invisible-v2'))() end);
-        createFunctionButton("script_toggle", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
