@@ -526,9 +526,22 @@ task.spawn(function()
     local isNotificationShowing = false
     local function showScriptExecutedNotification() if isNotificationShowing then return end isNotificationShowing = true NotificationFrame.Visible = true
     local tweenInfoIn = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.Out)
-    local tweenIn = TweenService:Create(NotificationFrame, tweenInfoIn, {Position = UDim2.new(0.5, 0, 0, 15)}) tweenIn:Play() task.wait(1.5) 
+    local tweenIn = TweenService:Create(NotificationFrame, tweenInfoIn, {Position = UDim2.new(0.5, 0, 0, 15)})tweenIn:Play()
+    
+    task.wait(1.5) -- 1.5 секунд күту
+    
+    -- Анимациямен жоғалуы
     local tweenInfoOut = TweenInfo.new(0.3, Enum.EasingStyle.Quad, Enum.EasingDirection.In)
-    local tweenOut = TweenService:Create(NotificationFrame, tweenInfoOut, {Position = UDim2.new(0.5, 0, 0, -50)}) tweenOut:Play() tweenOut.Completed:Wait() NotificationFrame.Visible = false isNotificationShowing = false
+    local tweenOut = TweenService:Create(NotificationFrame, tweenInfoOut, {Position = UDim2.new(0.5, 0, 0, -50)})
+    tweenOut:Play()
+    
+    tweenOut.Completed:Wait()
+    NotificationFrame.Visible = false
+    isNotificationShowing = false
+end
+
+-- <<-- КОДТЫҢ СОҢЫ -->>
+    
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
         WilsonHubGui.IgnoreGuiInset = true
         local BackgroundOverlay = Instance.new("Frame", WilsonHubGui) BackgroundOverlay.Name = "BackgroundOverlay" BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0) BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0) BackgroundOverlay.BackgroundTransparency = 0.5 BackgroundOverlay.BorderSizePixel = 0 BackgroundOverlay.ZIndex = 1 BackgroundOverlay.Visible = true
@@ -569,42 +582,31 @@ task.spawn(function()
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
 
-
-    local function createFunctionButton(textKey, parent, callback) 
-    local b = Instance.new("TextButton",parent)
-    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
-    b.BackgroundColor3=theme.main
-    b.TextColor3=theme.text
-    b.Font=Enum.Font.SourceSansBold
-    b.TextSize=16
+        local function createFunctionButton(textKey, parent, callback) 
+            local b = Instance.new("TextButton",parent)
+            local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+            b.BackgroundColor3=theme.main
+            b.TextColor3=theme.text
+            b.Font=Enum.Font.SourceSansBold
+            b.TextSize=16
             
-    local langCode = languageMap[settings.language] or "en"
-    local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
-    b.Text = initialText
+            -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
+            local langCode = languageMap[settings.language] or "en"
+            local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
+            b.Text = initialText
 
-    b.TextScaled = false
-    b.RichText = false
-    b.TextYAlignment = Enum.TextYAlignment.Center
-    b.Size = UDim2.new(0, 120, 0, 35)
-    Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
-    
-    -- [[ БІЗ ӨЗГЕРТКЕН БӨЛІК ]]
-    if callback then
-        b.MouseButton1Click:Connect(function()
-            -- Егер батырма ScriptsContainer ішінде болса, хабарламаны көрсету
-            if parent and parent.Name == "ScriptsContainer" then
-                showScriptExecutedNotification()
-            end
-            pcall(callback)
-        end)
-    end
-    -- [[ ӨЗГЕРІСТІҢ СОҢЫ ]]
-
-    table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
-    table.insert(themableObjects, {object=b, property="TextColor3", colorType="text"})
-    table.insert(translatableObjects, {object=b, property="Text", key=textKey})
-    return b 
-end
+            b.TextScaled = false
+            b.RichText = false
+            b.TextYAlignment = Enum.TextYAlignment.Center
+            b.Size = UDim2.new(0, 120, 0, 35)
+            Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
+            if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
+            table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
+            table.insert(themableObjects, {object=b, property="TextColor3", colorType="text"})
+            table.insert(translatableObjects, {object=b, property="Text", key=textKey})
+            return b 
+        end
+        local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
         local PlayerImage = Instance.new("ImageLabel", HomePage); PlayerImage.Size = UDim2.new(0, 128, 0, 128); PlayerImage.Position = UDim2.new(0, 15, 0, 15); PlayerImage.BackgroundTransparency = 1; task.spawn(function() pcall(function() PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end);
