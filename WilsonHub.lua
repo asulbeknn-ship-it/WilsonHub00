@@ -624,6 +624,7 @@ local AgeLabel = createInfoLabel("", HomePage);
 AgeLabel.Position = UDim2.new(0, 150, 0, 110);
 table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
 
+-- Жаңа ақпараттарды осы жерге қосамыз
 local GameNameLabel = createInfoLabel("Game Name: " .. game.Name, HomePage);
 GameNameLabel.Position = UDim2.new(0, 15, 0, 150);
 
@@ -711,7 +712,6 @@ deviceLabel.Text = string.format(translations.home_device[langCode] or translati
 translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
 
         -- #endregion
-
         
         -- #region INFO PAGE
         local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
