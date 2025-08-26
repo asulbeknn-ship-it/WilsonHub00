@@ -584,6 +584,11 @@ task.spawn(function()
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
+local HomePage = Instance.new("Frame", ContentContainer);
+HomePage.Size = UDim2.new(1, 0, 1, 0);
+HomePage.BackgroundTransparency = 1;
+HomePage.Visible = true;
+
 local PlayerImage = Instance.new("ImageLabel", HomePage);
 PlayerImage.Size = UDim2.new(0, 128, 0, 128);
 PlayerImage.Position = UDim2.new(0, 15, 0, 15);
@@ -619,20 +624,16 @@ local AgeLabel = createInfoLabel("", HomePage);
 AgeLabel.Position = UDim2.new(0, 150, 0, 110);
 table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
 
--- Жаңа ақпараттарды осы жерге қосамыз
-local GameNameLabel = createInfoLabel("", HomePage);
-GameNameLabel.Position = UDim2.new(0, 150, 0, 135);
-GameNameLabel.Text = "Game Name: " .. game.Name;
+local GameNameLabel = createInfoLabel("Game Name: " .. game.Name, HomePage);
+GameNameLabel.Position = UDim2.new(0, 15, 0, 150);
 
-local ExecutorLabel = createInfoLabel("", HomePage);
-ExecutorLabel.Position = UDim2.new(0, 150, 0, 160);
-ExecutorLabel.Text = "Executor: ";
+local ExecutorLabel = createInfoLabel("Executor: ", HomePage);
+ExecutorLabel.Position = UDim2.new(0, 15, 0, 175);
 
-local UserCountLabel = createInfoLabel("", HomePage);
-UserCountLabel.Position = UDim2.new(0, 150, 0, 185);
-UserCountLabel.Text = "Total users: Loading...";
+local UserCountLabel = createInfoLabel("Total users: Loading...", HomePage);
+UserCountLabel.Position = UDim2.new(0, 15, 0, 200);
 
--- Эезакутор атауын анықтау
+-- Executor анықтау және көрсету
 local Executor = "Unknown";
 if is_synapse_x then
     Executor = "Synapse X";
@@ -643,7 +644,6 @@ elseif is_fluxus then
 elseif getgenv then
     Executor = "Unknown (getgenv)";
 end
-
 ExecutorLabel.Text = "Executor: " .. Executor;
 
 -- Қолданушы санын жүктеу (онлайн API қажет)
@@ -658,21 +658,23 @@ task.spawn(function()
     end
 end)
 
+-- Басқа ақпараттардың позициясын реттеу
 local creationDateLabel = createInfoLabel("", HomePage);
-creationDateLabel.Position = UDim2.new(0, 15, 0, 150);
+creationDateLabel.Position = UDim2.new(0, 150, 0, 205);
 table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})
 
 local deviceLabel = createInfoLabel("", HomePage);
-deviceLabel.Position = UDim2.new(0, 15, 0, 175)
+deviceLabel.Position = UDim2.new(0, 150, 0, 230);
 
 local ipInfoLabel = createInfoLabel("", HomePage);
-ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);
+ipInfoLabel.Position = UDim2.new(0, 150, 0, 255);
 table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"})
 
 local countryLabel = createInfoLabel("", HomePage);
-countryLabel.Position = UDim2.new(0, 15, 0, 225);
+countryLabel.Position = UDim2.new(0, 150, 0, 280);
 table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"})
 
+-- Бұрынғы код үзінділерін сақтау
 task.spawn(function()
     pcall(function()
         local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId));
@@ -707,6 +709,7 @@ local langCode = languageMap[settings.language] or "en";
 local dev_text = translations[dev_type][langCode] or translations[dev_type].en;
 deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);
 translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
+
         -- #endregion
 
         
