@@ -584,20 +584,131 @@ task.spawn(function()
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
-        local PlayerImage = Instance.new("ImageLabel", HomePage); PlayerImage.Size = UDim2.new(0, 128, 0, 128); PlayerImage.Position = UDim2.new(0, 15, 0, 15); PlayerImage.BackgroundTransparency = 1; task.spawn(function() pcall(function() PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end);
-        local playerImageBorder = Instance.new("UIStroke", PlayerImage); playerImageBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; playerImageBorder.Color = currentTheme.main; playerImageBorder.Thickness = 2; table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"})
-        local WelcomeLabel = createInfoLabel("", HomePage); WelcomeLabel.Position = UDim2.new(0, 150, 0, 35); WelcomeLabel.TextColor3 = currentTheme.accent; WelcomeLabel.Font = Enum.Font.SourceSansBold; WelcomeLabel.TextSize = 22; table.insert(translatableObjects, {object=WelcomeLabel, property="Text", key="home_welcome", dynamic_args={player.Name}})
-        local NickLabel = createInfoLabel("", HomePage); NickLabel.Position = UDim2.new(0, 150, 0, 60); table.insert(translatableObjects, {object=NickLabel, property="Text", key="home_nickname", dynamic_args={player.Name}})
-        local IdLabel = createInfoLabel("", HomePage); IdLabel.Position = UDim2.new(0, 150, 0, 85); table.insert(translatableObjects, {object=IdLabel, property="Text", key="home_userid", dynamic_args={player.UserId}})
-        local AgeLabel = createInfoLabel("", HomePage); AgeLabel.Position = UDim2.new(0, 150, 0, 110); table.insert(translatableObjects, {object=AgeLabel, property="Text", key="home_userage", dynamic_args={player.AccountAge}})
-        local creationDateLabel = createInfoLabel("", HomePage); creationDateLabel.Position = UDim2.new(0, 15, 0, 150); table.insert(translatableObjects, {object=creationDateLabel, property="Text", key="home_creationdate_loading"})
-        local deviceLabel = createInfoLabel("", HomePage); deviceLabel.Position = UDim2.new(0, 15, 0, 175)
-        local ipInfoLabel = createInfoLabel("", HomePage); ipInfoLabel.Position = UDim2.new(0, 15, 0, 200); table.insert(translatableObjects, {object=ipInfoLabel, property="Text", key="home_ip_loading"})
-        local countryLabel = createInfoLabel("", HomePage); countryLabel.Position = UDim2.new(0, 15, 0, 225); table.insert(translatableObjects, {object=countryLabel, property="Text", key="home_country_loading"})
-        task.spawn(function() pcall(function() local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/"..player.UserId)); local dateStr = r.created:sub(1,10); local langCode = languageMap[settings.language] or "en"; local format = translations.home_creationdate[langCode] or translations.home_creationdate.en; creationDateLabel.Text = string.format(format, dateStr); translatableObjects[#translatableObjects+1] = {object=creationDateLabel, property="Text", key="home_creationdate", dynamic_args={dateStr}} end) end)
-        task.spawn(function() pcall(function() local r=HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")); local f=""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end; local ip = r.query or "N/A"; local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f; local langCode = languageMap[settings.language] or "en"; ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip); countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country); translatableObjects[#translatableObjects+1] = {object=ipInfoLabel, property="Text", key="home_ip", dynamic_args={ip}}; translatableObjects[#translatableObjects+1] = {object=countryLabel, property="Text", key="home_country", dynamic_args={country}} end) end)
-        local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc"; local langCode=languageMap[settings.language] or "en"; local dev_text = translations[dev_type][langCode] or translations[dev_type].en; deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text); translatableObjects[#translatableObjects+1] = {object=deviceLabel, property="Text", key="home_device", dynamic_args={dev_text}}
+local PlayerImage = Instance.new("ImageLabel", HomePage);
+PlayerImage.Size = UDim2.new(0, 128, 0, 128);
+PlayerImage.Position = UDim2.new(0, 15, 0, 15);
+PlayerImage.BackgroundTransparency = 1;
+task.spawn(function()
+    pcall(function()
+        PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
+    end)
+end);
+
+local playerImageBorder = Instance.new("UIStroke", PlayerImage);
+playerImageBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+playerImageBorder.Color = currentTheme.main;
+playerImageBorder.Thickness = 2;
+table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"})
+
+local WelcomeLabel = createInfoLabel("", HomePage);
+WelcomeLabel.Position = UDim2.new(0, 150, 0, 35);
+WelcomeLabel.TextColor3 = currentTheme.accent;
+WelcomeLabel.Font = Enum.Font.SourceSansBold;
+WelcomeLabel.TextSize = 22;
+table.insert(translatableObjects, {object = WelcomeLabel, property = "Text", key = "home_welcome", dynamic_args = {player.Name}})
+
+local NickLabel = createInfoLabel("", HomePage);
+NickLabel.Position = UDim2.new(0, 150, 0, 60);
+table.insert(translatableObjects, {object = NickLabel, property = "Text", key = "home_nickname", dynamic_args = {player.Name}})
+
+local IdLabel = createInfoLabel("", HomePage);
+IdLabel.Position = UDim2.new(0, 150, 0, 85);
+table.insert(translatableObjects, {object = IdLabel, property = "Text", key = "home_userid", dynamic_args = {player.UserId}})
+
+local AgeLabel = createInfoLabel("", HomePage);
+AgeLabel.Position = UDim2.new(0, 150, 0, 110);
+table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
+
+-- Жаңа ақпараттарды осы жерге қосамыз
+local GameNameLabel = createInfoLabel("", HomePage);
+GameNameLabel.Position = UDim2.new(0, 150, 0, 135);
+GameNameLabel.Text = "Game Name: " .. game.Name;
+
+local ExecutorLabel = createInfoLabel("", HomePage);
+ExecutorLabel.Position = UDim2.new(0, 150, 0, 160);
+ExecutorLabel.Text = "Executor: ";
+
+local UserCountLabel = createInfoLabel("", HomePage);
+UserCountLabel.Position = UDim2.new(0, 150, 0, 185);
+UserCountLabel.Text = "Total users: Loading...";
+
+-- Эезакутор атауын анықтау
+local Executor = "Unknown";
+if is_synapse_x then
+    Executor = "Synapse X";
+elseif is_krnl then
+    Executor = "KRNL";
+elseif is_fluxus then
+    Executor = "Fluxus";
+elseif getgenv then
+    Executor = "Unknown (getgenv)";
+end
+
+ExecutorLabel.Text = "Executor: " .. Executor;
+
+-- Қолданушы санын жүктеу (онлайн API қажет)
+task.spawn(function()
+    local success, response = pcall(function()
+        return HttpService:JSONDecode(game:HttpGet("https://your-api-url.com/user_count"))
+    end)
+    if success and response and response.users then
+        UserCountLabel.Text = "Total users: " .. response.users;
+    else
+        UserCountLabel.Text = "Total users: N/A";
+    end
+end)
+
+local creationDateLabel = createInfoLabel("", HomePage);
+creationDateLabel.Position = UDim2.new(0, 15, 0, 150);
+table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})
+
+local deviceLabel = createInfoLabel("", HomePage);
+deviceLabel.Position = UDim2.new(0, 15, 0, 175)
+
+local ipInfoLabel = createInfoLabel("", HomePage);
+ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);
+table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"})
+
+local countryLabel = createInfoLabel("", HomePage);
+countryLabel.Position = UDim2.new(0, 15, 0, 225);
+table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"})
+
+task.spawn(function()
+    pcall(function()
+        local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId));
+        local dateStr = r.created:sub(1, 10);
+        local langCode = languageMap[settings.language] or "en";
+        local format = translations.home_creationdate[langCode] or translations.home_creationdate.en;
+        creationDateLabel.Text = string.format(format, dateStr);
+        translatableObjects[#translatableObjects + 1] = {object = creationDateLabel, property = "Text", key = "home_creationdate", dynamic_args = {dateStr}}
+    end)
+end)
+
+task.spawn(function()
+    pcall(function()
+        local r = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/"));
+        local f = "";
+        if r.countryCode then
+            local a, b = 127462, string.byte("A");
+            f = utf8.char(a + (string.byte(r.countryCode, 1) - b)) .. utf8.char(a + (string.byte(r.countryCode, 2) - b))
+        end;
+        local ip = r.query or "N/A";
+        local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f;
+        local langCode = languageMap[settings.language] or "en";
+        ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip);
+        countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country);
+        translatableObjects[#translatableObjects + 1] = {object = ipInfoLabel, property = "Text", key = "home_ip", dynamic_args = {ip}};
+        translatableObjects[#translatableObjects + 1] = {object = countryLabel, property = "Text", key = "home_country", dynamic_args = {country}}
+    end)
+end)
+
+local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc";
+local langCode = languageMap[settings.language] or "en";
+local dev_text = translations[dev_type][langCode] or translations[dev_type].en;
+deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);
+translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
         -- #endregion
+
         
         -- #region INFO PAGE
         local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
