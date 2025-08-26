@@ -585,65 +585,66 @@ task.spawn(function()
         
         -- #region HOME PAGE
 local PlayerImage = Instance.new("ImageLabel", HomePage);
-[span_0](start_span)PlayerImage.Size = UDim2.new(0, 128, 0, 128);[span_0](end_span)
-[span_1](start_span)PlayerImage.Position = UDim2.new(0, 15, 0, 15);[span_1](end_span)
-[span_2](start_span)PlayerImage.BackgroundTransparency = 1;[span_2](end_span)
+PlayerImage.Size = UDim2.new(0, 128, 0, 128);
+PlayerImage.Position = UDim2.new(0, 15, 0, 15);
+PlayerImage.BackgroundTransparency = 1;
 task.spawn(function()
     pcall(function()
         PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
     end)
-[span_3](start_span)end);[span_3](end_span)
+end);
 local playerImageBorder = Instance.new("UIStroke", PlayerImage);
 playerImageBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
 playerImageBorder.Color = currentTheme.main;
-[span_4](start_span)playerImageBorder.Thickness = 2;[span_4](end_span)
-[span_5](start_span)table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"})[span_5](end_span)
+playerImageBorder.Thickness = 2;
+table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"})
 
 local WelcomeLabel = createInfoLabel("", HomePage);
-[span_6](start_span)WelcomeLabel.Position = UDim2.new(0, 150, 0, 35);[span_6](end_span)
-[span_7](start_span)WelcomeLabel.TextColor3 = currentTheme.accent;[span_7](end_span)
-[span_8](start_span)WelcomeLabel.Font = Enum.Font.SourceSansBold;[span_8](end_span)
-[span_9](start_span)WelcomeLabel.TextSize = 22;[span_9](end_span)
-[span_10](start_span)table.insert(translatableObjects, {object = WelcomeLabel, property = "Text", key = "home_welcome", dynamic_args = {player.Name}})[span_10](end_span)
+WelcomeLabel.Position = UDim2.new(0, 150, 0, 35);
+WelcomeLabel.TextColor3 = currentTheme.accent;
+WelcomeLabel.Font = Enum.Font.SourceSansBold;
+WelcomeLabel.TextSize = 22;
+table.insert(translatableObjects, {object = WelcomeLabel, property = "Text", key = "home_welcome", dynamic_args = {player.Name}})
 
-[span_11](start_span)local NickLabel = createInfoLabel("", HomePage);[span_11](end_span)
-[span_12](start_span)NickLabel.Position = UDim2.new(0, 150, 0, 60);[span_12](end_span)
-[span_13](start_span)table.insert(translatableObjects, {object = NickLabel, property = "Text", key = "home_nickname", dynamic_args = {player.Name}})[span_13](end_span)
+local NickLabel = createInfoLabel("", HomePage);
+NickLabel.Position = UDim2.new(0, 150, 0, 60);
+table.insert(translatableObjects, {object = NickLabel, property = "Text", key = "home_nickname", dynamic_args = {player.Name}})
 
-[span_14](start_span)local IdLabel = createInfoLabel("", HomePage);[span_14](end_span)
-[span_15](start_span)IdLabel.Position = UDim2.new(0, 150, 0, 85);[span_15](end_span)
-[span_16](start_span)table.insert(translatableObjects, {object = IdLabel, property = "Text", key = "home_userid", dynamic_args = {player.UserId}})[span_16](end_span)
+local IdLabel = createInfoLabel("", HomePage);
+IdLabel.Position = UDim2.new(0, 150, 0, 85);
+table.insert(translatableObjects, {object = IdLabel, property = "Text", key = "home_userid", dynamic_args = {player.UserId}})
 
-[span_17](start_span)local AgeLabel = createInfoLabel("", HomePage);[span_17](end_span)
-[span_18](start_span)AgeLabel.Position = UDim2.new(0, 150, 0, 110);[span_18](end_span)
-[span_19](start_span)table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})[span_19](end_span)
+local AgeLabel = createInfoLabel("", HomePage);
+AgeLabel.Position = UDim2.new(0, 150, 0, 110);
+table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
 
 -- Жаңа ақпараттарды осы жерге қосамыз
-[span_20](start_span)local GameNameLabel = createInfoLabel("", HomePage);[span_20](end_span)
-[span_21](start_span)GameNameLabel.Position = UDim2.new(0, 150, 0, 135);[span_21](end_span)
-[span_22](start_span)GameNameLabel.Text = "Game Name: " .. game.Name;[span_22](end_span)
+local GameNameLabel = createInfoLabel("", HomePage);
+GameNameLabel.Position = UDim2.new(0, 150, 0, 135);
+GameNameLabel.Text = "Game Name: " .. game.Name;
 
-[span_23](start_span)local ExecutorLabel = createInfoLabel("", HomePage);[span_23](end_span)
-[span_24](start_span)ExecutorLabel.Position = UDim2.new(0, 150, 0, 160);[span_24](end_span)
-[span_25](start_span)ExecutorLabel.Text = "Executor: ";[span_25](end_span)
+local ExecutorLabel = createInfoLabel("", HomePage);
+ExecutorLabel.Position = UDim2.new(0, 150, 0, 160);
+ExecutorLabel.Text = "Executor: ";
 
-[span_26](start_span)local UserCountLabel = createInfoLabel("", HomePage);[span_26](end_span)
-[span_27](start_span)UserCountLabel.Position = UDim2.new(0, 150, 0, 185);[span_27](end_span)
-[span_28](start_span)UserCountLabel.Text = "Total users: Loading...";[span_28](end_span)
+local UserCountLabel = createInfoLabel("", HomePage);
+UserCountLabel.Position = UDim2.new(0, 150, 0, 185);
+UserCountLabel.Text = "Total users: Loading...";
 
--- Эезакутор атауын анықтау
-[span_29](start_span)local Executor = "Unknown";[span_29](end_span)
-if is_synapse_x then
-    [span_30](start_span)Executor = "Synapse X";[span_30](end_span)
-elseif is_krnl then
-    [span_31](start_span)Executor = "KRNL";[span_31](end_span)
-elseif is_fluxus then
-    [span_32](start_span)Executor = "Fluxus";[span_32](end_span)
-elseif getgenv then
-    [span_33](start_span)Executor = "Unknown (getgenv)";[span_33](end_span)
-end
-
-[span_34](start_span)ExecutorLabel.Text = "Executor: " .. Executor;[span_34](end_span)
+-- Орындаушы атауын анықтау
+local Executor = "Unknown";
+pcall(function()
+    if is_synapse_x then
+        Executor = "Synapse X";
+    elseif is_krnl then
+        Executor = "KRNL";
+    elseif is_fluxus then
+        Executor = "Fluxus";
+    elseif getgenv then
+        Executor = "Unknown (getgenv)";
+    end
+end)
+ExecutorLabel.Text = "Executor: " .. Executor;
 
 -- Қолданушы санын жүктеу (онлайн API қажет)
 task.spawn(function()
@@ -657,24 +658,24 @@ task.spawn(function()
     end
 end)
 
-[span_35](start_span)local creationDateLabel = createInfoLabel("", HomePage);[span_35](end_span)
-[span_36](start_span)creationDateLabel.Position = UDim2.new(0, 15, 0, 150);[span_36](end_span)
-[span_37](start_span)table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})[span_37](end_span)
+local creationDateLabel = createInfoLabel("", HomePage);
+creationDateLabel.Position = UDim2.new(0, 15, 0, 150);
+table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})
 
-[span_38](start_span)local deviceLabel = createInfoLabel("", HomePage);[span_38](end_span)
-[span_39](start_span)deviceLabel.Position = UDim2.new(0, 15, 0, 175)[span_39](end_span)
+local deviceLabel = createInfoLabel("", HomePage);
+deviceLabel.Position = UDim2.new(0, 15, 0, 175)
 
-[span_40](start_span)local ipInfoLabel = createInfoLabel("", HomePage);[span_40](end_span)
-[span_41](start_span)ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);[span_41](end_span)
-[span_42](start_span)table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"})[span_42](end_span)
+local ipInfoLabel = createInfoLabel("", HomePage);
+ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);
+table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"})
 
-[span_43](start_span)local countryLabel = createInfoLabel("", HomePage);[span_43](end_span)
-[span_44](start_span)countryLabel.Position = UDim2.new(0, 15, 0, 225);[span_44](end_span)
-[span_45](start_span)table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"})[span_45](end_span)
+local countryLabel = createInfoLabel("", HomePage);
+countryLabel.Position = UDim2.new(0, 15, 0, 225);
+table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"})
 
 task.spawn(function()
     pcall(function()
-        [span_46](start_span)local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId));[span_46](end_span)
+        local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId));
         local dateStr = r.created:sub(1, 10);
         local langCode = languageMap[settings.language] or "en";
         local format = translations.home_creationdate[langCode] or translations.home_creationdate.en;
@@ -685,28 +686,28 @@ end)
 
 task.spawn(function()
     pcall(function()
-        [span_47](start_span)local r = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/"));[span_47](end_span)
+        local r = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/"));
         local f = "";
         if r.countryCode then
             local a, b = 127462, string.byte("A");
             f = utf8.char(a + (string.byte(r.countryCode, 1) - b)) .. utf8.char(a + (string.byte(r.countryCode, 2) - b))
-        [span_48](start_span)end;[span_48](end_span)
-        [span_49](start_span)local ip = r.query or "N/A";[span_49](end_span)
-        [span_50](start_span)local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f;[span_50](end_span)
-        [span_51](start_span)local langCode = languageMap[settings.language] or "en";[span_51](end_span)
-        [span_52](start_span)ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip);[span_52](end_span)
-        [span_53](start_span)countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country);[span_53](end_span)
-        [span_54](start_span)translatableObjects[#translatableObjects + 1] = {object = ipInfoLabel, property = "Text", key = "home_ip", dynamic_args = {ip}};[span_54](end_span)
-        [span_55](start_span)translatableObjects[#translatableObjects + 1] = {object = countryLabel, property = "Text", key = "home_country", dynamic_args = {country}}[span_55](end_span)
+        end;
+        local ip = r.query or "N/A";
+        local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f;
+        local langCode = languageMap[settings.language] or "en";
+        ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip);
+        countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country);
+        translatableObjects[#translatableObjects + 1] = {object = ipInfoLabel, property = "Text", key = "home_ip", dynamic_args = {ip}};
+        translatableObjects[#translatableObjects + 1] = {object = countryLabel, property = "Text", key = "home_country", dynamic_args = {country}}
     end)
 end)
 
-[span_56](start_span)local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc";[span_56](end_span)
-[span_57](start_span)local langCode = languageMap[settings.language] or "en";[span_57](end_span)
-[span_58](start_span)local dev_text = translations[dev_type][langCode] or translations[dev_type].en;[span_58](end_span)
-[span_59](start_span)deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);[span_59](end_span)
-[span_60](start_span)translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}[span_60](end_span)
-       -- #endregion
+local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc";
+local langCode = languageMap[settings.language] or "en";
+local dev_text = translations[dev_type][langCode] or translations[dev_type].en;
+deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);
+translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
+        -- #endregion
         
         -- #region INFO PAGE
         local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
