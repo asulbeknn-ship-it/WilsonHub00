@@ -55,6 +55,7 @@ local translations = {
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
+    tab_wilsonai = { en = "WILSON-AI", ru = "WILSON-AI", kz = "WILSON-AI", zh = "WILSON-AI", fr = "WILSON-AI" },
     -- HOME PAGE
     home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдің, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
     home_nickname = { en = "NickName: %s", ru = "Никнейм: %s", kz = "Лақап аты: %s", zh = "昵称: %s", fr = "Surnom: %s" },
@@ -144,7 +145,10 @@ local translations = {
     lang_zh = { en = "Chinese", ru = "Китайский", kz = "Қытайша", zh = "中文", fr = "Chinois " },
     lang_fr = { en = "French", ru = "Французский", kz = "Французша", zh = "法語", fr = "Français" },
     -- EXECUTOR PAGE
-    executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
+        executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
+    -- WILSONAI PAGE
+    ai_placeholder = { en = "Ask WilsonAI a question...", ru = "Задайте вопрос WilsonAI...", kz = "WilsonAI-ға сұрақ қойыңыз...", zh = "向WilsonAI提问...", fr = "Posez une question à WilsonAI..." },
+    ai_thinking = { en = "WilsonAI is thinking...", ru = "WilsonAI думает...", kz = "WilsonAI ойлануда...", zh = "WilsonAI正在思考...", fr = "WilsonAI réfléchit..." },    
     -- NOTIFICATIONS
     notif_esp_title = { en = "ESP", ru = "ЕСП", kz = "ЕСП", zh = "透视", fr = "ESP" },
     notif_esp_enabled_text = { en = "Player ESP has been enabled.", ru = "ЕСП игроков включено.", kz = "Ойыншы ESP қосылды.", zh = "玩家透视已启用。", fr = "L'ESP des joueurs a été activé." },
@@ -621,42 +625,6 @@ task.spawn(function()
         local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
         local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
         
-          -- [[ МЕНЮДІҢ ТӨБЕСІНЕ АВАТАРДЫҢ БАСЫН ҚОСАТЫН КОД ]]
-        task.spawn(function()
-            pcall(function()
-                -- Аватарды орналастыратын негізгі элемент
-                local AvatarImage = Instance.new("ImageLabel", MainFrame)
-                AvatarImage.Name = "HeaderAvatar"
-                AvatarImage.Size = UDim2.new(0, 50, 0, 50) -- Аватардың өлшемі
-                AvatarImage.AnchorPoint = Vector2.new(0.5, 0.5)
-                AvatarImage.Position = UDim2.new(0.5, 0, 0, 0) -- Дәл ортасына және төбесіне
-                AvatarImage.BackgroundTransparency = 1
-                AvatarImage.ZIndex = Header.ZIndex + 1 -- Басқа элементтердің үстінде тұруы үшін
-
-                -- Аватарды домалақ қылу
-                local corner = Instance.new("UICorner", AvatarImage)
-                corner.CornerRadius = UDim.new(0.5, 0)
-
-                -- Аватардың сыртына жиек (рамка) қосу
-                local stroke = Instance.new("UIStroke", AvatarImage)
-                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-                stroke.Color = currentTheme.main -- Бастапқы түсті орнату
-                stroke.Thickness = 2
-
-                -- Жиектің түсін меню темасымен бірге өзгерту үшін
-                table.insert(themableObjects, {object = stroke, property = "Color", colorType = "main"})
-
-                -- Roblox серверінен Nurgazy_21-дің ТЕК БАСЫНЫҢ суретін алу
-                local userId = Players:GetUserIdFromNameAsync("Nurgazy_21")
-                local thumbType = Enum.ThumbnailType.HeadShot -- Бұл тек басты алады
-                local thumbSize = Enum.ThumbnailSize.Size150x150
-                local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
-                
-                AvatarImage.Image = content
-            end)
-        end)
-        -- [[ КОДТЫҢ СОҢЫ ]]
-        
         local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
         TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4
         table.insert(themableObjects, {object = TabsContainer, property = "ScrollBarImageColor3", colorType = "main"})
@@ -666,7 +634,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local WilsonAiButton=createTabButton("tab_wilsonai")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -681,6 +649,7 @@ task.spawn(function()
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
+        local WilsonAiPage=Instance.new("Frame",ContentContainer); WilsonAiPage.Size=UDim2.new(1,0,1,0); WilsonAiPage.BackgroundTransparency=1; WilsonAiPage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback) 
             local b = Instance.new("TextButton",parent)
@@ -1071,12 +1040,101 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
 
+        -- #region WILSON-AI PAGE
+        do
+            -- API кілті мен URL мекенжайы
+            local apiKey = "AIzaSyBZ7-Y-XMkN_FJufWzUPjXuBNY-EMKXrrY"
+            local apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" .. apiKey
+
+            -- Негізгі элементтер
+            local AiInput = Instance.new("TextBox", WilsonAiPage)
+            AiInput.Size = UDim2.new(1, -20, 0, 80)
+            AiInput.Position = UDim2.new(0, 10, 0, 10)
+            AiInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            AiInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+            AiInput.Font = Enum.Font.SourceSans
+            AiInput.TextSize = 14
+            AiInput.TextWrapped = true
+            AiInput.TextXAlignment = Enum.TextXAlignment.Left
+            AiInput.TextYAlignment = Enum.TextYAlignment.Top
+            AiInput.ClearTextOnFocus = false
+            Instance.new("UICorner", AiInput).CornerRadius = UDim.new(0, 6)
+            table.insert(translatableObjects, {object = AiInput, property = "PlaceholderText", key = "ai_placeholder"})
+            local AiInputStroke = Instance.new("UIStroke", AiInput)
+            AiInputStroke.Color = currentTheme.main
+            table.insert(themableObjects, {object = AiInputStroke, property = "Color", colorType = "main"})
+
+            local AiResponse = Instance.new("TextLabel", WilsonAiPage)
+            AiResponse.Size = UDim2.new(1, -20, 1, -155)
+            AiResponse.Position = UDim2.new(0, 10, 0, 100)
+            AiResponse.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+            AiResponse.TextColor3 = Color3.fromRGB(255, 255, 255)
+            AiResponse.Font = Enum.Font.SourceSans
+            AiResponse.TextSize = 14
+            AiResponse.TextWrapped = true
+            AiResponse.RichText = true
+            AiResponse.TextXAlignment = Enum.TextXAlignment.Left
+            AiResponse.TextYAlignment = Enum.TextYAlignment.Top
+            Instance.new("UICorner", AiResponse).CornerRadius = UDim.new(0, 6)
+            local AiResponseStroke = Instance.new("UIStroke", AiResponse)
+            AiResponseStroke.Color = currentTheme.main
+            table.insert(themableObjects, {object = AiResponseStroke, property = "Color", colorType = "main"})
+
+            local function askAI()
+                local question = AiInput.Text
+                if question:gsub("%s", "") == "" then return end
+
+                local langCode = languageMap[settings.language] or "en"
+                local thinkingText = translations.ai_thinking[langCode] or translations.ai_thinking.en
+                AiResponse.Text = thinkingText
+
+                local data = {
+                    contents = {
+                        {
+                            parts = {
+                                {text = question}
+                            }
+                        }
+                    }
+                }
+                
+                local success, response = pcall(function()
+                    return HttpService:RequestAsync({
+                        Url = apiUrl,
+                        Method = "POST",
+                        Headers = {["Content-Type"] = "application/json"},
+                        Body = HttpService:JSONEncode(data)
+                    })
+                end)
+
+                if success and response.Success then
+                    local decodedResponse = HttpService:JSONDecode(response.Body)
+                    local text = decodedResponse.candidates[1].content.parts[1].text
+                    AiResponse.Text = text
+                else
+                    AiResponse.Text = "Error: " .. (response and response.Body or "Request failed.")
+                end
+            end
+
+            local SendButton = createFunctionButton("send", WilsonAiPage, askAI)
+            SendButton.Size = UDim2.new(0.5, -15, 0, 35)
+            SendButton.Position = UDim2.new(0, 10, 1, -45)
+            
+            local ClearButton = createFunctionButton("clear", WilsonAiPage, function()
+                AiInput.Text = ""
+                AiResponse.Text = ""
+            end)
+            ClearButton.Size = UDim2.new(0.5, -15, 0, 35)
+            ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        end
+        -- #endregion
+
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton,WilsonAiButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage,WilsonAiPage}
         
         activeTab = HomeButton
 
