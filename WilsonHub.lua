@@ -491,6 +491,94 @@ local function cleanupAllEsp() for targetPlayer, _ in pairs(espData.guis) do cle
 local function createEspForPlayer(targetPlayer) if not espData.enabled or targetPlayer == player then return end; local character=targetPlayer.Character; if not character then return end; local head=character:WaitForChild("Head", 1); if not head then return end; cleanupEspForPlayer(targetPlayer); local espGui=Instance.new("BillboardGui", head); espGui.Name="PLAYER_ESP_GUI"; espGui.AlwaysOnTop=true; espGui.Size=UDim2.new(2,0,1.5,0); espGui.StudsOffset=Vector3.new(0,2.5,0); espGui.LightInfluence=0; local mainFrame=Instance.new("Frame", espGui); mainFrame.BackgroundTransparency=1; mainFrame.Size=UDim2.new(1,0,1,0); local box=Instance.new("Frame", mainFrame); box.BackgroundColor3=Color3.fromRGB(255,255,0); box.BackgroundTransparency=0.5; box.BorderSizePixel=0; box.Size=UDim2.new(1,0,1,0); Instance.new("UICorner",box).CornerRadius=UDim.new(0,3); local innerBox=Instance.new("Frame",box); innerBox.BackgroundColor3=Color3.fromRGB(0,0,0); innerBox.BackgroundTransparency=0.3; innerBox.BorderSizePixel=0; innerBox.Size=UDim2.new(1,-2,1,-2); innerBox.Position=UDim2.new(0.5,-innerBox.AbsoluteSize.X/2,0.5,-innerBox.AbsoluteSize.Y/2); Instance.new("UICorner",innerBox).CornerRadius=UDim.new(0,2); local textLabel=Instance.new("TextLabel",mainFrame); textLabel.BackgroundTransparency=1; textLabel.Size=UDim2.new(1,0,1,0); textLabel.Font=Enum.Font.SourceSans; textLabel.TextSize=14; textLabel.TextColor3=Color3.new(1,1,1); textLabel.TextStrokeColor3=Color3.fromRGB(0,0,0); textLabel.TextStrokeTransparency=0; local function update() if not targetPlayer or not targetPlayer.Parent or not character or not character.Parent or not head or not head.Parent then cleanupEspForPlayer(targetPlayer); return end; local distance=(head.Position - workspace.CurrentCamera.CFrame.Position).Magnitude; textLabel.Text = targetPlayer.Name .. "\n[" .. math.floor(distance) .. "m]" end; espData.guis[targetPlayer] = { gui = espGui, updateConn = RunService.RenderStepped:Connect(update) } end
 function togglePlayerEsp(state) espData.enabled=state; if espData.enabled then cleanupAllEsp(); for _,p in ipairs(Players:GetPlayers())do createEspForPlayer(p)end; espData.connections.playerAdded=Players.PlayerAdded:Connect(createEspForPlayer); espData.connections.playerRemoving=Players.PlayerRemoving:Connect(cleanupEspForPlayer); sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5) else cleanupAllEsp(); sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5) end end
 
+-- ================================================================= --
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫ ]]
+-- ================================================================= --
+pcall(function()
+    -- Керекті сервистерді алу
+    local TweenService = game:GetService("TweenService")
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+
+    -- Негізгі UI элементтерін құру
+    local PreLoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    PreLoadingGui.Name = "WilsonHubIntroGui"
+    PreLoadingGui.ResetOnSpawn = false
+    PreLoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    PreLoadingGui.IgnoreGuiInset = true
+
+    -- Қара фон
+    local Background = Instance.new("Frame", PreLoadingGui)
+    Background.Size = UDim2.new(1, 0, 1, 0)
+    Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Background.BorderSizePixel = 0
+
+    -- Ортадағы сурет (логотип)
+    local Logo = Instance.new("ImageLabel", Background)
+    Logo.Size = UDim2.new(0, 220, 0, 220) -- Сурет өлшемі
+    Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
+    Logo.AnchorPoint = Vector2.new(0.5, 0.5)
+    Logo.BackgroundTransparency = 1
+    -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢ ЖҮКТЕГЕН СУРЕТТІҢ ID КОДЫН ҚОЙ !!!
+    Logo.Image = "rbxassetid://89264639082468" 
+    Logo.ScaleType = Enum.ScaleType.Crop
+
+    -- Суретті домалақ қылу үшін
+    local corner = Instance.new("UICorner", Logo)
+    corner.CornerRadius = UDim.new(0.5, 0)
+
+    -- Астындағы жазу
+    local PresentsText = Instance.new("TextLabel", Background)
+    PresentsText.Size = UDim2.new(1, -40, 0, 30)
+    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
+    PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
+    PresentsText.BackgroundTransparency = 1
+    PresentsText.Font = Enum.Font.SourceSansBold
+    PresentsText.TextSize = 26
+    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0) -- Қызыл түс
+    PresentsText.Text = "" -- Анимация үшін басында бос
+
+    -- --- АНИМАЦИЯЛАР ---
+    -- 1. Элементтерді бастапқы күйге келтіру (көрінбейтін)
+    Background.BackgroundTransparency = 1
+    Logo.ImageTransparency = 1
+    Logo.Size = UDim2.new(0, 0, 0, 0)
+
+    -- 2. Анимацияны бастау
+    -- Фонның біртіндеп пайда болуы
+    TweenService:Create(Background, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+    task.wait(0.3)
+
+    -- Логотиптің ортадан үлкейіп пайда болуы ("фото анимациясы")
+    local logoTweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+    TweenService:Create(Logo, logoTweenInfo, {
+        Size = UDim2.new(0, 220, 0, 220),
+        ImageTransparency = 0
+    }):Play()
+    task.wait(0.6)
+
+    -- Тексттің әріптеп жазылу анимациясы (1 секунд)
+    local fullText = "WILSONHUB games presents"
+    for i = 1, #fullText do
+        PresentsText.Text = string.sub(fullText, 1, i)
+        task.wait(1.0 / #fullText)
+    end
+
+    -- 3. Анимацияның соңы (жалпы 2 секундтан кейін жоғалады)
+    task.wait(0.5) -- Анимация біткен соң сәл күту
+
+    -- Барлығының біртіндеп жоғалуы
+    TweenService:Create(Background, TweenInfo.new(0.4), {BackgroundTransparency = 1}):Play()
+    task.wait(0.4)
+
+    -- Бұл экранды толықтай жою
+    PreLoadingGui:Destroy()
+end)
+
+-- ================================================================= --
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
+-- ================================================================= --
+
 -- 1. ЭКРАН ЗАГРУЗКИ
 local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 LoadingGui.IgnoreGuiInset = true
