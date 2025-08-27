@@ -1063,7 +1063,99 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
             local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer);
             createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
         end
-        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); ExecutorInput.Text = 'Print("HelloWorld!")' table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        local HighlightLabel = Instance.new("TextLabel", ExecutorPage)
+        HighlightLabel.Name = "HighlightLabel"
+        HighlightLabel.Size = UDim2.new(1, -20, 1, -60)
+        HighlightLabel.Position = UDim2.new(0, 10, 0, 10)
+        HighlightLabel.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+        HighlightLabel.Font = Enum.Font.Code
+        HighlightLabel.TextSize = 14
+        HighlightLabel.TextWrapped = true
+        HighlightLabel.TextXAlignment = Enum.TextXAlignment.Left
+        HighlightLabel.TextYAlignment = Enum.TextYAlignment.Top
+        HighlightLabel.RichText = true
+        Instance.new("UICorner", HighlightLabel).CornerRadius = UDim.new(0, 6)
+        
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); 
+        ExecutorInput.Name = "ExecutorInput"
+        ExecutorInput.Size = UDim2.new(1, -20, 1, -60);
+        ExecutorInput.Position = UDim2.new(0, 10, 0, 10); 
+        ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); 
+        ExecutorInput.BackgroundTransparency = 1 -- Фонды мөлдір етеміз
+        ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); 
+        ExecutorInput.Font = Enum.Font.Code;
+        ExecutorInput.TextSize = 14; 
+        ExecutorInput.TextWrapped = true; 
+        ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; 
+        ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; 
+        ExecutorInput.ClearTextOnFocus = false;
+        ExecutorInput.ZIndex = 2 -- Боялған тексттің үстінде тұруы үшін
+
+        table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); 
+        local ExecutorStroke = Instance.new("UIStroke", HighlightLabel); -- Stroke енді HighlightLabel-да болады
+        ExecutorStroke.Color = currentTheme.main; 
+        table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
+
+        -- LUA SYNTAX HIGHLIGHTING FUNCTION
+        local function highlightSyntax(text)
+            local colors = {
+                keyword = "rgb(86, 156, 214)",    -- blue
+                string = "rgb(206, 145, 120)",    -- orange
+                number = "rgb(181, 206, 168)",    -- light green
+                comment = "rgb(100, 150, 90)",    -- dark green
+                boolean_nil = "rgb(214, 96, 96)", -- red
+                variable = "rgb(156, 220, 254)",  -- light blue
+                default = "rgb(220, 220, 220)"    -- white
+            }
+            
+            local keywords = {
+                "and", "break", "do", "else", "elseif", "end", "false", "for", "function",
+                "if", "in", "local", "nil", "not", "or", "repeat", "return", "then",
+                "true", "until", "while", "continue"
+            }
+            local keywordPatterns = {}
+            for _, v in pairs(keywords) do
+                table.insert(keywordPatterns, "%f[%w]"..v.."%f[%W]")
+            end
+
+            text = text:gsub("&", "&amp;"):gsub("<", "&lt;"):gsub(">", "&gt;"):gsub('"', "&quot;"):gsub("'", "&apos;")
+
+            -- Comments
+            text = text:gsub("(--.-)\n", string.format("<font color='%s'>%%1</font>\n", colors.comment))
+            text = text:gsub("(--%[(=*)%[.-%]%2%])", string.format("<font color='%s'>%%1</font>", colors.comment))
+            -- Strings
+            text = text:gsub("([\"'])(.-)%1", string.format("<font color='%s'>%%1%%2%%1</font>", colors.string))
+            -- Numbers
+            text = text:gsub("([^%w])(%d+%.?%d*)", string.format("%%1<font color='%s'>%%2</font>", colors.number))
+            -- Keywords
+            for _, pattern in ipairs(keywordPatterns) do
+                text = text:gsub(pattern, function(word)
+                    local color = (word == "true" or word == "false" or word == "nil") and colors.boolean_nil or colors.keyword
+                    return string.format("<font color='%s'>%s</font>", color, word)
+                end)
+            end
+            -- game, workspace, script
+            text = text:gsub("(game|workspace|script|player|Players|Instance|Vector3|Color3|UDim2|CFrame)", string.format("<font color='%s'>%%1</font>", colors.variable))
+
+            return text
+        end
+
+        ExecutorInput:GetPropertyChangedSignal("Text"):Connect(function()
+            HighlightLabel.Text = highlightSyntax(ExecutorInput.Text)
+        end)
+        
+        -- Бастапқы текстті орнату
+        ExecutorInput.Text = 'Print("HelloWorld!")'
+        HighlightLabel.Text = highlightSyntax(ExecutorInput.Text)
+
+        local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end);
+        ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45);
+        local ClearButton = createFunctionButton("clear", ExecutorPage, function() 
+            ExecutorInput.Text = "" 
+            HighlightLabel.Text = ""
+        end); 
+        ClearButton.Size = UDim2.new(0.5, -15, 0, 35);
+        ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion        
 
         -- THEME REGISTRATION
