@@ -1002,16 +1002,16 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
             updateScriptsCanvasSize()
 
             -- Осында ойын скрипттерін қосасыз
-            createFunctionButton("game_brookhaven", ScriptsContainer, function()  end);
-            createFunctionButton("game_growagarden", ScriptsContainer, function()  end);
-            createFunctionButton("game_ukradibraynarot", ScriptsContainer, function()  end);
-            createFunctionButton("game_myortvyyrels", ScriptsContainer, function()  end);
-            createFunctionButton("game_99den", ScriptsContainer, function()  end);
-            createFunctionButton("game_mm2", ScriptsContainer, function()  end);
-            createFunctionButton("game_gorodkrasnykh", ScriptsContainer, function()  end);
-            createFunctionButton("game_bezimyannyy strelok", ScriptsContainer, function()  end);
-            createFunctionButton("game_naturaldisaster", ScriptsContainer, function()  end);
-            createFunctionButton("game_fruits", ScriptsContainer, function()  end);
+            createFunctionButton("game_brookhaven", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_growagarden", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_ukradibraynarot", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_myortvyyrels", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_99den", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_mm2", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_gorodkrasnykh", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_bezimyannyy strelok", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_naturaldisaster", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
+            createFunctionButton("game_fruits", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/AhmadV99/Speed-Hub-X/main/Speed%20Hub%20X.lua"))() end);
 
             SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
                 local s = SearchBox.Text:lower()
