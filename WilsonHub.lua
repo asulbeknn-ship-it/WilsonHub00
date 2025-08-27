@@ -991,12 +991,11 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 end)
 
 -- ================================================================= --
--- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V3 - Қарапайым) ]]
+-- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V4 - Нақты нұсқа) ]]
 -- ================================================================= --
 pcall(function()
     -- Керекті сервистер
     local ContentProvider = game:GetService("ContentProvider")
-    local TweenService = game:GetService("TweenService")
 
     -- 1. Кіріспе элементтерін құру
     local IntroBackground = Instance.new("Frame", Background)
@@ -1006,7 +1005,7 @@ pcall(function()
     IntroBackground.ZIndex = 2
 
     local Logo = Instance.new("ImageLabel", IntroBackground)
-    Logo.Size = UDim2.new(0, 220, 0, 220) -- Өлшемі бірден дайын
+    Logo.Size = UDim2.new(0, 220, 0, 220)
     Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
     Logo.AnchorPoint = Vector2.new(0.5, 0.5)
     Logo.BackgroundTransparency = 1
@@ -1025,7 +1024,7 @@ pcall(function()
     PresentsText.Font = Enum.Font.SourceSansBold
     PresentsText.TextSize = 26
     PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0)
-    PresentsText.Text = "WILSONHUB games presents" -- Текст бірден дайын
+    PresentsText.Text = ""
 
     -- 2. Ескі жүктеу элементтерін жасыру
     LoadingLabel.Visible = false
@@ -1035,17 +1034,22 @@ pcall(function()
     -- 3. Суретті алдын ала жүктеу
     ContentProvider:PreloadAsync({Logo})
     
-    -- 4. Кіріспе экранын 2 секунд бойы көрсету (анимациясыз)
+    -- 4. Тексттің 1 секундтық анимациясын іске қосу
+    task.spawn(function()
+        local fullText = "WILSONHUB games presents"
+        for i = 1, #fullText do
+            PresentsText.Text = string.sub(fullText, 1, i)
+            task.wait(1.0 / #fullText)
+        end
+    end)
+    
+    -- 5. Жалпы 2 секунд күту
     task.wait(2)
 
-    -- 5. Кіріспе экранын жайлап өшіру
-    local fadeOutInfo = TweenInfo.new(0.5)
-    TweenService:Create(IntroBackground, fadeOutInfo, { BackgroundTransparency = 1 }):Play()
-    task.wait(0.5)
-
+    -- 6. Кіріспе экранын бірден жою
     IntroBackground:Destroy()
 
-    -- 6. Негізгі жүктеу элементтерін қайта көрсету
+    -- 7. Негізгі жүктеу элементтерін көрсету
     LoadingLabel.Visible = true
     PercentageLabel.Visible = true
     ProgressBarBG.Visible = true
