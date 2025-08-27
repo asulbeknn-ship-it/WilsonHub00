@@ -991,25 +991,26 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 end)
 
 -- ================================================================= --
--- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ ]]
+-- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V2) ]]
 -- ================================================================= --
 pcall(function()
-    -- Керекті сервис
+    -- Керекті сервистер
     local TweenService = game:GetService("TweenService")
+    local ContentProvider = game:GetService("ContentProvider")
 
-    -- 1. Кіріспе анимациясы үшін элементтерді құру (ескі LoadingGui ішіне)
+    -- 1. Кіріспе анимациясы үшін элементтерді құру
     local IntroBackground = Instance.new("Frame", Background)
     IntroBackground.Name = "IntroBackground"
     IntroBackground.Size = UDim2.new(1, 0, 1, 0)
     IntroBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    IntroBackground.ZIndex = 2 -- Басқа элементтердің үстінде тұруы үшін
+    IntroBackground.ZIndex = 2
 
     local Logo = Instance.new("ImageLabel", IntroBackground)
     Logo.Size = UDim2.new(0, 220, 0, 220)
     Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
     Logo.AnchorPoint = Vector2.new(0.5, 0.5)
     Logo.BackgroundTransparency = 1
-    -- !!! МАҢЫЗДЫ: ӨТКЕН ЖОЛҒЫДАЙ ОСЫ ЖЕРГЕ СУРЕТІҢНІҢ ID КОДЫН ҚОЙ !!!
+    -- !!! ОСЫ ЖЕРГЕ СУРЕТТІҢ ID КОДЫН ҚАЙТА ҚОЮДЫ ҰМЫТПА !!!
     Logo.Image = "rbxassetid://89264639082468" 
     Logo.ScaleType = Enum.ScaleType.Crop
 
@@ -1031,19 +1032,22 @@ pcall(function()
     PercentageLabel.Visible = false
     ProgressBarBG.Visible = false
 
-    -- 3. Кіріспе анимациясын ойнату
+    -- 3. Суретті алдын ала жүктеу (кідірісті болдырмау үшін)
+    ContentProvider:PreloadAsync({Logo})
+    
+    -- 4. Кіріспе анимациясын ойнату
     Logo.ImageTransparency = 1
     Logo.Size = UDim2.new(0, 0, 0, 0)
+    
+    task.wait(0.2)
 
-    task.wait(0.3) -- Сәл кідіріс
-
-    -- Логотиптің ортадан үлкейіп пайда болуы
-    local logoTweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+    -- Логотиптің ортадан үлкейіп пайда болуы (1 секунд)
+    local logoTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
     TweenService:Create(Logo, logoTweenInfo, {
         Size = UDim2.new(0, 220, 0, 220),
         ImageTransparency = 0
     }):Play()
-    task.wait(0.6)
+    task.wait(0.5)
 
     -- Тексттің әріптеп жазылу анимациясы (1 секунд)
     local fullText = "WILSONHUB games presents"
@@ -1052,18 +1056,19 @@ pcall(function()
         task.wait(1.0 / #fullText)
     end
 
-    task.wait(0.5) -- Анимация біткен соң сәл күту
+    -- Анимация біткен соң, бәрін көріп үлгеру үшін 1 секунд күту
+    task.wait(1)
 
-    -- 4. Кіріспе элементтерін фонмен бірге жою
+    -- 5. Кіріспе элементтерін фонмен бірге өшіру (0.5 секунд)
     local fadeOutInfo = TweenInfo.new(0.5)
     TweenService:Create(Logo, fadeOutInfo, { ImageTransparency = 1 }):Play()
     TweenService:Create(PresentsText, fadeOutInfo, { TextTransparency = 1 }):Play()
     TweenService:Create(IntroBackground, fadeOutInfo, { BackgroundTransparency = 1 }):Play()
-    task.wait(0.5)
+    task.wait(0.5) -- Өшу анимациясының бітуін күту
 
-    IntroBackground:Destroy() -- Кіріспе элементтерін толық жою
+    IntroBackground:Destroy()
 
-    -- 5. Ескі жүктеу элементтерін қайта көрсету
+    -- 6. Ескі жүктеу элементтерін қайта көрсету
     LoadingLabel.Visible = true
     PercentageLabel.Visible = true
     ProgressBarBG.Visible = true
