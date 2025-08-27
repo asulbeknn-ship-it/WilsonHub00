@@ -12,7 +12,8 @@ local Themes = {
     Yellow = { main = Color3.fromRGB(255, 190, 0), accent = Color3.fromRGB(255, 220, 50), text = Color3.fromRGB(0,0,0) },
     Blue = { main = Color3.fromRGB(0, 120, 255), accent = Color3.fromRGB(50, 150, 255), text = Color3.fromRGB(255,255,255) },
     Green = { main = Color3.fromRGB(0, 180, 0), accent = Color3.fromRGB(50, 220, 50), text = Color3.fromRGB(255,255,255) },
-    White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) }
+    White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) },
+    Purple = { main = Color3.fromRGB(138, 43, 226), accent = Color3.fromRGB(148, 0, 211), text = Color3.fromRGB(255, 255, 255) }
 }
 local settings = { theme = "Red", language = "English" }
 
@@ -55,7 +56,6 @@ local translations = {
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
-    tab_wilsonai = { en = "WILSON-AI", ru = "WILSON-AI", kz = "WILSON-AI", zh = "WILSON-AI", fr = "WILSON-AI" },
     -- HOME PAGE
     home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдің, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
     home_nickname = { en = "NickName: %s", ru = "Никнейм: %s", kz = "Лақап аты: %s", zh = "昵称: %s", fr = "Surnom: %s" },
@@ -137,6 +137,7 @@ local translations = {
     theme_blue = { en = "Blue", ru = "Синяя", kz = "Көк", zh = "蓝色", fr = "Bleu" },
     theme_green = { en = "Green", ru = "Зеленая", kz = "Жасыл", zh = "绿色", fr = "Vert" },
     theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
+    theme_purple = { en = "Purple", ru = "Фиолетовая", kz = "Күлгін", zh = "紫色", fr = "Violet" },
     theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
     settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
     lang_en = { en = "English", ru = "Английский", kz = "Ағылшынша", zh = "英語", fr = "Anglais " },
@@ -145,10 +146,7 @@ local translations = {
     lang_zh = { en = "Chinese", ru = "Китайский", kz = "Қытайша", zh = "中文", fr = "Chinois " },
     lang_fr = { en = "French", ru = "Французский", kz = "Французша", zh = "法語", fr = "Français" },
     -- EXECUTOR PAGE
-        executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
-    -- WILSONAI PAGE
-    ai_placeholder = { en = "Ask WilsonAI a question...", ru = "Задайте вопрос WilsonAI...", kz = "WilsonAI-ға сұрақ қойыңыз...", zh = "向WilsonAI提问...", fr = "Posez une question à WilsonAI..." },
-    ai_thinking = { en = "WilsonAI is thinking...", ru = "WilsonAI думает...", kz = "WilsonAI ойлануда...", zh = "WilsonAI正在思考...", fr = "WilsonAI réfléchit..." },    
+    executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
     -- NOTIFICATIONS
     notif_esp_title = { en = "ESP", ru = "ЕСП", kz = "ЕСП", zh = "透视", fr = "ESP" },
     notif_esp_enabled_text = { en = "Player ESP has been enabled.", ru = "ЕСП игроков включено.", kz = "Ойыншы ESP қосылды.", zh = "玩家透视已启用。", fr = "L'ESP des joueurs a été activé." },
@@ -562,7 +560,7 @@ pcall(function()
     task.wait(0.6)
 
     -- Тексттің әріптеп жазылу анимациясы (1 секунд)
-    local fullText = "WILSONHUB games presents"
+    local fullText = "HACK WILSONHUB GAMES PRESENTS"
     for i = 1, #fullText do
         PresentsText.Text = string.sub(fullText, 1, i)
         task.wait(1.0 / #fullText)
@@ -570,10 +568,6 @@ pcall(function()
 
     -- 3. Анимацияның соңы (жалпы 2 секундтан кейін жоғалады)
     task.wait(0.0) -- Анимация біткен соң сәл күту
-
-    -- Барлығының біртіндеп жоғалуы
-    TweenService:Create(Background, TweenInfo.new(0.0), {BackgroundTransparency = 1}):Play()
-    task.wait(0.0)
 
     -- Бұл экранды толықтай жою
     PreLoadingGui:Destroy()
@@ -634,7 +628,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local WilsonAiButton=createTabButton("tab_wilsonai")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -649,7 +643,6 @@ task.spawn(function()
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
-        local WilsonAiPage=Instance.new("Frame",ContentContainer); WilsonAiPage.Size=UDim2.new(1,0,1,0); WilsonAiPage.BackgroundTransparency=1; WilsonAiPage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback) 
             local b = Instance.new("TextButton",parent)
@@ -1026,7 +1019,7 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
             local ThemesLabel = Instance.new("TextLabel", ThemesFrame); ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});
             local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame); ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
             local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer); ThemesGrid.CellPadding=UDim2.new(0,10,0,10); ThemesGrid.CellSize=UDim2.new(0,125,0,40); ThemesGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
-            createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
+            createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end);         createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
 
             -- Create a frame for Languages
             local LangFrame = Instance.new("Frame", SettingsContainer)
@@ -1040,101 +1033,12 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion
 
-        -- #region WILSON-AI PAGE
-        do
-            -- API кілті мен URL мекенжайы
-            local apiKey = "AIzaSyBZ7-Y-XMkN_FJufWzUPjXuBNY-EMKXrrY"
-            local apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" .. apiKey"
-
-            -- Негізгі элементтер
-            local AiInput = Instance.new("TextBox", WilsonAiPage)
-            AiInput.Size = UDim2.new(1, -20, 0, 80)
-            AiInput.Position = UDim2.new(0, 10, 0, 10)
-            AiInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-            AiInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-            AiInput.Font = Enum.Font.SourceSans
-            AiInput.TextSize = 14
-            AiInput.TextWrapped = true
-            AiInput.TextXAlignment = Enum.TextXAlignment.Left
-            AiInput.TextYAlignment = Enum.TextYAlignment.Top
-            AiInput.ClearTextOnFocus = false
-            Instance.new("UICorner", AiInput).CornerRadius = UDim.new(0, 6)
-            table.insert(translatableObjects, {object = AiInput, property = "PlaceholderText", key = "ai_placeholder"})
-            local AiInputStroke = Instance.new("UIStroke", AiInput)
-            AiInputStroke.Color = currentTheme.main
-            table.insert(themableObjects, {object = AiInputStroke, property = "Color", colorType = "main"})
-
-            local AiResponse = Instance.new("TextLabel", WilsonAiPage)
-            AiResponse.Size = UDim2.new(1, -20, 1, -155)
-            AiResponse.Position = UDim2.new(0, 10, 0, 100)
-            AiResponse.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
-            AiResponse.TextColor3 = Color3.fromRGB(255, 255, 255)
-            AiResponse.Font = Enum.Font.SourceSans
-            AiResponse.TextSize = 14
-            AiResponse.TextWrapped = true
-            AiResponse.RichText = true
-            AiResponse.TextXAlignment = Enum.TextXAlignment.Left
-            AiResponse.TextYAlignment = Enum.TextYAlignment.Top
-            Instance.new("UICorner", AiResponse).CornerRadius = UDim.new(0, 6)
-            local AiResponseStroke = Instance.new("UIStroke", AiResponse)
-            AiResponseStroke.Color = currentTheme.main
-            table.insert(themableObjects, {object = AiResponseStroke, property = "Color", colorType = "main"})
-
-            local function askAI()
-                local question = AiInput.Text
-                if question:gsub("%s", "") == "" then return end
-
-                local langCode = languageMap[settings.language] or "en"
-                local thinkingText = translations.ai_thinking[langCode] or translations.ai_thinking.en
-                AiResponse.Text = thinkingText
-
-                local data = {
-                    contents = {
-                        {
-                            parts = {
-                                {text = question}
-                            }
-                        }
-                    }
-                }
-                
-                local success, response = pcall(function()
-                    return HttpService:RequestAsync({
-                        Url = apiUrl,
-                        Method = "POST",
-                        Headers = {["Content-Type"] = "application/json"},
-                        Body = HttpService:JSONEncode(data)
-                    })
-                end)
-
-                if success and response.Success then
-                    local decodedResponse = HttpService:JSONDecode(response.Body)
-                    local text = decodedResponse.candidates[1].content.parts[1].text
-                    AiResponse.Text = text
-                else
-                    AiResponse.Text = "Error: " .. (response and response.Body or "Request failed.")
-                end
-            end
-
-            local SendButton = createFunctionButton("send", WilsonAiPage, askAI)
-            SendButton.Size = UDim2.new(0.5, -15, 0, 35)
-            SendButton.Position = UDim2.new(0, 10, 1, -45)
-            
-            local ClearButton = createFunctionButton("clear", WilsonAiPage, function()
-                AiInput.Text = ""
-                AiResponse.Text = ""
-            end)
-            ClearButton.Size = UDim2.new(0.5, -15, 0, 35)
-            ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
-        end
-        -- #endregion
-
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton,WilsonAiButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage,WilsonAiPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
         
         activeTab = HomeButton
 
