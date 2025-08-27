@@ -1044,7 +1044,7 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         do
             -- API кілті мен URL мекенжайы
             local apiKey = "AIzaSyBZ7-Y-XMkN_FJufWzUPjXuBNY-EMKXrrY"
-            local apiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" .. apiKey
+            local apiUrl = "https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key=" .. apiKey"
 
             -- Негізгі элементтер
             local AiInput = Instance.new("TextBox", WilsonAiPage)
