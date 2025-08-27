@@ -564,6 +564,9 @@ pcall(function()
         task.wait(1.0 / #fullText)
     end
 
+    -- 3. Анимацияның соңы (жалпы 2 секундтан кейін жоғалады)
+    task.wait(0.0) -- Анимация біткен соң сәл күту
+
     -- Барлығының біртіндеп жоғалуы
     TweenService:Create(Background, TweenInfo.new(0.0), {BackgroundTransparency = 1}):Play()
     task.wait(0.0)
