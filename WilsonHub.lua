@@ -1023,57 +1023,70 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         end
         -- #endregion
 
-         -- #region SETTINGS & EXECUTOR
+        -- #region SETTINGS & EXECUTOR
         do 
-            [span_0](start_span)local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage);[span_0](end_span) [span_1](start_span)SettingsContainer.Size=UDim2.new(1,-10,1,-10);[span_1](end_span) [span_2](start_span)SettingsContainer.Position=UDim2.new(0,5,0,5);[span_2](end_span) [span_3](start_span)SettingsContainer.BackgroundTransparency=1;[span_3](end_span) [span_4](start_span)SettingsContainer.ScrollBarThickness=6;[span_4](end_span) 
+            local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,-10,1,-10); SettingsContainer.Position=UDim2.new(0,5,0,5); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; 
             
-            -- [[ FIX: Use a UIListLayout for clean separation of sections ]]
-            [span_5](start_span)local ListLayout = Instance.new("UIListLayout", SettingsContainer)[span_5](end_span)
-            [span_6](start_span)ListLayout.Padding = UDim.new(0, 15)[span_6](end_span)
-            [span_7](start_span)ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center[span_7](end_span)
-            [span_8](start_span)ListLayout.SortOrder = Enum.SortOrder.LayoutOrder[span_8](end_span)
+            local ListLayout = Instance.new("UIListLayout", SettingsContainer)
+            ListLayout.Padding = UDim.new(0, 15)
+            ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
 
-            -- Create a frame for Themes
-         
-           [span_9](start_span)local ThemesFrame = Instance.new("Frame", SettingsContainer)[span_9](end_span)
-            [span_10](start_span)ThemesFrame.Name = "ThemesFrame";[span_10](end_span) [span_11](start_span)ThemesFrame.BackgroundTransparency = 1;[span_11](end_span) [span_12](start_span)ThemesFrame.Size = UDim2.new(1, 0, 0, 1);[span_12](end_span) [span_13](start_span)ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y;[span_13](end_span) [span_14](start_span)ThemesFrame.LayoutOrder = 1[span_14](end_span)
-            [span_15](start_span)local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame);[span_15](end_span)
-            [span_16](start_span)ThemesListLayout.Padding = UDim.new(0, 5)[span_16](end_span)
-            ThemesListLayout.SortOrder = Enum.SortOrder.LayoutOrder -- <-- ТҮЗЕТІЛДІ
-            [span_17](start_span)local ThemesLabel = Instance.new("TextLabel", ThemesFrame);[span_17](end_span)
-            ThemesLabel.LayoutOrder = 1 -- <-- ТҮЗЕТІЛДІ
-            [span_18](start_span)ThemesLabel.Size = UDim2.new(1, 0, 0, 20);[span_18](end_span) [span_19](start_span)ThemesLabel.BackgroundTransparency = 1;[span_19](end_span) [span_20](start_span)ThemesLabel.Font = Enum.Font.SourceSansBold;[span_20](end_span) [span_21](start_span)ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255);[span_21](end_span) [span_22](start_span)ThemesLabel.TextSize = 18;[span_22](end_span) [span_23](start_span)ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left;[span_23](end_span) [span_24](start_span)table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});[span_24](end_span)
-            [span_25](start_span)local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame);[span_25](end_span)
-            ThemeButtonsContainer.LayoutOrder = 2 -- <-- ТҮЗЕТІЛДІ
-            [span_26](start_span)ThemeButtonsContainer.BackgroundTransparency = 1;[span_26](end_span) [span_27](start_span)ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1);[span_27](end_span) [span_28](start_span)ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y[span_28](end_span)
-            [span_29](start_span)local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer);[span_29](end_span) [span_30](start_span)ThemesGrid.CellPadding=UDim2.new(0,10,0,10);[span_30](end_span) [span_31](start_span)ThemesGrid.CellSize=UDim2.new(0,125,0,40);[span_31](end_span) [span_32](start_span)ThemesGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;[span_32](end_span)
-            [span_33](start_span)createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end);[span_33](end_span) [span_34](start_span)createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end);[span_34](end_span) [span_35](start_span)createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end);[span_35](end_span)
-            [span_36](start_span)createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end);[span_36](end_span)         [span_37](start_span)createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end);[span_37](end_span) [span_38](start_span)createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end);[span_38](end_span) [span_39](start_span)createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);[span_39](end_span)
-            -- Create a frame for Languages
-            [span_40](start_span)local LangFrame = Instance.new("Frame", SettingsContainer)[span_40](end_span)
-            [span_41](start_span)LangFrame.Name = "LangFrame";[span_41](end_span) [span_42](start_span)LangFrame.BackgroundTransparency = 1;[span_42](end_span) [span_43](start_span)LangFrame.Size = UDim2.new(1, 0, 0, 1);[span_43](end_span) [span_44](start_span)LangFrame.AutomaticSize = Enum.AutomaticSize.Y;[span_44](end_span) [span_45](start_span)LangFrame.LayoutOrder = 2[span_45](end_span)
-            [span_46](start_span)local LangListLayout = Instance.new("UIListLayout", LangFrame);[span_46](end_span)
-            [span_47](start_span)LangListLayout.Padding = UDim.new(0, 5)[span_47](end_span)
-            LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder -- <-- ТҮЗЕТІЛДІ
-            [span_48](start_span)local LangLabel = Instance.new("TextLabel", LangFrame);[span_48](end_span)
-            LangLabel.LayoutOrder = 1 -- <-- ТҮЗЕТІЛДІ
-            [span_49](start_span)LangLabel.Size = UDim2.new(1, 0, 0, 20);[span_49](end_span) [span_50](start_span)LangLabel.BackgroundTransparency = 1;[span_50](end_span) [span_51](start_span)LangLabel.Font = Enum.Font.SourceSansBold;[span_51](end_span) [span_52](start_span)LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255);[span_52](end_span) [span_53](start_span)LangLabel.TextSize = 18;[span_53](end_span) [span_54](start_span)LangLabel.TextXAlignment = Enum.TextXAlignment.Left;[span_54](end_span) [span_55](start_span)table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});[span_55](end_span)
-            [span_56](start_span)local LangButtonsContainer = Instance.new("Frame", LangFrame);[span_56](end_span)
-            LangButtonsContainer.LayoutOrder = 2 -- <-- ТҮЗЕТІЛДІ
-            [span_57](start_span)LangButtonsContainer.BackgroundTransparency = 1;[span_57](end_span) [span_58](start_span)LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1);[span_58](end_span) [span_59](start_span)LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y[span_59](end_span)
-            [span_60](start_span)local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer);[span_60](end_span) [span_61](start_span)LangGrid.CellPadding=UDim2.new(0,10,0,10);[span_61](end_span) [span_62](start_span)LangGrid.CellSize=UDim2.new(0,125,0,40);[span_62](end_span) [span_63](start_span)LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;[span_63](end_span)
-            [span_64](start_span)createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end);[span_64](end_span) [span_65](start_span)createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end);[span_65](end_span) [span_66](start_span)createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end);[span_66](end_span)
-            [span_67](start_span)createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end);[span_67](end_span) [span_68](start_span)createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);[span_68](end_span)
-        [span_69](start_span)end[span_69](end_span)
-        [span_70](start_span)local ExecutorInput = Instance.new("TextBox", ExecutorPage);[span_70](end_span) [span_71](start_span)ExecutorInput.Size = UDim2.new(1, -20, 1, -60);[span_71](end_span)
-        [span_72](start_span)ExecutorInput.Position = UDim2.new(0, 10, 0, 10);[span_72](end_span) [span_73](start_span)ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25);[span_73](end_span) [span_74](start_span)ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255);[span_74](end_span) [span_75](start_span)ExecutorInput.Font = Enum.Font.Code;[span_75](end_span)
-        [span_76](start_span)ExecutorInput.TextSize = 14;[span_76](end_span) [span_77](start_span)ExecutorInput.TextWrapped = true;[span_77](end_span) [span_78](start_span)ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left;[span_78](end_span) [span_79](start_span)ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top;[span_79](end_span) [span_80](start_span)ExecutorInput.ClearTextOnFocus = false;[span_80](end_span) [span_81](start_span)Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6);[span_81](end_span)
-        [span_82](start_span)table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"});[span_82](end_span) [span_83](start_span)local ExecutorStroke = Instance.new("UIStroke", ExecutorInput);[span_83](end_span) [span_84](start_span)ExecutorStroke.Color = currentTheme.main;[span_84](end_span) [span_85](start_span)table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});[span_85](end_span)
-        [span_86](start_span)local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end);[span_86](end_span)
-        [span_87](start_span)ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35);[span_87](end_span) [span_88](start_span)ExecuteButton.Position = UDim2.new(0, 10, 1, -45);[span_88](end_span)
-        [span_89](start_span)local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end);[span_89](end_span) [span_90](start_span)ClearButton.Size = UDim2.new(0.5, -15, 0, 35);[span_90](end_span)
-        [span_91](start_span)ClearButton.Position = UDim2.new(0.5, 5, 1, -45)[span_91](end_span)
-        -- #endregion
+            -- Themes Frame
+            local ThemesFrame = Instance.new("Frame", SettingsContainer);
+            ThemesFrame.Name = "ThemesFrame"; ThemesFrame.BackgroundTransparency = 1; ThemesFrame.Size = UDim2.new(1, 0, 0, 1); ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y; ThemesFrame.LayoutOrder = 1
+            
+            local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame);
+            ThemesListLayout.Padding = UDim.new(0, 5);
+            ThemesListLayout.SortOrder = Enum.SortOrder.LayoutOrder; -- ТҮЗЕТУ
+
+            local ThemesLabel = Instance.new("TextLabel", ThemesFrame);
+            ThemesLabel.LayoutOrder = 1; -- ТҮЗЕТУ
+            ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left;
+            table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});
+            
+            local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame);
+            ThemeButtonsContainer.LayoutOrder = 2; -- ТҮЗЕТУ
+            ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            
+            local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer);
+            ThemesGrid.CellPadding=UDim2.new(0,10,0,10); ThemesGrid.CellSize=UDim2.new(0,125,0,40); ThemesGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
+            
+            createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end);
+            createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
+            
+            -- Languages Frame
+            local LangFrame = Instance.new("Frame", SettingsContainer)
+            LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
+            
+            local LangListLayout = Instance.new("UIListLayout", LangFrame);
+            LangListLayout.Padding = UDim.new(0, 5);
+            LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder; -- ТҮЗЕТУ
+
+            local LangLabel = Instance.new("TextLabel", LangFrame);
+            LangLabel.LayoutOrder = 1; -- ТҮЗЕТУ
+            LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left;
+            table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
+            
+            local LangButtonsContainer = Instance.new("Frame", LangFrame);
+            LangButtonsContainer.LayoutOrder = 2; -- ТҮЗЕТУ
+            LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            
+            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer);
+            LangGrid.CellPadding=UDim2.new(0,10,0,10); LangGrid.CellSize=UDim2.new(0,125,0,40); LangGrid.HorizontalAlignment=Enum.HorizontalAlignment.Center;
+            
+            createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end);
+            createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
+        end
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60);
+        ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code;
+        ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6);
+        table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"});
+        local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end);
+        ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45);
+        local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35);
+        ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        -- #endregion         
 
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
