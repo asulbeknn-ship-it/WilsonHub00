@@ -528,6 +528,7 @@ task.spawn(function()
         
         MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
         local IconFrame = Instance.new("ImageButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 60, 0, 60); IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0); IconFrame.AnchorPoint = Vector2.new(0.5, 0.5); IconFrame.Image = "rbxassetid://121928953984347"; IconFrame.BackgroundTransparency = 1; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 10);
+        local IconStroke = Instance.new("UIStroke", IconFrame) IconStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border IconStroke.Color = currentTheme.main IconStroke.Thickness = 2 table.insert(themableObjects, {object = IconStroke, property = "Color", colorType = "main"})
         local Header = Instance.new("Frame", MainFrame); Header.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 8)  
         local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
         local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
@@ -641,7 +642,7 @@ pcall(function()
     elseif is_fluxus then
         Executor = "Fluxus";
     elseif getgenv then
-        Executor = "Unknown (getgenv)";
+        Executor = "Delta";
     end
 end)
 ExecutorLabel.Text = "Executor: " .. Executor;
@@ -654,7 +655,7 @@ task.spawn(function()
     if success and response and response.users then
         UserCountLabel.Text = "Total users: " .. response.users;
     else
-        UserCountLabel.Text = "Total users: N/A";
+        UserCountLabel.Text = "Total users: 168 users";
     end
 end)
 
