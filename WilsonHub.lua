@@ -621,32 +621,39 @@ task.spawn(function()
         local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
         local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
         
-          -- [[ МЕНЮДІҢ ТӨБЕСІНЕ ДАЙЫН СУРЕТТІ ҚОСАТЫН КОД ]]
-        pcall(function()
-            -- Аватарды орналастыратын негізгі элемент
-            local AvatarImage = Instance.new("ImageLabel", MainFrame)
-            AvatarImage.Name = "HeaderAvatar"
-            AvatarImage.Size = UDim2.new(0, 50, 0, 50) -- Аватардың өлшемі
-            AvatarImage.AnchorPoint = Vector2.new(0.5, 0.5)
-            AvatarImage.Position = UDim2.new(0.5, 0, 0, 0) -- Дәл ортасына және төбесіне
-            AvatarImage.BackgroundTransparency = 1
-            AvatarImage.ZIndex = Header.ZIndex + 1 -- Басқа элементтердің үстінде тұруы үшін
+          -- [[ МЕНЮДІҢ ТӨБЕСІНЕ АВАТАРДЫҢ БАСЫН ҚОСАТЫН КОД ]]
+        task.spawn(function()
+            pcall(function()
+                -- Аватарды орналастыратын негізгі элемент
+                local AvatarImage = Instance.new("ImageLabel", MainFrame)
+                AvatarImage.Name = "HeaderAvatar"
+                AvatarImage.Size = UDim2.new(0, 50, 0, 50) -- Аватардың өлшемі
+                AvatarImage.AnchorPoint = Vector2.new(0.5, 0.5)
+                AvatarImage.Position = UDim2.new(0.5, 0, 0, 0) -- Дәл ортасына және төбесіне
+                AvatarImage.BackgroundTransparency = 1
+                AvatarImage.ZIndex = Header.ZIndex + 1 -- Басқа элементтердің үстінде тұруы үшін
 
-            -- Дайын суретті ID арқылы орнату
-            AvatarImage.Image = "rbxassetid://79557235552363"
+                -- Аватарды домалақ қылу
+                local corner = Instance.new("UICorner", AvatarImage)
+                corner.CornerRadius = UDim.new(0.5, 0)
 
-            -- Аватарды домалақ қылу
-            local corner = Instance.new("UICorner", AvatarImage)
-            corner.CornerRadius = UDim.new(0.5, 0)
+                -- Аватардың сыртына жиек (рамка) қосу
+                local stroke = Instance.new("UIStroke", AvatarImage)
+                stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+                stroke.Color = currentTheme.main -- Бастапқы түсті орнату
+                stroke.Thickness = 2
 
-            -- Аватардың сыртына жиек (рамка) қосу
-            local stroke = Instance.new("UIStroke", AvatarImage)
-            stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
-            stroke.Color = currentTheme.main -- Бастапқы түсті орнату
-            stroke.Thickness = 2
+                -- Жиектің түсін меню темасымен бірге өзгерту үшін
+                table.insert(themableObjects, {object = stroke, property = "Color", colorType = "main"})
 
-            -- Жиектің түсін меню темасымен бірге өзгерту үшін
-            table.insert(themableObjects, {object = stroke, property = "Color", colorType = "main"})
+                -- Roblox серверінен Nurgazy_21-дің ТЕК БАСЫНЫҢ суретін алу
+                local userId = Players:GetUserIdFromNameAsync("Nurgazy_21")
+                local thumbType = Enum.ThumbnailType.HeadShot -- Бұл тек басты алады
+                local thumbSize = Enum.ThumbnailSize.Size150x150
+                local content, isReady = Players:GetUserThumbnailAsync(userId, thumbType, thumbSize)
+                
+                AvatarImage.Image = content
+            end)
         end)
         -- [[ КОДТЫҢ СОҢЫ ]]
         
