@@ -492,69 +492,91 @@ local function createEspForPlayer(targetPlayer) if not espData.enabled or target
 function togglePlayerEsp(state) espData.enabled=state; if espData.enabled then cleanupAllEsp(); for _,p in ipairs(Players:GetPlayers())do createEspForPlayer(p)end; espData.connections.playerAdded=Players.PlayerAdded:Connect(createEspForPlayer); espData.connections.playerRemoving=Players.PlayerRemoving:Connect(cleanupEspForPlayer); sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5) else cleanupAllEsp(); sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5) end end
 
 -- ================================================================= --
--- [[ КІРІСПЕ ЭКРАНЫ (V5 - Бөлек нұсқа) ]]
--- Осы кодты "-- 1. ЭКРАН ЗАГРУЗКИ" дегеннің үстіне қой
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫ ]]
 -- ================================================================= --
 pcall(function()
-    -- Керекті сервистер
+    -- Керекті сервистерді алу
+    local TweenService = game:GetService("TweenService")
     local Players = game:GetService("Players")
     local player = Players.LocalPlayer
-    local ContentProvider = game:GetService("ContentProvider")
 
-    -- 1. Бөлек, жаңа ScreenGui құру
-    local IntroGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-    IntroGui.Name = "WilsonHubIntro"
-    IntroGui.ResetOnSpawn = false
-    IntroGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-    IntroGui.IgnoreGuiInset = true
+    -- Негізгі UI элементтерін құру
+    local PreLoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    PreLoadingGui.Name = "WilsonHubIntroGui"
+    PreLoadingGui.ResetOnSpawn = false
+    PreLoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    PreLoadingGui.IgnoreGuiInset = true
 
-    -- 2. Элементтерді құру (бәрі бірден көрінеді)
-    local IntroBackground = Instance.new("Frame", IntroGui)
-    IntroBackground.Size = UDim2.new(1, 0, 1, 0)
-    IntroBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Таза қара фон
+    -- Қара фон
+    local Background = Instance.new("Frame", PreLoadingGui)
+    Background.Size = UDim2.new(1, 0, 1, 0)
+    Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Background.BorderSizePixel = 0
 
-    local Logo = Instance.new("ImageLabel", IntroBackground)
-    Logo.Size = UDim2.new(0, 220, 0, 220)
+    -- Ортадағы сурет (логотип)
+    local Logo = Instance.new("ImageLabel", Background)
+    Logo.Size = UDim2.new(0, 220, 0, 220) -- Сурет өлшемі
     Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
     Logo.AnchorPoint = Vector2.new(0.5, 0.5)
     Logo.BackgroundTransparency = 1
-    -- !!! СУРЕТТІҢ ID КОДЫН ҚОЙ !!!
+    -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢ ЖҮКТЕГЕН СУРЕТТІҢ ID КОДЫН ҚОЙ !!!
     Logo.Image = "rbxassetid://89264639082468" 
     Logo.ScaleType = Enum.ScaleType.Crop
 
+    -- Суретті домалақ қылу үшін
     local corner = Instance.new("UICorner", Logo)
-    corner.CornerRadius = UDim2.new(0.5, 0)
+    corner.CornerRadius = UDim.new(0.5, 0)
 
-    local PresentsText = Instance.new("TextLabel", IntroBackground)
-    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
+    -- Астындағы жазу
+    local PresentsText = Instance.new("TextLabel", Background)
     PresentsText.Size = UDim2.new(1, -40, 0, 30)
+    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
     PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
     PresentsText.BackgroundTransparency = 1
     PresentsText.Font = Enum.Font.SourceSansBold
     PresentsText.TextSize = 26
-    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0)
-    PresentsText.Text = ""
+    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0) -- Қызыл түс
+    PresentsText.Text = "" -- Анимация үшін басында бос
 
-    -- 3. Суретті алдын ала жүктеу
-    ContentProvider:PreloadAsync({Logo})
-    
-    -- 4. Тексттің 1 секундтық анимациясын іске қосу
-    task.spawn(function()
-        local fullText = "WILSONHUB games presents"
-        for i = 1, #fullText do
-            PresentsText.Text = string.sub(fullText, 1, i)
-            task.wait(1.0 / #fullText)
-        end
-    end)
-    
-    -- 5. Жалпы 2 секунд күту
-    task.wait(2)
+    -- --- АНИМАЦИЯЛАР ---
+    -- 1. Элементтерді бастапқы күйге келтіру (көрінбейтін)
+    Background.BackgroundTransparency = 1
+    Logo.ImageTransparency = 1
+    Logo.Size = UDim2.new(0, 0, 0, 0)
 
-    -- 6. Кіріспе экранын жою
-    IntroGui:Destroy()
+    -- 2. Анимацияны бастау
+    -- Фонның біртіндеп пайда болуы
+    TweenService:Create(Background, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+    task.wait(0.3)
+
+    -- Логотиптің ортадан үлкейіп пайда болуы ("фото анимациясы")
+    local logoTweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+    TweenService:Create(Logo, logoTweenInfo, {
+        Size = UDim2.new(0, 220, 0, 220),
+        ImageTransparency = 0
+    }):Play()
+    task.wait(0.6)
+
+    -- Тексттің әріптеп жазылу анимациясы (1 секунд)
+    local fullText = "WILSONHUB games presents"
+    for i = 1, #fullText do
+        PresentsText.Text = string.sub(fullText, 1, i)
+        task.wait(1.0 / #fullText)
+    end
+
+    -- 3. Анимацияның соңы (жалпы 2 секундтан кейін жоғалады)
+    task.wait(0.0) -- Анимация біткен соң сәл күту
+
+    -- Барлығының біртіндеп жоғалуы
+    TweenService:Create(Background, TweenInfo.new(0.0), {BackgroundTransparency = 1}):Play()
+    task.wait(0.0)
+
+    -- Бұл экранды толықтай жою
+    PreLoadingGui:Destroy()
 end)
+
 -- ================================================================= --
--- [[ КІРІСПЕ ЭКРАНЫНЫҢ СОҢЫ ]]
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
 -- ================================================================= --
 
 -- 1. ЭКРАН ЗАГРУЗКИ
