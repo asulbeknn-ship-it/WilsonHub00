@@ -77,7 +77,6 @@ local translations = {
     -- TABS
     tab_home = { en = "HOME", ru = "ГЛАВНАЯ", kz = "БАСТЫ", zh = "主页", fr = "ACCUEIL" },
     tab_scripts = { en = "SCRIPTS", ru = "СКРИПТЫ", kz = "СКРИПТТЕР", zh = "脚本", fr = "SCRIPTS" },
-    tab_gamehub = { en = "GAMEHUB", ru = "ИГРАХАБ", kz = "ОЙЫНХАБ", zh = "游戏中心", fr = "LUDOTHÈQUE" },
     tab_info = { en = "INFO", ru = "ИНФО", kz = "АҚПАРАТ", zh = "信息", fr = "INFOS" },
     tab_guimods = { en = "GUI MODS", ru = "МОДЫ GUI", kz = "GUI МОДТАРЫ", zh = "界面模组", fr = "MODS GUI" },
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
@@ -147,17 +146,6 @@ local translations = {
     script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
     script_flash = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "FlashGUI" },
     script_spin = { en = "Spin", ru = "Спин", kz = "Айналу", zh = "旋轉", fr = "rotation " },
-    -- GAMEHUB PAGE
-    game_brookhaven = { en = "Brookhaven", ru = "Брухкевен", kz = "Врухкевен", zh = "布鲁克海文", fr = "Brookhaven" },
-    game_growagarden = { en = "Grow A Garden", ru = "Вырасти Сад", kz = "Бақша Өсіру", zh = "种花园", fr = "Faire pousser un jardin" },
-    game_ukradibraynarot = { en = "Steal a brainarot", ru = "Укради Брайнарот", kz = "Брайнаротты ұрла", zh = "偷走布莱纳罗特", fr = "Volez Braynarot" },
-    game_myortvyyrels = { en = "Dead rails", ru = "Мёртвый рельс", kz = "Өлі рельс", zh = "死亡铁路", fr = "Rail mort" },
-    game_99den = { en = "99 days", ru = "99 день", kz = "99 күн", zh = "99天", fr = "99 jours" },
-    game_mm2 = { en = "MM2", ru = "MM2", kz = "MM2", zh = "MM2", fr = "MM2" },
-    game_gorodkrasnykh = { en = "REDCLIFF CITY", ru = "Город красных", kz = "Қызылдар қаласы", zh = "红色之城", fr = "Ville des rouges" },
-    game_bezimyannyy strelok = { en = "nameless shooter", ru = "Безымянный стрелок", kz = "Аты жоқ атқыш", zh = "无名射手", fr = "Tireur sans nom" },
-    game_naturaldisaster = { en = "Natural disaster", ru = "Natural disaster", kz = "Natural disaster", zh = "自然灾害", fr = "Catastrophe naturelle" },
-    game_fruits = { en = "Blox fruits", ru = "Блок фруктов", kz = "Блокты жемістер", zh = "Blox水果", fr = "Fruits Blox " },
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -664,7 +652,7 @@ task.spawn(function()
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local GamehubButton=createTabButton("tab_gamehub"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -674,7 +662,6 @@ task.spawn(function()
         
         local HomePage=Instance.new("Frame",ContentContainer); HomePage.Size=UDim2.new(1,0,1,0); HomePage.BackgroundTransparency=1; HomePage.Visible=true
         local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false
-        local GamehubPage=Instance.new("Frame",ContentContainer); GamehubPage.Size=UDim2.new(1,0,1,0); GamehubPage.BackgroundTransparency=1; GamehubPage.Visible=false
         local InfoPage=Instance.new("Frame",ContentContainer); InfoPage.Size=UDim2.new(1,0,1,0); InfoPage.BackgroundTransparency=1; InfoPage.Visible=false
         local GuiModsPage=Instance.new("Frame",ContentContainer); GuiModsPage.Size=UDim2.new(1,0,1,0); GuiModsPage.BackgroundTransparency=1; GuiModsPage.Visible=false
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
@@ -986,44 +973,6 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         createFunctionButton("script_spin", ScriptsContainer, function() power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
         -- #endregion
 
-        -- #region GAMEHUB PAGE
-        do
-            local SearchBox = Instance.new("TextBox", GamehubPage);
-            SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
-            local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"});
-            local ScriptsContainer = Instance.new("ScrollingFrame", GamehubPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6;
-            local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 190, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-
-            local function updateScriptsCanvasSize()
-                ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y)
-            end
-            ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize)
-            task.wait(0.1)
-            updateScriptsCanvasSize()
-
-            -- Осында ойын скрипттерін қосасыз
-            createFunctionButton("game_brookhaven", ScriptsContainer, function()  end);
-            createFunctionButton("game_growagarden", ScriptsContainer, function()  end);
-            createFunctionButton("game_ukradibraynarot", ScriptsContainer, function()  end);
-            createFunctionButton("game_myortvyyrels", ScriptsContainer, function()  end);
-            createFunctionButton("game_99den", ScriptsContainer, function()  end);
-            createFunctionButton("game_mm2", ScriptsContainer, function()  end);
-            createFunctionButton("game_gorodkrasnykh", ScriptsContainer, function()  end);
-            createFunctionButton("game_bezimyannyy strelok", ScriptsContainer, function()  end);
-            createFunctionButton("game_naturaldisaster", ScriptsContainer, function()  end);
-            createFunctionButton("game_fruits", ScriptsContainer, function()  end);
-
-            SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
-                local s = SearchBox.Text:lower()
-                for _, b in ipairs(ScriptsContainer:GetChildren()) do
-                    if b:IsA("TextButton") then
-                        b.Visible = b.Text:lower():find(s, 1, true)
-                    end
-                end
-            end)
-        end
-        -- #endregion
-
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
         local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); 
         local PlayersListLayout = Instance.new("UIListLayout", PlayersList); PlayersListLayout.Padding = UDim.new(0, 5); PlayersListLayout.SortOrder = Enum.SortOrder.LayoutOrder; 
@@ -1121,8 +1070,8 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton,GamehubButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage,GamehubPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
         
         activeTab = HomeButton
 
