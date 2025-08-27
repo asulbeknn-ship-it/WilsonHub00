@@ -1,3 +1,29 @@
+-- [[ WILSONHUB ҚАЙТА ҚОСУДЫ ТЕКСЕРУШІ ]]
+if _G.WilsonHubLoaded then
+    -- Егер скрипт осы ойында бұрыннан қосылған болса:
+    pcall(function()
+        local player = game:GetService("Players").LocalPlayer
+        local playerGui = player:WaitForChild("PlayerGui")
+        local existingGui = playerGui:FindFirstChild("WilsonHubGui")
+
+        if existingGui then
+            -- Бұрыннан бар менюді тауып, оны қайта ашамыз
+            existingGui.Enabled = true
+            local mainFrame = existingGui:FindFirstChild("MainFrame")
+            local iconFrame = existingGui:FindFirstChild("IconFrame")
+            local backgroundOverlay = existingGui:FindFirstChild("BackgroundOverlay")
+
+            if mainFrame then mainFrame.Visible = true end
+            if iconFrame then iconFrame.Visible = false end
+            if backgroundOverlay then backgroundOverlay.Visible = true end
+        end
+    end)
+    return -- Жаңадан скрипті орындауды тоқтатамыз
+end
+-- Скрипт бірінші рет қосылғанын белгілейміз
+_G.WilsonHubLoaded = true
+-- [[ ТЕКСЕРУШІНІҢ СОҢЫ ]]
+
 -- Основные сервисы
 local Players = game:GetService("Players")
 local HttpService = game:GetService("HttpService")
@@ -950,7 +976,7 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         createFunctionButton("script_jump", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
         createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
         createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
-        createFunctionButton("script_flash", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Flash.lua"))() end);
+        createFunctionButton("script_flash", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
         createFunctionButton("script_spin", ScriptsContainer, function() power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
         -- #endregion
 
