@@ -491,6 +491,72 @@ local function cleanupAllEsp() for targetPlayer, _ in pairs(espData.guis) do cle
 local function createEspForPlayer(targetPlayer) if not espData.enabled or targetPlayer == player then return end; local character=targetPlayer.Character; if not character then return end; local head=character:WaitForChild("Head", 1); if not head then return end; cleanupEspForPlayer(targetPlayer); local espGui=Instance.new("BillboardGui", head); espGui.Name="PLAYER_ESP_GUI"; espGui.AlwaysOnTop=true; espGui.Size=UDim2.new(2,0,1.5,0); espGui.StudsOffset=Vector3.new(0,2.5,0); espGui.LightInfluence=0; local mainFrame=Instance.new("Frame", espGui); mainFrame.BackgroundTransparency=1; mainFrame.Size=UDim2.new(1,0,1,0); local box=Instance.new("Frame", mainFrame); box.BackgroundColor3=Color3.fromRGB(255,255,0); box.BackgroundTransparency=0.5; box.BorderSizePixel=0; box.Size=UDim2.new(1,0,1,0); Instance.new("UICorner",box).CornerRadius=UDim.new(0,3); local innerBox=Instance.new("Frame",box); innerBox.BackgroundColor3=Color3.fromRGB(0,0,0); innerBox.BackgroundTransparency=0.3; innerBox.BorderSizePixel=0; innerBox.Size=UDim2.new(1,-2,1,-2); innerBox.Position=UDim2.new(0.5,-innerBox.AbsoluteSize.X/2,0.5,-innerBox.AbsoluteSize.Y/2); Instance.new("UICorner",innerBox).CornerRadius=UDim.new(0,2); local textLabel=Instance.new("TextLabel",mainFrame); textLabel.BackgroundTransparency=1; textLabel.Size=UDim2.new(1,0,1,0); textLabel.Font=Enum.Font.SourceSans; textLabel.TextSize=14; textLabel.TextColor3=Color3.new(1,1,1); textLabel.TextStrokeColor3=Color3.fromRGB(0,0,0); textLabel.TextStrokeTransparency=0; local function update() if not targetPlayer or not targetPlayer.Parent or not character or not character.Parent or not head or not head.Parent then cleanupEspForPlayer(targetPlayer); return end; local distance=(head.Position - workspace.CurrentCamera.CFrame.Position).Magnitude; textLabel.Text = targetPlayer.Name .. "\n[" .. math.floor(distance) .. "m]" end; espData.guis[targetPlayer] = { gui = espGui, updateConn = RunService.RenderStepped:Connect(update) } end
 function togglePlayerEsp(state) espData.enabled=state; if espData.enabled then cleanupAllEsp(); for _,p in ipairs(Players:GetPlayers())do createEspForPlayer(p)end; espData.connections.playerAdded=Players.PlayerAdded:Connect(createEspForPlayer); espData.connections.playerRemoving=Players.PlayerRemoving:Connect(cleanupEspForPlayer); sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5) else cleanupAllEsp(); sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5) end end
 
+-- ================================================================= --
+-- [[ КІРІСПЕ ЭКРАНЫ (V5 - Бөлек нұсқа) ]]
+-- Осы кодты "-- 1. ЭКРАН ЗАГРУЗКИ" дегеннің үстіне қой
+-- ================================================================= --
+pcall(function()
+    -- Керекті сервистер
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+    local ContentProvider = game:GetService("ContentProvider")
+
+    -- 1. Бөлек, жаңа ScreenGui құру
+    local IntroGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    IntroGui.Name = "WilsonHubIntro"
+    IntroGui.ResetOnSpawn = false
+    IntroGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    IntroGui.IgnoreGuiInset = true
+
+    -- 2. Элементтерді құру (бәрі бірден көрінеді)
+    local IntroBackground = Instance.new("Frame", IntroGui)
+    IntroBackground.Size = UDim2.new(1, 0, 1, 0)
+    IntroBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0) -- Таза қара фон
+
+    local Logo = Instance.new("ImageLabel", IntroBackground)
+    Logo.Size = UDim2.new(0, 220, 0, 220)
+    Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
+    Logo.AnchorPoint = Vector2.new(0.5, 0.5)
+    Logo.BackgroundTransparency = 1
+    -- !!! СУРЕТТІҢ ID КОДЫН ҚОЙ !!!
+    Logo.Image = "rbxassetid://89264639082468" 
+    Logo.ScaleType = Enum.ScaleType.Crop
+
+    local corner = Instance.new("UICorner", Logo)
+    corner.CornerRadius = UDim2.new(0.5, 0)
+
+    local PresentsText = Instance.new("TextLabel", IntroBackground)
+    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
+    PresentsText.Size = UDim2.new(1, -40, 0, 30)
+    PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
+    PresentsText.BackgroundTransparency = 1
+    PresentsText.Font = Enum.Font.SourceSansBold
+    PresentsText.TextSize = 26
+    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0)
+    PresentsText.Text = ""
+
+    -- 3. Суретті алдын ала жүктеу
+    ContentProvider:PreloadAsync({Logo})
+    
+    -- 4. Тексттің 1 секундтық анимациясын іске қосу
+    task.spawn(function()
+        local fullText = "WILSONHUB games presents"
+        for i = 1, #fullText do
+            PresentsText.Text = string.sub(fullText, 1, i)
+            task.wait(1.0 / #fullText)
+        end
+    end)
+    
+    -- 5. Жалпы 2 секунд күту
+    task.wait(2)
+
+    -- 6. Кіріспе экранын жою
+    IntroGui:Destroy()
+end)
+-- ================================================================= --
+-- [[ КІРІСПЕ ЭКРАНЫНЫҢ СОҢЫ ]]
+-- ================================================================= --
+
 -- 1. ЭКРАН ЗАГРУЗКИ
 local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 LoadingGui.IgnoreGuiInset = true
@@ -989,74 +1055,6 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         warn("WILSONHUB ERROR: "..tostring(err))
     end
 end)
-
--- ================================================================= --
--- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V4 - Нақты нұсқа) ]]
--- ================================================================= --
-pcall(function()
-    -- Керекті сервистер
-    local ContentProvider = game:GetService("ContentProvider")
-
-    -- 1. Кіріспе элементтерін құру
-    local IntroBackground = Instance.new("Frame", Background)
-    IntroBackground.Name = "IntroBackground"
-    IntroBackground.Size = UDim2.new(1, 0, 1, 0)
-    IntroBackground.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    IntroBackground.ZIndex = 2
-
-    local Logo = Instance.new("ImageLabel", IntroBackground)
-    Logo.Size = UDim2.new(0, 220, 0, 220)
-    Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
-    Logo.AnchorPoint = Vector2.new(0.5, 0.5)
-    Logo.BackgroundTransparency = 1
-    -- !!! СУРЕТТІҢ ID КОДЫН ҚОЮДЫ ҰМЫТПА !!!
-    Logo.Image = "rbxassetid://89264639082468" 
-    Logo.ScaleType = Enum.ScaleType.Crop
-
-    local corner = Instance.new("UICorner", Logo)
-    corner.CornerRadius = UDim.new(0.5, 0)
-
-    local PresentsText = Instance.new("TextLabel", IntroBackground)
-    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
-    PresentsText.Size = UDim2.new(1, -40, 0, 30)
-    PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
-    PresentsText.BackgroundTransparency = 1
-    PresentsText.Font = Enum.Font.SourceSansBold
-    PresentsText.TextSize = 26
-    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0)
-    PresentsText.Text = ""
-
-    -- 2. Ескі жүктеу элементтерін жасыру
-    LoadingLabel.Visible = false
-    PercentageLabel.Visible = false
-    ProgressBarBG.Visible = false
-
-    -- 3. Суретті алдын ала жүктеу
-    ContentProvider:PreloadAsync({Logo})
-    
-    -- 4. Тексттің 1 секундтық анимациясын іске қосу
-    task.spawn(function()
-        local fullText = "WILSONHUB games presents"
-        for i = 1, #fullText do
-            PresentsText.Text = string.sub(fullText, 1, i)
-            task.wait(1.0 / #fullText)
-        end
-    end)
-    
-    -- 5. Жалпы 2 секунд күту
-    task.wait(2)
-
-    -- 6. Кіріспе экранын бірден жою
-    IntroBackground:Destroy()
-
-    -- 7. Негізгі жүктеу элементтерін көрсету
-    LoadingLabel.Visible = true
-    PercentageLabel.Visible = true
-    ProgressBarBG.Visible = true
-end)
--- ================================================================= --
--- [[ АНИМАЦИЯНЫҢ СОҢЫ ]]
--- ================================================================= --
 
 -- 3. АНИМАЦИЯ ЗАГРУЗКИ
 applyLanguage(settings.language)
