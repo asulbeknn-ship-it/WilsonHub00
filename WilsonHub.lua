@@ -991,14 +991,14 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 end)
 
 -- ================================================================= --
--- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V2) ]]
+-- [[ БІРІКТІРІЛГЕН ЖҮКТЕУ АНИМАЦИЯСЫ (V3 - Қарапайым) ]]
 -- ================================================================= --
 pcall(function()
     -- Керекті сервистер
-    local TweenService = game:GetService("TweenService")
     local ContentProvider = game:GetService("ContentProvider")
+    local TweenService = game:GetService("TweenService")
 
-    -- 1. Кіріспе анимациясы үшін элементтерді құру
+    -- 1. Кіріспе элементтерін құру
     local IntroBackground = Instance.new("Frame", Background)
     IntroBackground.Name = "IntroBackground"
     IntroBackground.Size = UDim2.new(1, 0, 1, 0)
@@ -1006,11 +1006,11 @@ pcall(function()
     IntroBackground.ZIndex = 2
 
     local Logo = Instance.new("ImageLabel", IntroBackground)
-    Logo.Size = UDim2.new(0, 220, 0, 220)
+    Logo.Size = UDim2.new(0, 220, 0, 220) -- Өлшемі бірден дайын
     Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
     Logo.AnchorPoint = Vector2.new(0.5, 0.5)
     Logo.BackgroundTransparency = 1
-    -- !!! ОСЫ ЖЕРГЕ СУРЕТТІҢ ID КОДЫН ҚАЙТА ҚОЮДЫ ҰМЫТПА !!!
+    -- !!! СУРЕТТІҢ ID КОДЫН ҚОЮДЫ ҰМЫТПА !!!
     Logo.Image = "rbxassetid://89264639082468" 
     Logo.ScaleType = Enum.ScaleType.Crop
 
@@ -1018,57 +1018,34 @@ pcall(function()
     corner.CornerRadius = UDim.new(0.5, 0)
 
     local PresentsText = Instance.new("TextLabel", IntroBackground)
-    PresentsText.Size = UDim2.new(1, -40, 0, 30)
     PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
+    PresentsText.Size = UDim2.new(1, -40, 0, 30)
     PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
     PresentsText.BackgroundTransparency = 1
     PresentsText.Font = Enum.Font.SourceSansBold
     PresentsText.TextSize = 26
     PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0)
-    PresentsText.Text = ""
+    PresentsText.Text = "WILSONHUB games presents" -- Текст бірден дайын
 
-    -- 2. Ескі жүктеу элементтерін уақытша жасыру
+    -- 2. Ескі жүктеу элементтерін жасыру
     LoadingLabel.Visible = false
     PercentageLabel.Visible = false
     ProgressBarBG.Visible = false
 
-    -- 3. Суретті алдын ала жүктеу (кідірісті болдырмау үшін)
+    -- 3. Суретті алдын ала жүктеу
     ContentProvider:PreloadAsync({Logo})
     
-    -- 4. Кіріспе анимациясын ойнату
-    Logo.ImageTransparency = 1
-    Logo.Size = UDim2.new(0, 0, 0, 0)
-    
-    task.wait(0.2)
+    -- 4. Кіріспе экранын 2 секунд бойы көрсету (анимациясыз)
+    task.wait(2)
 
-    -- Логотиптің ортадан үлкейіп пайда болуы (1 секунд)
-    local logoTweenInfo = TweenInfo.new(1, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
-    TweenService:Create(Logo, logoTweenInfo, {
-        Size = UDim2.new(0, 220, 0, 220),
-        ImageTransparency = 0
-    }):Play()
-    task.wait(0.5)
-
-    -- Тексттің әріптеп жазылу анимациясы (1 секунд)
-    local fullText = "WILSONHUB games presents"
-    for i = 1, #fullText do
-        PresentsText.Text = string.sub(fullText, 1, i)
-        task.wait(1.0 / #fullText)
-    end
-
-    -- Анимация біткен соң, бәрін көріп үлгеру үшін 1 секунд күту
-    task.wait(1)
-
-    -- 5. Кіріспе элементтерін фонмен бірге өшіру (0.5 секунд)
+    -- 5. Кіріспе экранын жайлап өшіру
     local fadeOutInfo = TweenInfo.new(0.5)
-    TweenService:Create(Logo, fadeOutInfo, { ImageTransparency = 1 }):Play()
-    TweenService:Create(PresentsText, fadeOutInfo, { TextTransparency = 1 }):Play()
     TweenService:Create(IntroBackground, fadeOutInfo, { BackgroundTransparency = 1 }):Play()
-    task.wait(0.5) -- Өшу анимациясының бітуін күту
+    task.wait(0.5)
 
     IntroBackground:Destroy()
 
-    -- 6. Ескі жүктеу элементтерін қайта көрсету
+    -- 6. Негізгі жүктеу элементтерін қайта көрсету
     LoadingLabel.Visible = true
     PercentageLabel.Visible = true
     ProgressBarBG.Visible = true
@@ -1079,7 +1056,7 @@ end)
 
 -- 3. АНИМАЦИЯ ЗАГРУЗКИ
 applyLanguage(settings.language)
-local loadDuration=3
+local loadDuration=1.5
 for i=0,100 do 
     local progress=i/100
     local numDots=math.floor(i/12)%4
