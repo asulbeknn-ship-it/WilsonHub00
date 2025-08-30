@@ -40,7 +40,7 @@ local Themes = {
     White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) },
     Purple = { main = Color3.fromRGB(138, 43, 226), accent = Color3.fromRGB(148, 0, 211), text = Color3.fromRGB(255, 255, 255) }
 }
-local settings = { theme = "Red", language = "English", iconShape = "Төртбұрыш" }
+local settings = { theme = "Red", language = "English" }
 
 -- ЗАГРУЗКА НАСТРОЕК
 if isfile and isfile("WilsonHubSettings.json") then
@@ -162,11 +162,6 @@ local translations = {
     theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
     theme_purple = { en = "Purple", ru = "Фиолетовая", kz = "Күлгін", zh = "紫色", fr = "Violet" },
     theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
-    settings_icon_shape_title = { en = "Icon Shape", ru = "Форма иконки", kz = "Иконканы өзгерту", zh = "图标形状", fr = "Forme de l'icône" },
-    shape_square = { en = "Square", ru = "Квадрат", kz = "Төртбұрыш", zh = "方形", fr = "Carré" },
-    shape_circle = { en = "Circle", ru = "Круг", kz = "Домалақ", zh = "圆形", fr = "Cercle" },
-    shape_triangle = { en = "Triangle", ru = "Треугольник", kz = "Үш бұрыш", zh = "三角形", fr = "Triangle" },
-    shape_hexagon = { en = "Hexagon", ru = "Шестиугольник", kz = "Алты бұрышты", zh = "Hexagone", fr = "Hexagone" },
     settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
     lang_en = { en = "English", ru = "Английский", kz = "Ағылшынша", zh = "英語", fr = "Anglais " },
     lang_ru = { en = "Russian", ru = "Русский", kz = "Орысша", zh = "俄文", fr = "Russe " },
@@ -657,73 +652,8 @@ task.spawn(function()
         local ContentContainer = Instance.new("Frame", MainFrame); ContentContainer.Name = "ContentContainer"; ContentContainer.Size = UDim2.new(1, -120, 1, -40); ContentContainer.Position = UDim2.new(0, 120, 0, 40); ContentContainer.BackgroundTransparency = 1
         
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        local applyIconShape -- Алдын ала жариялау
-
-        -- ... (local HomePage, MainPage, және т.б. осында қалады)
-
-        -- ... (local function createFunctionButton(...) осында қалады)
         
-        -- ... (local function createInfoLabel(...) осында қалады)
-
-        -- #region HOME PAGE
-        -- ... (бүкіл HOME PAGE коды)
-        -- #endregion
-
-        -- ... (INFO, GUI MODS, SCRIPTS, PLAYERS беттерінің кодтары)
-
-        -- #region SETTINGS & EXECUTOR
-        do 
-            -- ... (SettingsContainer және ThemesFrame кодтары)
-            
-            -- ... (LangFrame және оның ішіндегі батырмалардың коды)
-
-            -- [[ ЖАҢА ФУНКЦИЯНЫҢ UI КОДЫН ОСЫ ЖЕРГЕ ҚОСАМЫЗ (3-ҚАДАМДАҒЫ) ]]
-            local IconShapeFrame = Instance.new("Frame", SettingsContainer)
-            -- ... (3-қадамдағы IconShapeFrame-ге қатысты барлық код) ...
-            local IconShapeGrid = Instance.new("UIGridLayout", IconShapeButtonsContainer)
-            
-            -- Енді осы батырмаларға функцияларын береміз
-            createFunctionButton("shape_square", IconShapeButtonsContainer, function() applyIconShape("Төртбұрыш") end)
-            createFunctionButton("shape_circle", IconShapeButtonsContainer, function() applyIconShape("Домалақ") end)
-            createFunctionButton("shape_triangle", IconShapeButtonsContainer, function() applyIconShape("Үш бұрыш") end)
-            createFunctionButton("shape_hexagon", IconShapeButtonsContainer, function() applyIconShape("Алты бұрышты") end)
-        end
-        -- ... (ExecutorPage коды)
-        -- #endregion
-
-        -- THEME REGISTRATION
-        -- ...
-
-        -- MAIN LOGIC
-        -- ... (tabs, pages, activeTab кодтары)
-
-        -- [[ ОСЫ ЖЕРГЕ ИКОНКАНЫ БАПТАЙТЫН ФУНКЦИЯНЫҢ ӨЗІН ҚОЯМЫЗ ]]
-        applyIconShape = function(shapeName)
-            if not IconFrame or not IconFrame:FindFirstChild("UICorner") then return end
-            local IconCorner = IconFrame:FindFirstChild("UICorner")
-
-            -- Алдымен стандартты күйге келтіреміз
-            IconFrame.Image = "rbxassetid://121928953984347" -- Стандартты сурет
-            IconCorner.CornerRadius = UDim.new(0, 10)
-            IconFrame.Rotation = 0
-
-            if shapeName == "Домалақ" then
-                IconCorner.CornerRadius = UDim.new(0.5, 0)
-            elseif shapeName == "Үш бұрыш" then
-                IconFrame.Image = "rbxassetid://510311200" -- Дайын үшбұрыш суреті
-                IconCorner.CornerRadius = UDim.new(0, 0)
-            elseif shapeName == "Алты бұрышты" then
-                IconFrame.Image = "rbxassetid://773229699" -- Дайын алтыбұрыш суреті
-                IconCorner.CornerRadius = UDim.new(0, 0)
-            end
-            
-            settings.iconShape = shapeName
-            pcall(function() if writefile then writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end end)
-        end
-        
-        -- Скрипт жүктелгенде сақталған пішінді қолдану
-        applyIconShape(settings.iconShape)
-        local function createTabButton(textKey)  local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
+        local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
         local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
         task.wait()
@@ -1207,45 +1137,6 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 
             -- Create a frame for Languages
             local LangFrame = Instance.new("Frame", SettingsContainer)
-            local LangFrame = Instance.new("Frame", SettingsContainer)
-            LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
-            local LangListLayout = Instance.new("UIListLayout", LangFrame); LangListLayout.Padding = UDim.new(0, 5)
-            LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            local LangLabel = Instance.new("TextLabel", LangFrame); LangLabel.LayoutOrder = 1
-            LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
-            local LangButtonsContainer = Instance.new("Frame", LangFrame);
-            LangButtonsContainer.LayoutOrder = 2
-            LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
-            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
-            
-            -- [[ ЖАҢА ФУНКЦИЯНЫҢ КОДЫН ОСЫ ЖЕРГЕ ҚОСАМЫЗ ]]
-            local IconShapeFrame = Instance.new("Frame", SettingsContainer)
-            IconShapeFrame.Name = "IconShapeFrame"
-            IconShapeFrame.BackgroundTransparency = 1
-            IconShapeFrame.Size = UDim2.new(1, 0, 0, 1)
-            IconShapeFrame.AutomaticSize = Enum.AutomaticSize.Y
-            IconShapeFrame.LayoutOrder = 3 -- Тілдерден кейін тұруы үшін
-
-            local IconShapeListLayout = Instance.new("UIListLayout", IconShapeFrame)
-            IconShapeListLayout.Padding = UDim.new(0, 5)
-            IconShapeListLayout.SortOrder = Enum.SortOrder.LayoutOrder
-            
-            local IconShapeLabel = Instance.new("TextLabel", IconShapeFrame)
-            IconShapeLabel.LayoutOrder = 1
-            IconShapeLabel.Size = UDim2.new(1, 0, 0, 20)
-            IconShapeLabel.BackgroundTransparency = 1
-            IconShapeLabel.Font = Enum.Font.SourceSansBold
-            IconShapeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
-            IconShapeLabel.TextSize = 18
-            IconShapeLabel.TextXAlignment = Enum.TextXAlignment.Left
-            table.insert(translatableObjects, {object=IconShapeLabel, property="Text", key="settings_icon_shape_title"})
-            
-            local IconShapeButtonsContainer = Instance.new("Frame", IconShapeFrame)
-            IconShapeButtonsContainer.LayoutOrder = 2
-            IconShapeButtonsContainer.BackgroundTransparency = 1
-            IconShapeButtonsContainer.Size = UDim2.new(1, 0, 0, 1)
-            IconShapeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
-            local IconShapeGrid = Instance.new("UIGridLayout", IconShapeButtonsContainer)
             LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
             local LangListLayout = Instance.new("UIListLayout", LangFrame);
             LangListLayout.Padding = UDim.new(0, 5)
@@ -1331,3 +1222,18 @@ LoadingGui:Destroy()
 local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
+
+-- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫ ]]
+pcall(function()
+    -- Егер музыка ойнап тұрса, қайталап қоспаймыз
+    if game:GetService("SoundService"):FindFirstChild("WilsonHubMusic") then return end
+
+    -- Жаңа дыбыс объектісін құрамыз
+    local sound = Instance.new("Sound", game:GetService("SoundService"))
+    sound.Name = "WilsonHubMusic"
+    sound.SoundId = "rbxassetid://6442389964" -- Сенің музыка ID
+    sound.Looped = true -- Музыканы қайталап ойнату
+    sound.Volume = 0.5 -- Музыканың дауыс деңгейі (0-ден 1-ге дейін өзгерте аласың)
+    sound:Play() -- Музыканы ойнату
+end)
+-- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫНЫҢ СОҢЫ ]]
