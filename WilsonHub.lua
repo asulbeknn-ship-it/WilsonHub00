@@ -678,7 +678,6 @@ task.spawn(function()
     b.Font=Enum.Font.SourceSansBold
     b.TextSize=16
 
-    -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
     local langCode = languageMap[settings.language] or "en"
     local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
     b.Text = initialText
@@ -689,21 +688,31 @@ task.spawn(function()
     b.Size = UDim2.new(0, 120, 0, 35)
     Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
 
-    -- [[ ЖАҢА КОД БАСТАЛДЫ: БЕЛГІНІ СУРЕТКЕ АУЫСТЫРУ ]]
+    -- [[ ТҮЗЕТІЛГЕН КОД БАСТАЛДЫ ]]
     if string.find(b.Text, "☑︎") then
-        b.Text = string.gsub(b.Text, " ☑︎", "") -- Тексттен белгіні алып тастаймыз
+        -- 1-ТҮЗЕТУ: Белгіні 100% өшіріп, артық бос орынды алып тастаймыз
+        local newText = string.gsub(b.Text, "☑︎", "")
+        b.Text = newText:match("^%s*(.-)%s*$") or newText
+
+        -- 2-ТҮЗЕТУ: Барлық текстті сол жаққа туралаймыз
+        b.TextXAlignment = Enum.TextXAlignment.Left
+
+        -- 3-ТҮЗЕТУ: Тексттің сол жағынан әдемі орын қалдырамыз
+        local padding = Instance.new("UIPadding")
+        padding.Parent = b
+        padding.PaddingLeft = UDim.new(0, 8)
 
         -- Суретті қосамыз
         local checkmarkImage = Instance.new("ImageLabel")
         checkmarkImage.Parent = b
-        checkmarkImage.Size = UDim2.new(0, 16, 0, 16) -- Суреттің өлшемі
-        checkmarkImage.Position = UDim2.new(1, -22, 0.5, -8) -- Оң жаққа орналастыру
+        checkmarkImage.Size = UDim2.new(0, 16, 0, 16)
+        checkmarkImage.Position = UDim2.new(1, -22, 0.5, -8)
         checkmarkImage.BackgroundTransparency = 1
 
-        -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢІЗ ЖҮКТЕГЕН СУРЕТТІҢ ID-СЫН ҚОЙЫҢЫЗ !!!
+        -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢІЗДІҢ ID-ҢІЗДІ ҚАЛДЫРЫҢЫЗ !!!
         checkmarkImage.Image = "rbxassetid://83391301433854" 
     end
-    -- [[ ЖАҢА КОД АЯҚТАЛДЫ ]]
+    -- [[ ТҮЗЕТІЛГЕН КОД АЯҚТАЛДЫ ]]
 
     if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
     table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
