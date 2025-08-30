@@ -1096,7 +1096,10 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         
         Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
         Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
-        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false IconFrame.Visible = true BackgroundOverlay.Visible = false end) IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true IconFrame.Visible = false BackgroundOverlay.Visible = true end)
+        local isMinimized = false
+        local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized if isMinimized then TabsContainer.Visible = false ContentContainer.Visible = false MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else TabsContainer.Visible = true ContentContainer.Visible = true MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)
+        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false IconFrame.Visible = true BackgroundOverlay.Visible = false end)
+        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true IconFrame.Visible = false BackgroundOverlay.Visible = true end)
         
         if settings.theme == "Rainbow" then
             activateRainbowTheme()
