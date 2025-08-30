@@ -671,29 +671,46 @@ task.spawn(function()
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback) 
-            local b = Instance.new("TextButton",parent)
-            local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
-            b.BackgroundColor3=theme.main
-            b.TextColor3=theme.text
-            b.Font=Enum.Font.SourceSansBold
-            b.TextSize=16
-            
-            -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
-            local langCode = languageMap[settings.language] or "en"
-            local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
-            b.Text = initialText
+    local b = Instance.new("TextButton",parent)
+    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+    b.BackgroundColor3=theme.main
+    b.TextColor3=theme.text
+    b.Font=Enum.Font.SourceSansBold
+    b.TextSize=16
 
-            b.TextScaled = false
-            b.RichText = false
-            b.TextYAlignment = Enum.TextYAlignment.Center
-            b.Size = UDim2.new(0, 120, 0, 35)
-            Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
-            if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
-            table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
-            table.insert(themableObjects, {object=b, property="TextColor3", colorType="text"})
-            table.insert(translatableObjects, {object=b, property="Text", key=textKey})
-            return b 
-        end
+    -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
+    local langCode = languageMap[settings.language] or "en"
+    local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
+    b.Text = initialText
+
+    b.TextScaled = false
+    b.RichText = false
+    b.TextYAlignment = Enum.TextYAlignment.Center
+    b.Size = UDim2.new(0, 120, 0, 35)
+    Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
+
+    -- [[ ЖАҢА КОД БАСТАЛДЫ: БЕЛГІНІ СУРЕТКЕ АУЫСТЫРУ ]]
+    if string.find(b.Text, "☑︎") then
+        b.Text = string.gsub(b.Text, " ☑︎", "") -- Тексттен белгіні алып тастаймыз
+
+        -- Суретті қосамыз
+        local checkmarkImage = Instance.new("ImageLabel")
+        checkmarkImage.Parent = b
+        checkmarkImage.Size = UDim2.new(0, 16, 0, 16) -- Суреттің өлшемі
+        checkmarkImage.Position = UDim2.new(1, -22, 0.5, -8) -- Оң жаққа орналастыру
+        checkmarkImage.BackgroundTransparency = 1
+
+        -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢІЗ ЖҮКТЕГЕН СУРЕТТІҢ ID-СЫН ҚОЙЫҢЫЗ !!!
+        checkmarkImage.Image = "rbxassetid://83391301433854" 
+    end
+    -- [[ ЖАҢА КОД АЯҚТАЛДЫ ]]
+
+    if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
+    table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
+    table.insert(themableObjects, {object=b, property="TextColor3", colorType="text"})
+    table.insert(translatableObjects, {object=b, property="Text", key=textKey})
+    return b 
+end
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
