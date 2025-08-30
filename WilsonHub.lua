@@ -1,3 +1,11 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
+Library.DefaultColor = Color3.fromRGB(255,0,0)
+
+Library:Notification({
+	Text = "WILSONHUB SCRIPTS EXECUTED!",
+	Duration = 6
+})
+
 if _G.WilsonHubLoaded then
     -- Егер скрипт осы ойында бұрыннан қосылған болса:
     pcall(function()
@@ -1223,32 +1231,17 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
--- [[ МУЗЫКАНЫҢ ЖАҢАРТЫЛҒАН КОДЫ ]]
-task.spawn(function()
-    local sound
-    local success, err = pcall(function()
-        -- Егер музыка ойнап тұрса, қайталап қоспаймыз
-        if game:GetService("SoundService"):FindFirstChild("WilsonHubMusic") then return end
+-- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫ ]]
+pcall(function()
+    -- Егер музыка ойнап тұрса, қайталап қоспаймыз
+    if game:GetService("SoundService"):FindFirstChild("WilsonHubMusic") then return end
 
-        sound = Instance.new("Sound")
-        sound.Name = "WilsonHubMusic"
-        sound.SoundId = "rbxassetid://146961487"
-        sound.Looped = true
-        sound.Volume = 0.5
-        sound.Parent = game:GetService("SoundService") -- Ата-ананы соңында белгілейміз
-
-        -- Музыканың жүктелуін күтеміз (ең маңызды бөлігі!)
-        if not sound.IsLoaded then
-            sound.Loaded:Wait()
-        end
-
-        sound:Play()
-    end)
-
-    if not success then
-        -- Егер қате болса, F9 консольға қатені шығарады
-        warn("!! WILSONHUB МУЗЫКА ҚАТЕСІ !!: " .. tostring(err))
-        if sound then sound:Destroy() end
-    end
+    -- Жаңа дыбыс объектісін құрамыз
+    local sound = Instance.new("Sound", game:GetService("SoundService"))
+    sound.Name = "WilsonHubMusic"
+    sound.SoundId = "rbxassetid://72089843969979" -- Сенің музыка ID
+    sound.Looped = true -- Музыканы қайталап ойнату
+    sound.Volume = 0.5 -- Музыканың дауыс деңгейі (0-ден 1-ге дейін өзгерте аласың)
+    sound:Play() -- Музыканы ойнату
 end)
--- [[ МУЗЫКА КОДЫНЫҢ СОҢЫ ]]
+-- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫНЫҢ СОҢЫ ]]
