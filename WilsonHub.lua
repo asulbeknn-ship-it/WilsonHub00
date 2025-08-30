@@ -651,8 +651,7 @@ task.spawn(function()
         local CloseButton = Instance.new("TextButton", Header); CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(1, -40, 0, 0); CloseButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45); CloseButton.TextColor3 = Color3.fromRGB(255, 255, 255); CloseButton.Font = Enum.Font.SourceSansBold; CloseButton.TextSize = 20; table.insert(translatableObjects, {object=CloseButton, property="Text", key="close_button"})
         local MinimizeButton = Instance.new("TextButton", Header) MinimizeButton.Size = UDim2.new(0, 40, 1, 0) MinimizeButton.Position = UDim2.new(1, -80, 0, 0) MinimizeButton.BackgroundColor3 = Color3.fromRGB(45, 45, 45) MinimizeButton.TextColor3 = Color3.fromRGB(255, 255, 255) MinimizeButton.Font = Enum.Font.SourceSansBold MinimizeButton.TextSize = 20 MinimizeButton.Text = "–"
         local isMinimized = false
-        local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized
-        local muteBtn = MainFrame:FindFirstChild("MuteButton") if isMinimized then BackgroundOverlay.Visible = false TabsContainer.Visible = false ContentContainer.Visible = false if muteBtn then muteBtn.Visible = false end MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else BackgroundOverlay.Visible = true TabsContainer.Visible = true ContentContainer.Visible = true if muteBtn then muteBtn.Visible = true end MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)
+        local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized if isMinimized then BackgroundOverlay.Visible = false TabsContainer.Visible = false ContentContainer.Visible = false MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else BackgroundOverlay.Visible = true TabsContainer.Visible = true ContentContainer.Visible = true MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)        
         
         local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
         TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4
@@ -1230,9 +1229,9 @@ task.wait(0.2)
 LoadingGui:Destroy()
 local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
-sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
+sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_bulocal" 
 
--- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ ]]
+-- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ЖАҢАРТЫЛҒАН) ]]
 -- Бастапқы айнымалылар
 local soundId = "72089843969979"
 local playbackSpeed = 0.19
@@ -1245,37 +1244,34 @@ local audio = Instance.new("Sound", game.SoundService)
 audio.SoundId = "rbxassetid://" .. soundId
 audio.PlaybackSpeed = playbackSpeed
 audio.Volume = soundVolume
-audio.Looped = true -- Музыкa қайталанып ойнайды
+audio.Looped = true
 audio:Play()
 
--- Басқару батырмасын (кнопкасын) құру
--- Егер WilsonHubGui табылмаса, қатенің алдын алу
+-- Басқару батырмасын құру
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local WilsonHubGui = playerGui:FindFirstChild("WilsonHubGui")
 
 if WilsonHubGui then
-    local MainFrame = WilsonHubGui:FindFirstChild("MainFrame")
-    if MainFrame then
-        local MuteButton = Instance.new("ImageButton")
-        MuteButton.Name = "MuteButton"
-        MuteButton.Parent = MainFrame
-        MuteButton.BackgroundTransparency = 1
-        MuteButton.AnchorPoint = Vector2.new(1, 1) -- Оң жақ төменгі бұрышқа орнату
-        MuteButton.Position = UDim2.new(1, -15, 1, -15) -- Шегіністерді реттеу
-        MuteButton.Size = UDim2.new(0, 40, 0, 40) -- Өлшемін реттеу
-        MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
+    local MuteButton = Instance.new("ImageButton")
+    MuteButton.Name = "MuteButton"
+    MuteButton.Parent = WilsonHubGui -- Ата-анасын MainFrame-нен WilsonHubGui-ға ауыстырдық
+    MuteButton.BackgroundTransparency = 1
+    MuteButton.ZIndex = 10 -- Басқа элементтердің үстінде тұруы үшін
 
-        -- Батырманы басқанда не болатынын анықтайтын функция
-        MuteButton.MouseButton1Click:Connect(function()
-            if audio.IsPlaying then
-                -- Егер музыка ойнап тұрса, оны тоқтатып, иконканы өзгертеміз
-                audio:Pause()
-                MuteButton.Image = soundOffIcon
-            else
-                -- Егер музыка тоқтап тұрса, оны жалғастырып, иконканы қайтарамыз
-                audio:Resume()
-                MuteButton.Image = soundOnIcon
-            end
-        end)
-    end
+    -- Позициясын сол жақ жоғарғы бұрышқа орнатамыз
+    MuteButton.AnchorPoint = Vector2.new(0, 0)
+    MuteButton.Position = UDim2.new(0, 15, 0, 15) -- Жоғарыдан және солдан 15 пиксель
+    MuteButton.Size = UDim2.new(0, 40, 0, 40)
+    MuteButton.Image = soundOnIcon
+
+    -- Батырманы басқанда не болатынын анықтайтын функция
+    MuteButton.MouseButton1Click:Connect(function()
+        if audio.IsPlaying then
+            audio:Pause()
+            MuteButton.Image = soundOffIcon
+        else
+            audio:Resume()
+            MuteButton.Image = soundOnIcon
+        end
+    end)
 end
