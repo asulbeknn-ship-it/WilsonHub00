@@ -688,32 +688,26 @@ task.spawn(function()
     b.Size = UDim2.new(0, 120, 0, 35)
     Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
 
-    -- [[ СОҢҒЫ ТҮЗЕТУ КОДЫ БАСТАЛДЫ ]]
-    -- Ағылшын тіліндегі негізгі текстте ☑︎ белгісі бар-жоғын тексереміз
     if translations[textKey] and translations[textKey].en and string.find(translations[textKey].en, "☑︎") then
 
-        -- СОҢҒЫ ТҮЗЕТУ: Символды БАЙТ-КОД арқылы 100% өшіру
-        -- Бұл әдіс символдың кез келген түрін тауып, сенімді түрде өшіреді
         local newText = string.gsub(b.Text, "\226\152\145", "") 
         b.Text = newText:match("^%s*(.-)%s*$") or newText
 
-        -- Текстті сол жаққа туралап, әдемі көрінуін қамтамасыз ету
-        b.TextXAlignment = Enum.TextYAlignment.Left
+        -- [[ МІНЕ, ОСЫ ЖЕРДЕГІ ҚАТЕ ТҮЗЕТІЛДІ ]]
+        b.TextXAlignment = Enum.TextXAlignment.Left -- Y әрпі X-ке түзетілді
+
         local padding = Instance.new("UIPadding")
         padding.Parent = b
         padding.PaddingLeft = UDim.new(0, 8)
 
-        -- Суретті қосу
         local checkmarkImage = Instance.new("ImageLabel")
         checkmarkImage.Parent = b
         checkmarkImage.Size = UDim2.new(0, 16, 0, 16)
         checkmarkImage.Position = UDim2.new(1, -22, 0.5, -8)
         checkmarkImage.BackgroundTransparency = 1
 
-        -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРДЕ ӨЗІҢІЗДІҢ СУРЕТ ID-ҢІЗ ТҰРУЫ КЕРЕК !!!
         checkmarkImage.Image = "rbxassetid://83391301433854" 
     end
-    -- [[ СОҢҒЫ ТҮЗЕТУ КОДЫ АЯҚТАЛДЫ ]]
 
     if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
     table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
