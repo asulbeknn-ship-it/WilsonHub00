@@ -1232,7 +1232,7 @@ task.spawn(function()
 
         sound = Instance.new("Sound")
         sound.Name = "WilsonHubMusic"
-        sound.SoundId = "rbxassetid://1839246711"
+        sound.SoundId = "rbxassetid://6442389964"
         sound.Looped = true
         sound.Volume = 0.5
         sound.Parent = game:GetService("SoundService") -- Ата-ананы соңында белгілейміз
