@@ -104,47 +104,47 @@ local translations = {
     mod_fpsping = { en = "FPS/Ping Display", ru = "Отображение FPS/Пинга", kz = "FPS/Пинг Көрсеткіші", zh = "显示FPS/延迟", fr = "Affichage FPS/Ping" },
     mod_worldcolor = { en = "World Color Changer", ru = "Смена Цвета Мира", kz = "Әлем Түсін Өзгерткіш", zh = "世界颜色变换器", fr = "Changeur de couleur du monde" },
     mod_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
-    -- SCRIPTS PAGE
+        -- SCRIPTS PAGE
     search_placeholder = { en = "Search scripts...", ru = "Поиск скриптов...", kz = "Скрипттерді іздеу...", zh = "搜索脚本...", fr = "Rechercher des scripts..." },
-    script_fly = { en = "Fly gui <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Летать гуи <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Ұшу гуи <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "飞行界面 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Fly gui <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_fireblock = { en = "Fire Block <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Огненный Блок <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Отты Блок <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "火焰方块 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Bloc de feu <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_speed = { en = "Speed Hack <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Спидхак <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Жылдамдық хагы <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "速度破解 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Hack de vitesse <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_wallhop = { en = "Wallhop <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Прыжки с стеном <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Қабырғада секіру <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "爬墙 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Wallhop <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_clicktp = { en = "Click Teleport", ru = "Телепорт по клику", kz = "Басу арқылы телепорт", zh = "点击传送", fr = "Téléportation par clic" },
-    script_grav = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" },
-    script_afk = { en = "Anti afk", ru = "Анти афк", kz = "Анти афк", zh = "反afk", fr = "Anti-afk" },
-    script_infiniteyield= { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" },
-    script_antislap = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" },
-    script_autoslap = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" },
-    script_win = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" },
-    script_god = { en = "God mode <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Режим Бога <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Құдай режимі <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "上帝模式 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Mode Dieu <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_spamdecal = { en = "WilsonSpam <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "УилсонСпам <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "WilsonSpam <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "威爾遜垃圾郵件 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "WilsonSpam <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_skybox = { en = "WilsonSpam 2 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "УилсонСпам 2 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "WilsonSpam 2 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "威爾遜垃圾郵件貼紙 2 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "WilsonSpam 2 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_ak47 = { en = "AK-47 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Автомат АК-47 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "АК-47 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "AK-47 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "AK-47 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_lasergun = { en = "Laser gun <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Лазерное оружие <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Лазерлі қару <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "雷射武器 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "armes laser <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_johndoe = { en = "JOHNDOE", ru = "JOHNDOE", kz = "JOHNDOE", zh = "阿凡達約翰多", fr = "JOHNDOE" },
-    script_avatarcopy = { en = "COPY SKIN R6 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Копировать аватар <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Аватарды көшіру <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "複製頭像 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "COPIER L'AVATAR <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_jerk = { en = "Jerk <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Jerk <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Jerk <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "混蛋 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Abruti <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_spamchat = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" },
-    script_dance = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" },
-    script_hummer = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" },
-    script_snake = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " },
-    script_r6 = { en = "R7 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "R7 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "R7 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "R7 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "R7 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_metiorid = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" },
-    script_thomas = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " },
-    script_spider = { en = "Spiderman <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Человек паук <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Өрмекші адам <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "蜘蛛人 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Spider-Man <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_playertp = { en = "Player tp", ru = "Тп на игрок", kz = "Ойыншыға тп", zh = "玩家傳送", fr = "Player teleport " },
-    script_board = { en = "Keyboard <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Клавиатура <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Пернетақта <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "鍵盤 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Clavier <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_xester = { en = "Xester <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Xester <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Xester <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "克斯特 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Xester <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_rpg = { en = "Rocket", ru = "Ракета", kz = "Зымыран", zh = "火箭", fr = "Fusée" },
-    script_object = { en = "BTool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Btool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Btool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "工具 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Btool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_killall = { en = "Kill all <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Убить всех <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Барлығын өлтіру <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "全部殺死 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Tuez tout le monde <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_head = { en = "Big head", ru = "Большой голова", kz = "Үлкен бас", zh = "大頭", fr = "Grosse tête " },
-    script_jump = { en = "Infinite jump", ru = "Большой прыжок", kz = "Ұзын секіру", zh = "無限跳躍", fr = "Saut infini " },
-    script_firepart = { en = "Fireparts tool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", ru = "Fireparts tool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", kz = "Fireparts tool <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", zh = "Fireparts 工具 <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>", fr = "Outil Fireparts <font color=\"rgb(0,255,0)\"><img src=\"rbxassetid://83391301433854\" width=\"15\" height=\"15\"/></font>" },
-    script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
-    script_flash = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "FlashGUI" },
-    script_spin = { en = "Spin", ru = "Спин", kz = "Айналу", zh = "旋轉", fr = "rotation " },
+    script_fly = { text = { en = "Fly gui", ru = "Летать гуи", kz = "Ұшу гуи", zh = "飞行界面", fr = "Fly gui" }, icon = "83391301433854" },
+    script_fireblock = { text = { en = "Fire Block", ru = "Огненный Блок", kz = "Отты Блок", zh = "火焰方块", fr = "Bloc de feu" }, icon = "83391301433854" },
+    script_speed = { text = { en = "Speed Hack", ru = "Спидхак", kz = "Жылдамдық хагы", zh = "速度破解", fr = "Hack de vitesse" }, icon = "83391301433854" },
+    script_wallhop = { text = { en = "Wallhop", ru = "Прыжки с стеном", kz = "Қабырғада секіру", zh = "爬墙", fr = "Wallhop" }, icon = "83391301433854" },
+    script_clicktp = { text = { en = "Click Teleport", ru = "Телепорт по клику", kz = "Басу арқылы телепорт", zh = "点击传送", fr = "Téléportation par clic" } },
+    script_grav = { text = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" } },
+    script_afk = { text = { en = "Anti afk", ru = "Анти афк", kz = "Анти афк", zh = "反afk", fr = "Anti-afk" } },
+    script_infiniteyield = { text = { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" } },
+    script_antislap = { text = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" } },
+    script_autoslap = { text = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" } },
+    script_win = { text = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" } },
+    script_god = { text = { en = "God mode", ru = "Режим Бога", kz = "Құдай режимі", zh = "上帝模式", fr = "Mode Dieu" }, icon = "83391301433854" },
+    script_spamdecal = { text = { en = "WilsonSpam", ru = "УилсонСпам", kz = "WilsonSpam", zh = "威爾遜垃圾郵件", fr = "WilsonSpam" }, icon = "83391301433854" },
+    script_skybox = { text = { en = "WilsonSpam 2", ru = "УилсонСпам 2", kz = "WilsonSpam 2", zh = "威爾遜垃圾郵件貼紙 2", fr = "WilsonSpam 2" }, icon = "83391301433854" },
+    script_ak47 = { text = { en = "AK-47", ru = "Автомат АК-47", kz = "АК-47", zh = "AK-47", fr = "AK-47" }, icon = "83391301433854" },
+    script_lasergun = { text = { en = "Laser gun", ru = "Лазерное оружие", kz = "Лазерлі қару", zh = "雷射武器", fr = "armes laser" }, icon = "83391301433854" },
+    script_johndoe = { text = { en = "JOHNDOE", ru = "JOHNDOE", kz = "JOHNDOE", zh = "阿凡達約翰多", fr = "JOHNDOE" } },
+    script_avatarcopy = { text = { en = "COPY SKIN R6", ru = "Копировать аватар", kz = "Аватарды көшіру", zh = "複製頭像", fr = "COPIER L'AVATAR" }, icon = "83391301433854" },
+    script_jerk = { text = { en = "Jerk", ru = "Jerk", kz = "Jerk", zh = "混蛋", fr = "Abruti" }, icon = "83391301433854" },
+    script_spamchat = { text = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" } },
+    script_dance = { text = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" } },
+    script_hummer = { text = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" } },
+    script_snake = { text = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " } },
+    script_r6 = { text = { en = "R7", ru = "R7", kz = "R7", zh = "R7", fr = "R7" }, icon = "83391301433854" },
+    script_metiorid = { text = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" } },
+    script_thomas = { text = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " } },
+    script_spider = { text = { en = "Spiderman", ru = "Человек паук", kz = "Өрмекші адам", zh = "蜘蛛人", fr = "Spider-Man" }, icon = "83391301433854" },
+    script_playertp = { text = { en = "Player tp", ru = "Тп на игрок", kz = "Ойыншыға тп", zh = "玩家傳送", fr = "Player teleport " } },
+    script_board = { text = { en = "Keyboard", ru = "Клавиатура", kz = "Пернетақта", zh = "鍵盤", fr = "Clavier" }, icon = "83391301433854" },
+    script_xester = { text = { en = "Xester", ru = "Xester", kz = "Xester", zh = "克斯特", fr = "Xester" }, icon = "83391301433854" },
+    script_rpg = { text = { en = "Rocket", ru = "Ракета", kz = "Зымыран", zh = "火箭", fr = "Fusée" } },
+    script_object = { text = { en = "BTool", ru = "Btool", kz = "Btool", zh = "工具", fr = "Btool" }, icon = "83391301433854" },
+    script_killall = { text = { en = "Kill all", ru = "Убить всех", kz = "Барлығын өлтіру", zh = "全部殺死", fr = "Tuez tout le monde" }, icon = "83391301433854" },
+    script_head = { text = { en = "Big head", ru = "Большой голова", kz = "Үлкен бас", zh = "大頭", fr = "Grosse tête " } },
+    script_jump = { text = { en = "Infinite jump", ru = "Большой прыжок", kz = "Ұзын секіру", zh = "無限跳躍", fr = "Saut infini " } },
+    script_firepart = { text = { en = "Fireparts tool", ru = "Fireparts tool", kz = "Fireparts tool", zh = "Fireparts 工具", fr = "Outil Fireparts" }, icon = "83391301433854" },
+    script_invisible = { text = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " } },
+    script_flash = { text = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "FlashGUI" } },
+    script_spin = { text = { en = "Spin", ru = "Спин", kz = "Айналу", zh = "旋轉", fr = "rotation " } },    
     -- PLAYERS PAGE
     player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
     player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
@@ -670,30 +670,78 @@ task.spawn(function()
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
 
-        local function createFunctionButton(textKey, parent, callback) 
-            local b = Instance.new("TextButton",parent)
-            local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
-            b.BackgroundColor3=theme.main
-            b.TextColor3=theme.text
-            b.Font=Enum.Font.SourceSansBold
-            b.TextSize=16
-            
-            -- FIX: Set initial text on creation to prevent "Button" text on dynamic elements
-            local langCode = languageMap[settings.language] or "en"
-            local initialText = (translations[textKey] and translations[textKey][langCode]) or (translations[textKey] and translations[textKey].en) or textKey
-            b.Text = initialText
+        local function createFunctionButton(textKey, parent, callback)
+    local b = Instance.new("TextButton", parent)
+    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+    b.BackgroundColor3 = theme.main
+    b.TextColor3 = theme.text
+    b.Font = Enum.Font.SourceSansBold
+    b.Text = "" -- Батырманың өз тексін бос қыламыз
+    b.Size = UDim2.new(0, 120, 0, 35)
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+    if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
 
-            b.TextScaled = false
-            b.RichText = true
-            b.TextYAlignment = Enum.TextYAlignment.Center
-            b.Size = UDim2.new(0, 120, 0, 35)
-            Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
-            if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
-            table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
-            table.insert(themableObjects, {object=b, property="TextColor3", colorType="text"})
-            table.insert(translatableObjects, {object=b, property="Text", key=textKey})
-            return b 
+    -- Мәтін мен суретті орналастыру үшін ListLayout қосамыз
+    local listLayout = Instance.new("UIListLayout", b)
+    listLayout.FillDirection = Enum.FillDirection.Horizontal
+    listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    listLayout.Padding = UDim.new(0, 5)
+
+    -- Мәтін үшін бөлек TextLabel жасаймыз
+    local textLabel = Instance.new("TextLabel", b)
+    textLabel.Name = "Text"
+    textLabel.BackgroundTransparency = 1
+    textLabel.TextColor3 = theme.text
+    textLabel.Font = Enum.Font.SourceSansBold
+    textLabel.TextSize = 16
+    textLabel.Size = UDim2.new(0, 0, 1, 0) -- Өлшемі автоматты түрде реттеледі
+    textLabel.AutomaticSize = Enum.AutomaticSize.X
+    textLabel.TextXAlignment = Enum.TextXAlignment.Center
+
+    -- Сурет үшін бөлек ImageLabel (егер бар болса)
+    local imageLabel = Instance.new("ImageLabel", b)
+    imageLabel.Name = "Icon"
+    imageLabel.BackgroundTransparency = 1
+    imageLabel.Size = UDim2.new(0, 15, 0, 15)
+    imageLabel.Visible = false -- Бастапқыда көрінбейді
+
+    -- Тіл мен тақырыпты жаңарту жүйесіне қосу
+    table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+    table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+    
+    local trans_obj = {
+        object = textLabel,
+        property = "Text",
+        icon_object = imageLabel,
+        key = textKey
+    }
+    table.insert(translatableObjects, trans_obj)
+
+    -- Тілді алғаш рет орнату
+    pcall(function()
+        local langCode = languageMap[settings.language] or "en"
+        local translationData = translations[textKey]
+        if translationData then
+            -- Мәтінді орнату
+            if translationData.text and (translationData.text[langCode] or translationData.text.en) then
+                textLabel.Text = translationData.text[langCode] or translationData.text.en
+            end
+            -- Суретті орнату
+            if translationData.icon and translationData.icon ~= "" then
+                imageLabel.Image = "rbxassetid://" .. translationData.icon
+                imageLabel.Visible = true
+            else
+                imageLabel.Visible = false
+            end
+        else
+            textLabel.Text = textKey -- Егер аударма табылмаса
         end
+    end)
+
+    return b
+end        
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
