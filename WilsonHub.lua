@@ -40,7 +40,7 @@ local Themes = {
     White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) },
     Purple = { main = Color3.fromRGB(138, 43, 226), accent = Color3.fromRGB(148, 0, 211), text = Color3.fromRGB(255, 255, 255) }
 }
-local settings = { theme = "Red", language = "English" }
+local settings = { theme = "Red", language = "English", iconShape = "Төртбұрыш" }
 
 -- ЗАГРУЗКА НАСТРОЕК
 if isfile and isfile("WilsonHubSettings.json") then
@@ -162,6 +162,11 @@ local translations = {
     theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
     theme_purple = { en = "Purple", ru = "Фиолетовая", kz = "Күлгін", zh = "紫色", fr = "Violet" },
     theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
+    settings_icon_shape_title = { en = "Icon Shape", ru = "Форма иконки", kz = "Иконканы өзгерту", zh = "图标形状", fr = "Forme de l'icône" },
+    shape_square = { en = "Square", ru = "Квадрат", kz = "Төртбұрыш", zh = "方形", fr = "Carré" },
+    shape_circle = { en = "Circle", ru = "Круг", kz = "Домалақ", zh = "圆形", fr = "Cercle" },
+    shape_triangle = { en = "Triangle", ru = "Треугольник", kz = "Үш бұрыш", zh = "三角形", fr = "Triangle" },
+    shape_hexagon = { en = "Hexagon", ru = "Шестиугольник", kz = "Алты бұрышты", zh = "Hexagone", fr = "Hexagone" },
     settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
     lang_en = { en = "English", ru = "Английский", kz = "Ағылшынша", zh = "英語", fr = "Anglais " },
     lang_ru = { en = "Russian", ru = "Русский", kz = "Орысша", zh = "俄文", fr = "Russe " },
@@ -632,8 +637,7 @@ task.spawn(function()
 
         local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.ZIndex = 2 
         
-        MainFrame.Size = UDim2.new(0, 550, 0, 300); 
-        MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
+        MainFrame.Size = UDim2.new(0, 550, 0, 300); MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
         
         MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
         local IconFrame = Instance.new("ImageButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 60, 0, 60); IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0); IconFrame.AnchorPoint = Vector2.new(0.5, 0.5); IconFrame.Image = "rbxassetid://121928953984347"; IconFrame.BackgroundTransparency = 1; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 10);
@@ -653,6 +657,8 @@ task.spawn(function()
         
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
+        local applyIconShape -- Алдын ала жариялау
+
         local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
         local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
@@ -671,58 +677,183 @@ task.spawn(function()
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback)
-    local b = Instance.new("TextButton", parent)
-    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
-    b.BackgroundColor3 = theme.main
-    b.Font = Enum.Font.SourceSansBold
-    b.Size = UDim2.new(0, 120, 0, 35)
-    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
-    if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
-
-    local translationData = translations[textKey]
-    
-    -- Егер батырма SCRIPTS бөліміне арналған болса (жаңа формат)
-    if type(translationData) == "table" and translationData.text then
-        b.Text = "" -- Батырманың өз тексін бос қыламыз
+            local b = Instance.new("TextButton", parent)
+            local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+            b.BackgroundColor3 = theme.main
+            b.Font = Enum.Font.SourceSansBold
+            b.Size = UDim2.new(0, 120, 0, 35)
+            Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+            if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
         
-        local listLayout = Instance.new("UIListLayout", b)
-        listLayout.FillDirection = Enum.FillDirection.Horizontal
-        listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-        listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-        listLayout.Padding = UDim.new(0, 5)
-
-        local textLabel = Instance.new("TextLabel", b)
-        textLabel.Name = "Text"
-        textLabel.BackgroundTransparency = 1
-        textLabel.TextColor3 = theme.text
-        textLabel.Font = Enum.Font.SourceSansBold
-        textLabel.TextSize = 16
-        textLabel.Size = UDim2.new(0, 0, 1, 0)
-        textLabel.AutomaticSize = Enum.AutomaticSize.X
+            local translationData = translations[textKey]
+            
+            -- Егер батырма SCRIPTS бөліміне арналған болса (жаңа формат)
+            if type(translationData) == "table" and translationData.text then
+                b.Text = "" -- Батырманың өз тексін бос қыламыз
+                
+                local listLayout = Instance.new("UIListLayout", b)
+                listLayout.FillDirection = Enum.FillDirection.Horizontal
+                listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+                listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+                listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+                listLayout.Padding = UDim.new(0, 5)
         
-        local imageLabel = Instance.new("ImageLabel", b)
-        imageLabel.Name = "Icon"
-        imageLabel.BackgroundTransparency = 1
-        imageLabel.Size = UDim2.new(0, 15, 0, 15)
-        imageLabel.Visible = false
+                local textLabel = Instance.new("TextLabel", b)
+                textLabel.Name = "TextLabel"
+                textLabel.BackgroundTransparency = 1
+                textLabel.TextColor3 = theme.text
+                textLabel.Font = Enum.Font.SourceSansBold
+                textLabel.TextSize = 16
+                textLabel.Size = UDim2.new(0, 0, 1, 0)
+                textLabel.AutomaticSize = Enum.AutomaticSize.X
+                
+                local imageLabel = Instance.new("ImageLabel", b)
+                imageLabel.Name = "ImageLabel"
+                imageLabel.BackgroundTransparency = 1
+                imageLabel.Size = UDim2.new(0, 15, 0, 15)
+                imageLabel.Visible = false
+        
+                table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+                table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+                table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey })
+            
+            -- Егер батырма басқа бөлімдерге арналған болса (ескі, қарапайым формат)
+            else
+                b.TextColor3 = theme.text
+                b.TextSize = 16
+                b.TextScaled = false
+                b.RichText = false
+                b.TextYAlignment = Enum.TextYAlignment.Center
+        
+                table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+                table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" })
+                table.insert(translatableObjects, { object = b, property = "Text", key = textKey })
+            end
+        
+            -- Тілді бірден орнату
+            pcall(function()
+                local langCode = languageMap[settings.language] or "en"
+                if type(translationData) == "table" and translationData.text then
+                     if b:FindFirstChild("TextLabel") then b.TextLabel.Text = translationData.text[langCode] or translationData.text.en end
+                     if translationData.icon and b:FindFirstChild("ImageLabel") then
+                         b.ImageLabel.Image = "rbxassetid://" .. translationData.icon
+                         b.ImageLabel.Visible = true
+                     end
+                else
+                    if translationData then
+                        b.Text = translationData[langCode] or translationData.en
+                    else
+                        b.Text = textKey
+                    end
+                end
+            end)
+            return b
+        end
 
-        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
-        table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
-        table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey })
-    
-    -- Егер батырма басқа бөлімдерге арналған болса (ескі, қарапайым формат)
-    else
-        b.TextColor3 = theme.text
-        b.TextSize = 16
-        b.TextScaled = false
-        b.RichText = false
-        b.TextYAlignment = Enum.TextYAlignment.Center
+        local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
+        
+        -- #region HOME PAGE
+        -- ... (Бұл бөлімнің коды өзгеріссіз қалады, сондықтан қысқартылды)
+        -- #endregion
+        
+        -- #region INFO PAGE
+        -- ... (Бұл бөлімнің коды өзгеріссіз қалады, сондықтан қысқартылды)
+        -- #endregion
 
-        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
-        table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" })
-        table.insert(translatableObjects, { object = b, property = "Text", key = textKey })
+        -- #region GUI MODS PAGE
+        -- ... (Бұл бөлімнің коды өзгеріссіз қалады, сондықтан қысқартылды)
+        -- #endregion
+
+        -- #region SCRIPTS PAGE
+        -- ... (Бұл бөлімнің коды өзгеріссіз қалады, сондықтан қысқартылды)
+        -- #endregion
+
+        -- #region PLAYERS PAGE
+        -- ... (Бұл бөлімнің коды өзгеріссіз қалады, сондықтан қысқартылды)
+        -- #endregion
+
+        -- #region SETTINGS & EXECUTOR
+        do 
+            local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,-10,1,-10); SettingsContainer.Position=UDim2.new(0,5,0,5); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; 
+            local ListLayout = Instance.new("UIListLayout", SettingsContainer); ListLayout.Padding = UDim.new(0, 15); ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+            local ThemesFrame = Instance.new("Frame", SettingsContainer); ThemesFrame.Name = "ThemesFrame"; ThemesFrame.BackgroundTransparency = 1; ThemesFrame.Size = UDim2.new(1, 0, 0, 1); ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y; ThemesFrame.LayoutOrder = 1
+            local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame); ThemesListLayout.Padding = UDim.new(0, 5); ThemesListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            local ThemesLabel = Instance.new("TextLabel", ThemesFrame); ThemesLabel.LayoutOrder = 1; ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});
+            local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame); ThemeButtonsContainer.LayoutOrder = 2; ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer); createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
+
+            local LangFrame = Instance.new("Frame", SettingsContainer); LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
+            local LangListLayout = Instance.new("UIListLayout", LangFrame); LangListLayout.Padding = UDim.new(0, 5); LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            local LangLabel = Instance.new("TextLabel", LangFrame); LangLabel.LayoutOrder = 1; LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
+            local LangButtonsContainer = Instance.new("Frame", LangFrame); LangButtonsContainer.LayoutOrder = 2; LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
+            
+            local IconShapeFrame = Instance.new("Frame", SettingsContainer); IconShapeFrame.Name = "IconShapeFrame"; IconShapeFrame.BackgroundTransparency = 1; IconShapeFrame.Size = UDim2.new(1, 0, 0, 1); IconShapeFrame.AutomaticSize = Enum.AutomaticSize.Y; IconShapeFrame.LayoutOrder = 3
+            local IconShapeListLayout = Instance.new("UIListLayout", IconShapeFrame); IconShapeListLayout.Padding = UDim.new(0, 5); IconShapeListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            local IconShapeLabel = Instance.new("TextLabel", IconShapeFrame); IconShapeLabel.LayoutOrder = 1; IconShapeLabel.Size = UDim2.new(1, 0, 0, 20); IconShapeLabel.BackgroundTransparency = 1; IconShapeLabel.Font = Enum.Font.SourceSansBold; IconShapeLabel.TextColor3 = Color3.fromRGB(255, 255, 255); IconShapeLabel.TextSize = 18; IconShapeLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=IconShapeLabel, property="Text", key="settings_icon_shape_title"})
+            local IconShapeButtonsContainer = Instance.new("Frame", IconShapeFrame); IconShapeButtonsContainer.LayoutOrder = 2; IconShapeButtonsContainer.BackgroundTransparency = 1; IconShapeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); IconShapeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local IconShapeGrid = Instance.new("UIGridLayout", IconShapeButtonsContainer);
+            
+            createFunctionButton("shape_square", IconShapeButtonsContainer, function() applyIconShape("Төртбұрыш") end)
+            createFunctionButton("shape_circle", IconShapeButtonsContainer, function() applyIconShape("Домалақ") end)
+            createFunctionButton("shape_triangle", IconShapeButtonsContainer, function() applyIconShape("Үш бұрыш") end)
+            createFunctionButton("shape_hexagon", IconShapeButtonsContainer, function() applyIconShape("Алты бұрышты") end)
+        end
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); ExecutorInput.Text = 'Print("HelloWorld!")'; table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45);
+        local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        -- #endregion        
+
+        -- THEME REGISTRATION
+        table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
+        
+        -- MAIN LOGIC
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
+        activeTab = HomeButton
+        for i,tab in ipairs(tabs) do tab.MouseButton1Click:Connect(function() 
+            if activeTab and activeTab.Parent then activeTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60) end
+            activeTab = tab 
+            for _,p in ipairs(pages) do p.Visible=false end
+            pages[i].Visible=true
+            if not rainbowThemeActive then activeTab.BackgroundColor3 = currentTheme.main end
+            if tab==PlayersButton then pcall(updatePlayerList) end 
+        end)end  
+        
+        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
+        Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
+        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false IconFrame.Visible = true BackgroundOverlay.Visible = false end)
+        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true IconFrame.Visible = false BackgroundOverlay.Visible = true end)
+        
+        applyIconShape = function(shapeName)
+            if not IconFrame or not IconFrame:FindFirstChild("UICorner") then return end
+            local IconCorner = IconFrame:FindFirstChild("UICorner")
+            IconFrame.Image = "rbxassetid://121928953984347"; IconCorner.CornerRadius = UDim.new(0, 10); IconFrame.Rotation = 0
+            if shapeName == "Домалақ" then
+                IconCorner.CornerRadius = UDim.new(0.5, 0)
+            elseif shapeName == "Үш бұрыш" then
+                IconFrame.Image = "rbxassetid://510311200"; IconCorner.CornerRadius = UDim.new(0, 0)
+            elseif shapeName == "Алты бұрышты" then
+                IconFrame.Image = "rbxassetid://773229699"; IconCorner.CornerRadius = UDim.new(0, 0)
+            end
+            settings.iconShape = shapeName
+            pcall(function() if writefile then writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end end)
+        end
+        
+        applyIconShape(settings.iconShape)
+
+        if settings.theme == "Rainbow" then
+             activateRainbowTheme()
+        else
+            applyTheme(settings.theme)
+        end
+        applyLanguage(settings.language)
+    end)
+    if not success then  
+        sendTranslatedNotification("notif_fatal_error_title", "notif_fatal_error_text", 20, nil, {tostring(err)})
+        warn("WILSONHUB ERROR: "..tostring(err))
     end
+end)
 
     -- Тілді бірден орнату
     pcall(function()
@@ -1137,6 +1268,45 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 
             -- Create a frame for Languages
             local LangFrame = Instance.new("Frame", SettingsContainer)
+            local LangFrame = Instance.new("Frame", SettingsContainer)
+            LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
+            local LangListLayout = Instance.new("UIListLayout", LangFrame); LangListLayout.Padding = UDim.new(0, 5)
+            LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            local LangLabel = Instance.new("TextLabel", LangFrame); LangLabel.LayoutOrder = 1
+            LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
+            local LangButtonsContainer = Instance.new("Frame", LangFrame);
+            LangButtonsContainer.LayoutOrder = 2
+            LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
+            
+            -- [[ ЖАҢА ФУНКЦИЯНЫҢ КОДЫН ОСЫ ЖЕРГЕ ҚОСАМЫЗ ]]
+            local IconShapeFrame = Instance.new("Frame", SettingsContainer)
+            IconShapeFrame.Name = "IconShapeFrame"
+            IconShapeFrame.BackgroundTransparency = 1
+            IconShapeFrame.Size = UDim2.new(1, 0, 0, 1)
+            IconShapeFrame.AutomaticSize = Enum.AutomaticSize.Y
+            IconShapeFrame.LayoutOrder = 3 -- Тілдерден кейін тұруы үшін
+
+            local IconShapeListLayout = Instance.new("UIListLayout", IconShapeFrame)
+            IconShapeListLayout.Padding = UDim.new(0, 5)
+            IconShapeListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+            
+            local IconShapeLabel = Instance.new("TextLabel", IconShapeFrame)
+            IconShapeLabel.LayoutOrder = 1
+            IconShapeLabel.Size = UDim2.new(1, 0, 0, 20)
+            IconShapeLabel.BackgroundTransparency = 1
+            IconShapeLabel.Font = Enum.Font.SourceSansBold
+            IconShapeLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+            IconShapeLabel.TextSize = 18
+            IconShapeLabel.TextXAlignment = Enum.TextXAlignment.Left
+            table.insert(translatableObjects, {object=IconShapeLabel, property="Text", key="settings_icon_shape_title"})
+            
+            local IconShapeButtonsContainer = Instance.new("Frame", IconShapeFrame)
+            IconShapeButtonsContainer.LayoutOrder = 2
+            IconShapeButtonsContainer.BackgroundTransparency = 1
+            IconShapeButtonsContainer.Size = UDim2.new(1, 0, 0, 1)
+            IconShapeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local IconShapeGrid = Instance.new("UIGridLayout", IconShapeButtonsContainer)
             LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
             local LangListLayout = Instance.new("UIListLayout", LangFrame);
             LangListLayout.Padding = UDim.new(0, 5)
