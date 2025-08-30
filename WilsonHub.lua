@@ -1,11 +1,3 @@
-local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
-Library.DefaultColor = Color3.fromRGB(255,0,0)
-
-Library:Notification({
-	Text = "WILSONHUB SCRIPTS EXECUTED!",
-	Duration = 6
-})
-
 if _G.WilsonHubLoaded then
     -- Егер скрипт осы ойында бұрыннан қосылған болса:
     pcall(function()
