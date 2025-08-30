@@ -1231,7 +1231,7 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
--- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ТЕК HOME БЕТІНДЕ) ]]
+-- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ ]]
 -- Бастапқы айнымалылар
 local soundId = "72089843969979"
 local playbackSpeed = 0.19
@@ -1248,16 +1248,16 @@ audio.Looped = true -- Музыкa қайталанып ойнайды
 audio:Play()
 
 -- Басқару батырмасын (кнопкасын) құру
+-- Егер WilsonHubGui табылмаса, қатенің алдын алу
 local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
 local WilsonHubGui = playerGui:FindFirstChild("WilsonHubGui")
 
 if WilsonHubGui then
-    -- Батырманы орналастыратын HomePage-ді табамыз
-    local HomePage = WilsonHubGui:FindFirstChild("MainFrame"):FindFirstChild("ContentContainer"):FindFirstChild("HomePage")
-    if HomePage then
+    local MainFrame = WilsonHubGui:FindFirstChild("MainFrame")
+    if MainFrame then
         local MuteButton = Instance.new("ImageButton")
         MuteButton.Name = "MuteButton"
-        MuteButton.Parent = HomePage -- <<-- МАҢЫЗДЫ ӨЗГЕРІС ОСЫ ЖЕРДЕ
+        MuteButton.Parent = MainFrame
         MuteButton.BackgroundTransparency = 1
         MuteButton.AnchorPoint = Vector2.new(1, 1) -- Оң жақ төменгі бұрышқа орнату
         MuteButton.Position = UDim2.new(1, -15, 1, -15) -- Шегіністерді реттеу
