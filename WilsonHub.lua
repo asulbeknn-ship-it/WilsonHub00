@@ -106,42 +106,42 @@ local translations = {
     mod_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
     -- SCRIPTS PAGE
     search_placeholder = { en = "Search scripts...", ru = "Поиск скриптов...", kz = "Скрипттерді іздеу...", zh = "搜索脚本...", fr = "Rechercher des scripts..." },
-    script_fly = { en = "Fly gui ☑︎", ru = "Летать гуи ☑︎", kz = "Ұшу гуи ☑︎", zh = "飞行界面 ☑︎", fr = "Fly gui ☑︎" },
-    script_fireblock = { en = "Fire Block ☑︎", ru = "Огненный Блок ☑︎", kz = "Отты Блок ☑︎", zh = "火焰方块 ☑︎", fr = "Bloc de feu ☑︎" },
-    script_speed = { en = "Speed Hack ☑︎", ru = "Спидхак ☑︎", kz = "Жылдамдық хагы ☑︎", zh = "速度破解 ☑︎", fr = "Hack de vitesse ☑︎" },
-    script_wallhop = { en = "Wallhop ☑︎", ru = "Прыжки с стеном ☑︎", kz = "Қабырғада секіру ☑︎", zh = "爬墙 ☑︎", fr = "Wallhop ☑︎" },
-    script_clicktp = { en = "Click Teleport", ru = "Телепорт по клику ☑︎", kz = "Басу арқылы телепорт ☑︎", zh = "点击传送 ☑︎", fr = "Téléportation par clic ☑︎" },
+    script_fly = { en = "Fly gui ‐", ru = "Летать гуи ‐", kz = "Ұшу гуи ‐", zh = "飞行界面 ‐", fr = "Fly gui ‐" },
+    script_fireblock = { en = "Fire Block ‐", ru = "Огненный Блок ‐", kz = "Отты Блок ‐", zh = "火焰方块 ‐", fr = "Bloc de feu ‐" },
+    script_speed = { en = "Speed Hack ‐", ru = "Спидхак ‐", kz = "Жылдамдық хагы ‐", zh = "速度破解 ‐", fr = "Hack de vitesse ‐" },
+    script_wallhop = { en = "Wallhop ‐", ru = "Прыжки с стеном ‐", kz = "Қабырғада секіру ‐", zh = "爬墙 ‐", fr = "Wallhop ‐" },
+    script_clicktp = { en = "Click Teleport", ru = "Телепорт по клику ‐", kz = "Басу арқылы телепорт ‐", zh = "点击传送 ‐", fr = "Téléportation par clic ‐" },
     script_grav = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" },
     script_afk = { en = "Anti afk", ru = "Анти афк", kz = "Анти афк", zh = "反afk", fr = "Anti-afk" },
     script_infiniteyield= { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" },
     script_antislap = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" },
     script_autoslap = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" },
     script_win = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" },
-    script_god = { en = "God mode ☑︎", ru = "Режим Бога ☑︎", kz = "Құдай режимі ☑︎", zh = "上帝模式 ☑︎", fr = "Mode Dieu ☑︎" },
-    script_spamdecal = { en = "WilsonSpam ☑︎", ru = "УилсонСпам ☑︎", kz = "WilsonSpam ☑︎", zh = "威爾遜垃圾郵件 ☑︎", fr = "WilsonSpam ☑︎" },
-    script_skybox = { en = "WilsonSpam 2 ☑︎", ru = "УилсонСпам 2 ☑︎", kz = "WilsonSpam 2 ☑︎", zh = "威爾遜垃圾郵件貼紙 2 ☑︎", fr = "WilsonSpam 2 ☑︎" },
-    script_ak47 = { en = "AK-47 ☑︎", ru = "Автомат АК-47 ☑︎", kz = "АК-47 ☑︎", zh = "AK-47 ☑︎", fr = "AK-47 ☑︎" },
-    script_lasergun = { en = "Laser gun ☑︎", ru = "Лазерное оружие ☑︎", kz = "Лазерлі қару ☑︎", zh = "雷射武器 ☑︎", fr = "armes laser ☑︎" },
+    script_god = { en = "God mode ‐", ru = "Режим Бога ‐", kz = "Құдай режимі ‐", zh = "上帝模式 ‐", fr = "Mode Dieu ‐" },
+    script_spamdecal = { en = "WilsonSpam ‐", ru = "УилсонСпам ‐", kz = "WilsonSpam ‐", zh = "威爾遜垃圾郵件 ‐", fr = "WilsonSpam ‐" },
+    script_skybox = { en = "WilsonSpam 2 ‐", ru = "УилсонСпам 2 ‐", kz = "WilsonSpam 2 ‐", zh = "威爾遜垃圾郵件貼紙 2 ‐", fr = "WilsonSpam 2 ‐" },
+    script_ak47 = { en = "AK-47 ‐", ru = "Автомат АК-47 ‐", kz = "АК-47 ‐", zh = "AK-47 ‐", fr = "AK-47 ‐" },
+    script_lasergun = { en = "Laser gun ‐", ru = "Лазерное оружие ‐", kz = "Лазерлі қару ‐", zh = "雷射武器 ‐", fr = "armes laser ‐" },
     script_johndoe = { en = "JOHNDOE", ru = "JOHNDOE", kz = "JOHNDOE", zh = "阿凡達約翰多", fr = "JOHNDOE" },
-    script_avatarcopy = { en = "COPY SKIN R6 ☑︎", ru = "Копировать аватар ☑︎", kz = "Аватарды көшіру ☑︎", zh = "複製頭像 ☑︎", fr = "COPIER L'AVATAR ☑︎" },
-    script_jerk = { en = "Jerk ☑︎", ru = "Jerk ☑︎", kz = "Jerk ☑︎", zh = "混蛋 ☑︎", fr = "Abruti ☑︎" },
+    script_avatarcopy = { en = "COPY SKIN R6 ‐", ru = "Копировать аватар ‐", kz = "Аватарды көшіру ‐", zh = "複製頭像 ‐", fr = "COPIER L'AVATAR ‐" },
+    script_jerk = { en = "Jerk ‐", ru = "Jerk ‐", kz = "Jerk ‐", zh = "混蛋 ‐", fr = "Abruti ‐" },
     script_spamchat = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" },
     script_dance = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" },
     script_hummer = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" },
     script_snake = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " },
-    script_r6 = { en = "R7", ru = "R7 ☑︎", kz = "R7 ☑︎", zh = "R7 ☑︎", fr = "R7 ☑︎" },
+    script_r6 = { en = "R7", ru = "R7 ‐", kz = "R7 ‐", zh = "R7 ‐", fr = "R7 ‐" },
     script_metiorid = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" },
     script_thomas = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " },
-    script_spider = { en = "Spiderman ☑︎", ru = "Человек паук ☑︎", kz = "Өрмекші адам ☑︎", zh = "蜘蛛人 ☑︎", fr = "Spider-Man ☑︎" },
+    script_spider = { en = "Spiderman ‐", ru = "Человек паук ‐", kz = "Өрмекші адам ‐", zh = "蜘蛛人 ‐", fr = "Spider-Man ‐" },
     script_playertp = { en = "Player tp", ru = "Тп на игрок", kz = "Ойыншыға тп", zh = "玩家傳送", fr = "Player teleport " },
-    script_board = { en = "Keyboard ☑︎", ru = "Клавиатура ☑︎", kz = "Пернетақта ☑︎", zh = "鍵盤 ☑︎", fr = "Clavier ☑︎" },
-    script_xester = { en = "Xester ☑︎", ru = "Xester ☑︎", kz = "Xester ☑︎", zh = "克斯特 ☑︎", fr = "Xester ☑︎" },
+    script_board = { en = "Keyboard ‐", ru = "Клавиатура ‐", kz = "Пернетақта ‐", zh = "鍵盤 ‐", fr = "Clavier ‐" },
+    script_xester = { en = "Xester ‐", ru = "Xester ‐", kz = "Xester ‐", zh = "克斯特 ‐", fr = "Xester ‐" },
     script_rpg = { en = "Rocket", ru = "Ракета", kz = "Зымыран", zh = "火箭", fr = "Fusée" },
-    script_object = { en = "BTool ☑︎", ru = "Btool ☑︎", kz = "Btool ☑︎", zh = "工具 ☑︎", fr = "Btool ☑︎" },
-    script_killall = { en = "Kill all ☑︎", ru = "Убить всех ☑︎", kz = "Барлығын өлтіру ☑︎", zh = "全部殺死 ☑︎", fr = "Tuez tout le monde ☑︎" },
+    script_object = { en = "BTool ‐", ru = "Btool ‐", kz = "Btool ‐", zh = "工具 ‐", fr = "Btool ‐" },
+    script_killall = { en = "Kill all ‐", ru = "Убить всех ‐", kz = "Барлығын өлтіру ‐", zh = "全部殺死 ‐", fr = "Tuez tout le monde ‐" },
     script_head = { en = "Big head", ru = "Большой голова", kz = "Үлкен бас", zh = "大頭", fr = "Grosse tête " },
     script_jump = { en = "Infinite jump", ru = "Большой прыжок", kz = "Ұзын секіру", zh = "無限跳躍", fr = "Saut infini " },
-    script_firepart = { en = "Fireparts tool", ru = "Fireparts tool ☑︎", kz = "Fireparts tool ☑︎", zh = "Fireparts 工具 ☑︎", fr = "Outil Fireparts ☑︎" },
+    script_firepart = { en = "Fireparts tool", ru = "Fireparts tool ‐", kz = "Fireparts tool ‐", zh = "Fireparts 工具 ‐", fr = "Outil Fireparts ‐" },
     script_invisible = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " },
     script_flash = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "FlashGUI" },
     script_spin = { en = "Spin", ru = "Спин", kz = "Айналу", zh = "旋轉", fr = "rotation " },
@@ -688,26 +688,31 @@ task.spawn(function()
     b.Size = UDim2.new(0, 120, 0, 35)
     Instance.new("UICorner",b).CornerRadius=UDim.new(0,6)
 
-    if translations[textKey] and translations[textKey].en and string.find(translations[textKey].en, "☑︎") then
-
-        local newText = string.gsub(b.Text, "\226\152\145", "") 
+    -- [[ ТҮЗЕТІЛГЕН КОД БАСТАЛДЫ ]]
+    if string.find(b.Text, "‐") then
+        -- 1-ТҮЗЕТУ: Белгіні 100% өшіріп, артық бос орынды алып тастаймыз
+        local newText = string.gsub(b.Text, "‐", "")
         b.Text = newText:match("^%s*(.-)%s*$") or newText
 
-        -- [[ МІНЕ, ОСЫ ЖЕРДЕГІ ҚАТЕ ТҮЗЕТІЛДІ ]]
-        b.TextXAlignment = Enum.TextXAlignment.Left -- Y әрпі X-ке түзетілді
+        -- 2-ТҮЗЕТУ: Барлық текстті сол жаққа туралаймыз
+        b.TextXAlignment = Enum.TextXAlignment.Left
 
+        -- 3-ТҮЗЕТУ: Тексттің сол жағынан әдемі орын қалдырамыз
         local padding = Instance.new("UIPadding")
         padding.Parent = b
         padding.PaddingLeft = UDim.new(0, 8)
 
+        -- Суретті қосамыз
         local checkmarkImage = Instance.new("ImageLabel")
         checkmarkImage.Parent = b
         checkmarkImage.Size = UDim2.new(0, 16, 0, 16)
         checkmarkImage.Position = UDim2.new(1, -22, 0.5, -8)
         checkmarkImage.BackgroundTransparency = 1
 
+        -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢІЗДІҢ ID-ҢІЗДІ ҚАЛДЫРЫҢЫЗ !!!
         checkmarkImage.Image = "rbxassetid://83391301433854" 
     end
+    -- [[ ТҮЗЕТІЛГЕН КОД АЯҚТАЛДЫ ]]
 
     if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
     table.insert(themableObjects, {object=b, property="BackgroundColor3", colorType="main"})
