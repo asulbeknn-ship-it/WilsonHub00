@@ -1231,18 +1231,13 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
-local sound = "72089843969979"
-local seconds = 8 
-local speed = 0.19 
-local start = 0 
-local volume = 6
+local soundId = "72089843969979"
+local playbackSpeed = 0.19 
+local soundVolume = 6
 
 local audio = Instance.new("Sound", game.SoundService)
-audio.SoundId = "rbxassetid://"..sound
-audio.PlaybackSpeed = speed
-audio.TimePosition = start
-audio.Volume = volume
+audio.SoundId = "rbxassetid://" .. soundId
+audio.PlaybackSpeed = playbackSpeed
+audio.Volume = soundVolume
+audio.Looped = true -- Музыканы қайталау үшін осы қатарды қостық
 audio:Play()
-wait(seconds)
-
-jumpscare:Destroy()
