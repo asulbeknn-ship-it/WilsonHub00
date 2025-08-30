@@ -1231,7 +1231,7 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
--- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ТҮПКІЛІКТІ ТҮЗЕТІЛГЕН) ]]
+-- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ТЕК HOME БЕТІНДЕ) ]]
 -- Бастапқы айнымалылар
 local soundId = "72089843969979"
 local playbackSpeed = 0.19
@@ -1252,32 +1252,29 @@ local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui
 local WilsonHubGui = playerGui:FindFirstChild("WilsonHubGui")
 
 if WilsonHubGui then
-    -- Батырманы тек "HOME" бетіне қосу үшін, сол беттің өзін дұрыс табамыз
-    local ContentContainer = WilsonHubGui:FindFirstChild("MainFrame"):FindFirstChild("ContentContainer")
-    if ContentContainer then
-        local HomePage = ContentContainer:FindFirstChild("HomePage")
-        if HomePage then
-            local MuteButton = Instance.new("ImageButton")
-            MuteButton.Name = "MuteButton"
-            -- !!! МАҢЫЗДЫ: Батырманы негізгі терезеге емес, HomePage-дің өзіне саламыз !!!
-            MuteButton.Parent = HomePage
-            
-            MuteButton.BackgroundTransparency = 1
-            MuteButton.AnchorPoint = Vector2.new(1, 1) -- Оң жақ төменгі бұрышқа орнату
-            MuteButton.Position = UDim2.new(1, -15, 1, -15) -- Шегіністерді реттеу
-            MuteButton.Size = UDim2.new(0, 40, 0, 40) -- Өлшемін реттеу
-            MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
+    -- Батырманы орналастыратын HomePage-ді табамыз
+    local HomePage = WilsonHubGui:FindFirstChild("MainFrame"):FindFirstChild("ContentContainer"):FindFirstChild("HomePage")
+    if HomePage then
+        local MuteButton = Instance.new("ImageButton")
+        MuteButton.Name = "MuteButton"
+        MuteButton.Parent = HomePage -- <<-- МАҢЫЗДЫ ӨЗГЕРІС ОСЫ ЖЕРДЕ
+        MuteButton.BackgroundTransparency = 1
+        MuteButton.AnchorPoint = Vector2.new(1, 1) -- Оң жақ төменгі бұрышқа орнату
+        MuteButton.Position = UDim2.new(1, -15, 1, -15) -- Шегіністерді реттеу
+        MuteButton.Size = UDim2.new(0, 40, 0, 40) -- Өлшемін реттеу
+        MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
 
-            -- Батырманы басқанда не болатынын анықтайтын функция
-            MuteButton.MouseButton1Click:Connect(function()
-                if audio.IsPlaying then
-                    audio:Pause()
-                    MuteButton.Image = soundOffIcon
-                else
-                    audio:Resume()
-                    MuteButton.Image = soundOnIcon
-                end
-            end)
-        end
+        -- Батырманы басқанда не болатынын анықтайтын функция
+        MuteButton.MouseButton1Click:Connect(function()
+            if audio.IsPlaying then
+                -- Егер музыка ойнап тұрса, оны тоқтатып, иконканы өзгертеміз
+                audio:Pause()
+                MuteButton.Image = soundOffIcon
+            else
+                -- Егер музыка тоқтап тұрса, оны жалғастырып, иконканы қайтарамыз
+                audio:Resume()
+                MuteButton.Image = soundOnIcon
+            end
+        end)
     end
 end
