@@ -1231,7 +1231,7 @@ pcall(function()
     -- Жаңа дыбыс объектісін құрамыз
     local sound = Instance.new("Sound", game:GetService("SoundService"))
     sound.Name = "WilsonHubMusic"
-    sound.SoundId = "rbxassetid://6442389964" -- Сенің музыка ID
+    sound.SoundId = "rbxassetid://1839246711" -- Сенің музыка ID
     sound.Looped = true -- Музыканы қайталап ойнату
     sound.Volume = 0.5 -- Музыканың дауыс деңгейі (0-ден 1-ге дейін өзгерте аласың)
     sound:Play() -- Музыканы ойнату
