@@ -1,3 +1,11 @@
+local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
+Library.DefaultColor = Color3.fromRGB(255,0,0)
+
+Library:Notification({
+	Text = "WILSONHUB SCRIPTS EXECUTED!",
+	Duration = 3
+})
+
 if _G.WilsonHubLoaded then
     -- Егер скрипт осы ойында бұрыннан қосылған болса:
     pcall(function()
@@ -1223,17 +1231,28 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
--- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫ ]]
-pcall(function()
-    -- Егер музыка ойнап тұрса, қайталап қоспаймыз
-    if game:GetService("SoundService"):FindFirstChild("WilsonHubMusic") then return end
+local image = ""
+local sound = "72089843969979"
+local seconds = 8 
+local speed = 0.19 
+local start = 0 
+local volume = 10 
 
-    -- Жаңа дыбыс объектісін құрамыз
-    local sound = Instance.new("Sound", game:GetService("SoundService"))
-    sound.Name = "WilsonHubMusic"
-    sound.SoundId = "rbxassetid://72089843969979" -- Сенің музыка ID
-    sound.Looped = true -- Музыканы қайталап ойнату
-    sound.Volume = 0.5 -- Музыканың дауыс деңгейі (0-ден 1-ге дейін өзгерте аласың)
-    sound:Play() -- Музыканы ойнату
-end)
--- [[ МУЗЫКА ОЙНАТУ ФУНКЦИЯСЫНЫҢ СОҢЫ ]]
+local jumpscare = Instance.new("ScreenGui")
+jumpscare.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+jumpscare.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") --🧐🤨...localplayer?
+local label = Instance.new("ImageLabel", jumpscare)
+label.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+label.BorderColor3 = Color3.fromRGB(0, 0, 0)
+label.BorderSizePixel = 0
+label.Size = UDim2.new(1, 0, 1, 0)
+label.Image = "rbxassetid://"..image
+local audio = Instance.new("Sound", game.SoundService)
+audio.SoundId = "rbxassetid://"..sound
+audio.PlaybackSpeed = speed
+audio.TimePosition = start
+audio.Volume = volume
+audio:Play()
+wait(seconds)
+
+jumpscare:Destroy()
