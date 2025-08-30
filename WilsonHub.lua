@@ -1231,7 +1231,7 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
--- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ ]]
+-- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ЖАҢАРТЫЛҒАН) ]]
 -- Бастапқы айнымалылар
 local soundId = "72089843969979"
 local playbackSpeed = 0.19
@@ -1240,41 +1240,38 @@ local soundOnIcon = "rbxassetid://96768815002144" -- Музыка қосулы �
 local soundOffIcon = "rbxassetid://125331517259500" -- Музыка өшірулі иконкасы
 
 -- Музыканы құру
-local audio = Instance.new("Sound", game.SoundService)
+local audio = Instance.new("Sound", game:GetService("SoundService"))
 audio.SoundId = "rbxassetid://" .. soundId
 audio.PlaybackSpeed = playbackSpeed
 audio.Volume = soundVolume
-audio.Looped = true -- Музыкa қайталанып ойнайды
+audio.Looped = true
 audio:Play()
 
--- Басқару батырмасын (кнопкасын) құру
--- Егер WilsonHubGui табылмаса, қатенің алдын алу
-local playerGui = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui")
-local WilsonHubGui = playerGui:FindFirstChild("WilsonHubGui")
+-- Басқару батырмасын (кнопкасын) құру үшін жаңа ScreenGui
+local MuteButtonGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+MuteButtonGui.Name = "WilsonHubMuteGui"
+MuteButtonGui.ResetOnSpawn = false
+MuteButtonGui.ZIndexBehavior = Enum.ZIndexBehavior.Global -- Басқа элементтердің үстінде болуын қамтамасыз ету
+MuteButtonGui.IgnoreGuiInset = true -- Экранның ең жоғарғы жағына дейін жетуіне мүмкіндік береді
 
-if WilsonHubGui then
-    local MainFrame = WilsonHubGui:FindFirstChild("MainFrame")
-    if MainFrame then
-        local MuteButton = Instance.new("ImageButton")
-        MuteButton.Name = "MuteButton"
-        MuteButton.Parent = MainFrame
-        MuteButton.BackgroundTransparency = 1
-        MuteButton.AnchorPoint = Vector2.new(1, 1) -- Оң жақ төменгі бұрышқа орнату
-        MuteButton.Position = UDim2.new(1, -15, 1, -15) -- Шегіністерді реттеу
-        MuteButton.Size = UDim2.new(0, 40, 0, 40) -- Өлшемін реттеу
-        MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
+local MuteButton = Instance.new("ImageButton")
+MuteButton.Name = "MuteButton"
+MuteButton.Parent = MuteButtonGui -- Жаңа Gui-ға орналастыру
+MuteButton.BackgroundTransparency = 1
+MuteButton.AnchorPoint = Vector2.new(1, 0) -- Оң жақ жоғарғы бұрышқа бекіту
+MuteButton.Position = UDim2.new(1, -55, 0, 10) -- Экранның оң жақ жоғарғы бұрышына орналастыру
+MuteButton.Size = UDim2.new(0, 45, 0, 45) -- Өлшемін реттеу
+MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
 
-        -- Батырманы басқанда не болатынын анықтайтын функция
-        MuteButton.MouseButton1Click:Connect(function()
-            if audio.IsPlaying then
-                -- Егер музыка ойнап тұрса, оны тоқтатып, иконканы өзгертеміз
-                audio:Pause()
-                MuteButton.Image = soundOffIcon
-            else
-                -- Егер музыка тоқтап тұрса, оны жалғастырып, иконканы қайтарамыз
-                audio:Resume()
-                MuteButton.Image = soundOnIcon
-            end
-        end)
+-- Батырманы басқанда не болатынын анықтайтын функция
+MuteButton.MouseButton1Click:Connect(function()
+    if audio.IsPlaying then
+        -- Егер музыка ойнап тұрса, оны тоқтатып, иконканы өзгертеміз
+        audio:Pause()
+        MuteButton.Image = soundOffIcon
+    else
+        -- Егер музыка тоқтап тұрса, оны жалғастырып, иконканы қайтарамыз
+        audio:Resume()
+        MuteButton.Image = soundOnIcon
     end
-end
+end)
