@@ -674,73 +674,110 @@ task.spawn(function()
     local b = Instance.new("TextButton", parent)
     local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
     b.BackgroundColor3 = theme.main
-    b.TextColor3 = theme.text
     b.Font = Enum.Font.SourceSansBold
-    b.Text = "" -- Батырманың өз тексін бос қыламыз
     b.Size = UDim2.new(0, 120, 0, 35)
     Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
     if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
 
-    -- Мәтін мен суретті орналастыру үшін ListLayout қосамыз
-    local listLayout = Instance.new("UIListLayout", b)
-    listLayout.FillDirection = Enum.FillDirection.Horizontal
-    listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
-    listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
-    listLayout.SortOrder = Enum.SortOrder.LayoutOrder
-    listLayout.Padding = UDim.new(0, 5)
-
-    -- Мәтін үшін бөлек TextLabel жасаймыз
-    local textLabel = Instance.new("TextLabel", b)
-    textLabel.Name = "Text"
-    textLabel.BackgroundTransparency = 1
-    textLabel.TextColor3 = theme.text
-    textLabel.Font = Enum.Font.SourceSansBold
-    textLabel.TextSize = 16
-    textLabel.Size = UDim2.new(0, 0, 1, 0) -- Өлшемі автоматты түрде реттеледі
-    textLabel.AutomaticSize = Enum.AutomaticSize.X
-    textLabel.TextXAlignment = Enum.TextXAlignment.Center
-
-    -- Сурет үшін бөлек ImageLabel (егер бар болса)
-    local imageLabel = Instance.new("ImageLabel", b)
-    imageLabel.Name = "Icon"
-    imageLabel.BackgroundTransparency = 1
-    imageLabel.Size = UDim2.new(0, 15, 0, 15)
-    imageLabel.Visible = false -- Бастапқыда көрінбейді
-
-    -- Тіл мен тақырыпты жаңарту жүйесіне қосу
-    table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
-    table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+    local translationData = translations[textKey]
     
-    local trans_obj = {
-        object = textLabel,
-        property = "Text",
-        icon_object = imageLabel,
-        key = textKey
-    }
-    table.insert(translatableObjects, trans_obj)
+    -- Егер батырма SCRIPTS бөліміне арналған болса (жаңа формат)
+    if type(translationData) == "table" and translationData.text then
+        b.Text = "" -- Батырманың өз тексін бос қыламыз
+        
+        local listLayout = Instance.new("UIListLayout", b)
+        listLayout.FillDirection = Enum.FillDirection.Horizontal
+        listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Padding = UDim.new(0, 5)
 
-    -- Тілді алғаш рет орнату
+        local textLabel = Instance.new("TextLabel", b)
+        textLabel.Name = "Text"
+        textLabel.BackgroundTransparency = 1
+        textLabel.TextColor3 = theme.text
+        textLabel.Font = Enum.Font.SourceSansBold
+        textLabel.TextSize = 16
+        textLabel.Size = UDim2.new(0, 0, 1, 0)
+        textLabel.AutomaticSize = Enum.AutomaticSize.X
+        
+        local imageLabel = Instance.new("ImageLabel", b)
+        imageLabel.Name = "Icon"
+        imageLabel.BackgroundTransparency = 1
+        imageLabel.Size = UDim2.new(0, 15, 0, 15)
+        imageLabel.Visible = false
+
+        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+        table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+        table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey })
+    
+    -- Егер батырма басқа бөлімдерге арналған болса (ескі, қарапайым формат)
+    else
+        b.TextColor3 = theme.text
+        b.TextSize = 16
+        b.TextScaled = false
+        b.RichText = false
+        b.TextYAlignment = Enum.TextYAlignment.Center
+
+        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+        table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" })
+        table.insert(translatableObjects, { object = b, property = "Text", key = textKey })
+    end
+
+    -- Тілді бірден орнату
     pcall(function()
         local langCode = languageMap[settings.language] or "en"
-        local translationData = translations[textKey]
-        if translationData then
-            -- Мәтінді орнату
-            if translationData.text and (translationData.text[langCode] or translationData.text.en) then
-                textLabel.Text = translationData.text[langCode] or translationData.text.en
-            end
-            -- Суретті орнату
-            if translationData.icon and translationData.icon ~= "" then
-                imageLabel.Image = "rbxassetid://" .. translationData.icon
-                imageLabel.Visible = true
-            else
-                imageLabel.Visible = false
-            end
+        if type(translationData) == "table" and translationData.text then
+             if b.TextLabel then b.TextLabel.Text = translationData.text[langCode] or translationData.text.en end
+             if translationData.icon and b.ImageLabel then
+                 b.ImageLabel.Image = "rbxassetid://" .. translationData.icon
+                 b.ImageLabel.Visible = true
+             end
         else
-            textLabel.Text = textKey -- Егер аударма табылмаса
+            if translationData then
+                b.Text = translationData[langCode] or translationData.en
+            else
+                b.Text = textKey
+            end
         end
     end)
-
     return b
+end
+applyLanguage = function(langName)
+    if not languageMap[langName] then langName = "English" end
+    settings.language = langName
+    pcall(function() if writefile then writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end end)
+    
+    local langCode = languageMap[settings.language] or "en"
+    
+    for _, item in ipairs(translatableObjects) do
+        if item.object and (item.object.Parent or (item.object.textLabel and item.object.textLabel.Parent)) then
+            local translationData = translations[item.key]
+            if translationData then
+                -- Жаңа, иконкасы бар батырмалар үшін
+                if item.property == "CustomScriptButton" then
+                    local textData = translationData.text
+                    if textData then
+                        item.object.textLabel.Text = textData[langCode] or textData.en
+                    end
+                    if translationData.icon then
+                        item.object.imageLabel.Image = "rbxassetid://" .. translationData.icon
+                        item.object.imageLabel.Visible = true
+                    else
+                        item.object.imageLabel.Visible = false
+                    end
+                -- Ескі, қарапайым батырмалар үшін
+                else
+                    local translatedText = translationData[langCode] or translationData.en
+                    if item.dynamic_args then
+                         pcall(function() item.object[item.property] = string.format(translatedText, unpack(item.dynamic_args)) end)
+                    else
+                         item.object[item.property] = translatedText
+                    end
+                end
+            end
+        end
+    end
 end        
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
