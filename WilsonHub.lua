@@ -1231,22 +1231,12 @@ local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
-local image = ""
 local sound = "72089843969979"
 local seconds = 8 
 local speed = 0.19 
 local start = 0 
 local volume = 6
 
-local jumpscare = Instance.new("ScreenGui")
-jumpscare.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
-jumpscare.Parent = game:GetService("Players").LocalPlayer:WaitForChild("PlayerGui") --🧐🤨...localplayer?
-local label = Instance.new("ImageLabel", jumpscare)
-label.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-label.BorderColor3 = Color3.fromRGB(0, 0, 0)
-label.BorderSizePixel = 0
-label.Size = UDim2.new(1, 0, 1, 0)
-label.Image = "rbxassetid://"..image
 local audio = Instance.new("Sound", game.SoundService)
 audio.SoundId = "rbxassetid://"..sound
 audio.PlaybackSpeed = speed
