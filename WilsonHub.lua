@@ -831,46 +831,6 @@ local AgeLabel = createInfoLabel("", HomePage);
 AgeLabel.Position = UDim2.new(0, 150, 0, 110);
 table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
 
--- Жаңа ақпараттарды осы жерге қосамыз
-local GameNameLabel = createInfoLabel("", HomePage);
-GameNameLabel.Position = UDim2.new(0, 150, 0, 135);
-GameNameLabel.Text = "Game Name: " .. game.Name;
-
-local ExecutorLabel = createInfoLabel("", HomePage);
-ExecutorLabel.Position = UDim2.new(0, 150, 0, 160);
-ExecutorLabel.Text = "Executor: ";
-
-local UserCountLabel = createInfoLabel("", HomePage);
-UserCountLabel.Position = UDim2.new(0, 150, 0, 185);
-UserCountLabel.Text = "Total users: Loading...";
-
--- Орындаушы атауын анықтау
-local Executor = "Unknown";
-pcall(function()
-    if is_synapse_x then
-        Executor = "Synapse X";
-    elseif is_krnl then
-        Executor = "KRNL";
-    elseif is_fluxus then
-        Executor = "Fluxus";
-    elseif getgenv then
-        Executor = "Delta";
-    end
-end)
-ExecutorLabel.Text = "Executor: " .. Executor;
-
--- Қолданушы санын жүктеу (онлайн API қажет)
-task.spawn(function()
-    local success, response = pcall(function()
-        return HttpService:JSONDecode(game:HttpGet("https://your-api-url.com/user_count"))
-    end)
-    if success and response and response.users then
-        UserCountLabel.Text = "Total users: " .. response.users;
-    else
-        UserCountLabel.Text = "Total users: 168 users";
-    end
-end)
-
 local creationDateLabel = createInfoLabel("", HomePage);
 creationDateLabel.Position = UDim2.new(0, 15, 0, 150);
 table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})
@@ -1033,6 +993,14 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         
         task.wait(0.1) 
         updateScriptsCanvasSize()
+        
+        local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
+Library.DefaultColor = Color3.fromRGB(0,255,0)
+
+Library:Notification({
+	Text = "SCRIPT EXECUTED!",
+	Duration = 3
+})
 
         createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
         SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
@@ -1216,7 +1184,7 @@ end)
 
 -- 3. АНИМАЦИЯ ЗАГРУЗКИ
 applyLanguage(settings.language)
-local loadDuration=1.5
+local loadDuration=1
 for i=0,100 do 
     local progress=i/100
     local numDots=math.floor(i/12)%4
