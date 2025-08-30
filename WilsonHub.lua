@@ -979,11 +979,11 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         -- #endregion
 
         -- #region SCRIPTS PAGE
-        local SearchBox = Instance.new("TextBox", MainPage); SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
+        local SearchBox = Instance.new("TextBox", MainPage);
+        SearchBox.Size = UDim2.new(1,-20,0,30); SearchBox.Position = UDim2.new(0,10,0,10); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
         local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
         local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-50); ScriptsContainer.Position=UDim2.new(0,10,0,50); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6;
         local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 95, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-        
         local function updateScriptsCanvasSize()
             -- AbsoluteContentSize Y-ті CanvasSize-ға орнатамыз
             ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y)
@@ -993,54 +993,56 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         
         task.wait(0.1) 
         updateScriptsCanvasSize()
-        
-        local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
-Library.DefaultColor = Color3.fromRGB(0,255,0)
 
-Library:Notification({
-	Text = "SCRIPT EXECUTED!",
-	Duration = 3
-})
+        local function showExecutedNotification()
+            Library.DefaultColor = Color3.fromRGB(0,255,0)
+            Library:Notification({
+                Text = "SCRIPT EXECUTED!",
+                Duration = 3
+            })
+            Library.DefaultColor = Color3.fromRGB(255,0,0) -- Негізгі қызыл түске қайтару
+        end
 
-        createFunctionButton("script_fly", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end); createFunctionButton("script_fireblock", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
+        createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
+        createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
         SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then b.Visible = b.Text:lower():find(s, 1, true) end end end)
-        createFunctionButton("script_speed", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
-        createFunctionButton("script_wallhop", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
-        createFunctionButton("script_clicktp", ScriptsContainer, function() local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
-        createFunctionButton("script_grav", ScriptsContainer, function() workspace.Gravity = 30 end);
-        createFunctionButton("script_afk", ScriptsContainer, function() local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
-        createFunctionButton("script_infiniteyield", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
-        createFunctionButton("script_antislap", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Antislap.lua"))() end);
-        createFunctionButton("script_autoslap", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
-        createFunctionButton("script_win", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Win.lua"))() end);
-        createFunctionButton("script_god", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
-        createFunctionButton("script_spamdecal", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
-        createFunctionButton("script_skybox", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
-        createFunctionButton("script_ak47", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
-        createFunctionButton("script_lasergun", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
-        createFunctionButton("script_johndoe", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
-        createFunctionButton("script_avatarcopy", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
-        createFunctionButton("script_jerk", ScriptsContainer, function() loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
-        createFunctionButton("script_spamchat", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/spamchat.lua"))() end);
-        createFunctionButton("script_dance", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Dance.lua"))() end);
-        createFunctionButton("script_hummer", ScriptsContainer, function() loadstring(game:HttpGet("https://pastebin.com/raw/h9NvY2PD"))() end);
-        createFunctionButton("script_snake", ScriptsContainer, function() loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))() end);
-        createFunctionButton("script_r6", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/CoreGui/Scripts/main/RC7"))() end);
-        createFunctionButton("script_metiorid", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Meteor.lua"))() end);
-        createFunctionButton("script_thomas", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-g00lxploiter-thomas-12611"))() end);
-        createFunctionButton("script_spider", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spiderman.lua"))() end);
-        createFunctionButton("script_playertp", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Tp.lua"))() end);
-        createFunctionButton("script_board", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Keyboard.lua"))() end);
-        createFunctionButton("script_xester", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Xester-18937"))() end);
-        createFunctionButton("script_rpg", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/Scripts/main/rocketLauncher.lua"))() end);
-        createFunctionButton("script_object", ScriptsContainer, function() loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)() end);
-        createFunctionButton("script_killall", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FEKILLALL.lua"))() end);
-        createFunctionButton("script_head", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Head.lua"))() end);
-        createFunctionButton("script_jump", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
-        createFunctionButton("script_firepart", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
-        createFunctionButton("script_invisible", ScriptsContainer, function() loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
-        createFunctionButton("script_flash", ScriptsContainer, function() loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
-        createFunctionButton("script_spin", ScriptsContainer, function() power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
+        createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
+        createFunctionButton("script_wallhop", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
+        createFunctionButton("script_clicktp", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
+        createFunctionButton("script_grav", ScriptsContainer, function() showExecutedNotification(); workspace.Gravity = 30 end);
+        createFunctionButton("script_afk", ScriptsContainer, function() showExecutedNotification(); local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
+        createFunctionButton("script_infiniteyield", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
+        createFunctionButton("script_antislap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Antislap.lua"))() end);
+        createFunctionButton("script_autoslap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+        createFunctionButton("script_win", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Win.lua"))() end);
+        createFunctionButton("script_god", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
+        createFunctionButton("script_spamdecal", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
+        createFunctionButton("script_skybox", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+        createFunctionButton("script_ak47", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
+        createFunctionButton("script_lasergun", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
+        createFunctionButton("script_johndoe", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
+        createFunctionButton("script_avatarcopy", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
+        createFunctionButton("script_jerk", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
+        createFunctionButton("script_spamchat", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/spamchat.lua"))() end);
+        createFunctionButton("script_dance", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Dance.lua"))() end);
+        createFunctionButton("script_hummer", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastebin.com/raw/h9NvY2PD"))() end);
+        createFunctionButton("script_snake", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))() end);
+        createFunctionButton("script_r6", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/CoreGui/Scripts/main/RC7"))() end);
+        createFunctionButton("script_metiorid", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Meteor.lua"))() end);
+        createFunctionButton("script_thomas", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-g00lxploiter-thomas-12611"))() end);
+        createFunctionButton("script_spider", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spiderman.lua"))() end);
+        createFunctionButton("script_playertp", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Tp.lua"))() end);
+        createFunctionButton("script_board", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Keyboard.lua"))() end);
+        createFunctionButton("script_xester", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Xester-18937"))() end);
+        createFunctionButton("script_rpg", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/Scripts/main/rocketLauncher.lua"))() end);
+        createFunctionButton("script_object", ScriptsContainer, function() showExecutedNotification(); loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)() end);
+        createFunctionButton("script_killall", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FEKILLALL.lua"))() end);
+        createFunctionButton("script_head", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Head.lua"))() end);
+        createFunctionButton("script_jump", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
+        createFunctionButton("script_firepart", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
+        createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
+        createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
+        createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
