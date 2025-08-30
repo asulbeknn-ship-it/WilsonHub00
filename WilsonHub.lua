@@ -1229,7 +1229,7 @@ task.wait(0.2)
 LoadingGui:Destroy()
 local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
 if WilsonHubGui then WilsonHubGui.Enabled=true end
-sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_bulocal" 
+sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_bulocal")
 
 -- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ЖАҢАРТЫЛҒАН) ]]
 -- Бастапқы айнымалылар
