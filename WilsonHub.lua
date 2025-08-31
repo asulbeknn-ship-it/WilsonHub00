@@ -697,7 +697,8 @@ task.spawn(function()
 
         local function createFunctionButton(textKey, parent, callback)
     local b = Instance.new("TextButton", parent)
-    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+    -- Тема толық жүктелгенше қолданылатын уақытша тема
+    local theme = (not rainbowThemeActive and currentTheme) or Themes.Red 
     b.BackgroundColor3 = theme.main
     b.Font = Enum.Font.SourceSansBold
     b.Size = UDim2.new(0, 120, 0, 35)
@@ -706,9 +707,9 @@ task.spawn(function()
 
     local translationData = translations[textKey]
     
-    -- Егер батырма SCRIPTS бөліміне арналған болса (жаңа формат)
+    -- Бұл иконкасы бар скрипт батырмасы ма, әлде қарапайым батырма ма, соны тексеру
     if type(translationData) == "table" and translationData.text then
-        b.Text = "" -- Батырманың өз тексін бос қыламыз
+        b.Text = "" -- Батырманың өз текстін тазалау
         
         local listLayout = Instance.new("UIListLayout", b)
         listLayout.FillDirection = Enum.FillDirection.Horizontal
@@ -725,44 +726,53 @@ task.spawn(function()
         textLabel.TextSize = 16
         textLabel.Size = UDim2.new(0, 0, 1, 0)
         textLabel.AutomaticSize = Enum.AutomaticSize.X
+        textLabel.LayoutOrder = 1
         
         local imageLabel = Instance.new("ImageLabel", b)
         imageLabel.Name = "Icon"
         imageLabel.BackgroundTransparency = 1
         imageLabel.Size = UDim2.new(0, 15, 0, 15)
-        imageLabel.Visible = false
+        imageLabel.Visible = false -- Бастапқыда жасырулы
+        imageLabel.LayoutOrder = 2
 
         table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
         table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+        -- Аударма кезінде осы батырма түрін анықтау үшін арнайы қасиетті пайдалану
         table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey })
     
-    -- Егер батырма басқа бөлімдерге арналған болса (ескі, қарапайым формат)
+    -- Қарапайым батырмаларды өңдеу
     else
         b.TextColor3 = theme.text
         b.TextSize = 16
-        b.TextScaled = false
-        b.RichText = false
-        b.TextYAlignment = Enum.TextYAlignment.Center
-
+        
         table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
         table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" })
         table.insert(translatableObjects, { object = b, property = "Text", key = textKey })
     end
 
-    -- Тілді бірден орнату
+    -- Осы жаңа батырмаға ағымдағы тілді бірден қолдану
     pcall(function()
         local langCode = languageMap[settings.language] or "en"
         if type(translationData) == "table" and translationData.text then
-             if b.TextLabel then b.TextLabel.Text = translationData.text[langCode] or translationData.text.en end
-             if translationData.icon and b.ImageLabel then
-                 b.ImageLabel.Image = "rbxassetid://" .. translationData.icon
-                 b.ImageLabel.Visible = true
+             local textData = translationData.text
+             if textData then
+                local textLabel = b:FindFirstChild("Text")
+                if textLabel then
+                    textLabel.Text = textData[langCode] or textData.en
+                end
+             end
+             if translationData.icon then
+                 local imageLabel = b:FindFirstChild("Icon")
+                 if imageLabel then
+                     imageLabel.Image = "rbxassetid://" .. translationData.icon
+                     imageLabel.Visible = true
+                 end
              end
         else
             if translationData then
                 b.Text = translationData[langCode] or translationData.en
             else
-                b.Text = textKey
+                b.Text = textKey -- Аудармасы жоқ қарапайым батырмалар үшін
             end
         end
     end)
@@ -776,22 +786,23 @@ applyLanguage = function(langName)
     local langCode = languageMap[settings.language] or "en"
     
     for _, item in ipairs(translatableObjects) do
+        -- Объектінің бар-жоғын тексеру
         if item.object and (item.object.Parent or (item.object.textLabel and item.object.textLabel.Parent)) then
             local translationData = translations[item.key]
             if translationData then
-                -- Жаңа, иконкасы бар батырмалар үшін
+                -- Иконкасы бар жаңа скрипт батырмаларын өңдеу
                 if item.property == "CustomScriptButton" then
                     local textData = translationData.text
-                    if textData then
+                    if textData and item.object.textLabel then
                         item.object.textLabel.Text = textData[langCode] or textData.en
                     end
-                    if translationData.icon then
+                    if translationData.icon and item.object.imageLabel then
                         item.object.imageLabel.Image = "rbxassetid://" .. translationData.icon
                         item.object.imageLabel.Visible = true
-                    else
+                    elseif item.object.imageLabel then
                         item.object.imageLabel.Visible = false
                     end
-                -- Ескі, қарапайым батырмалар үшін
+                -- Қалған барлық стандартты аударылатын объектілерді өңдеу
                 else
                     local translatedText = translationData[langCode] or translationData.en
                     if item.dynamic_args then
@@ -803,7 +814,7 @@ applyLanguage = function(langName)
             end
         end
     end
-end        
+end
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
         -- #region HOME PAGE
@@ -989,8 +1000,32 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         -- #endregion
 
         -- #region SCRIPTS PAGE
+-- Рұқсат етілген пайдаланушылар тізімі
 local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
+local customScripts = {}
+
+-- [[ Жеке скрипттерді сақтау және жүктеу ]]
+local function saveCustomScripts()
+    if writefile then
+        pcall(function()
+            writefile("WilsonHubCustomScripts.json", HttpService:JSONEncode(customScripts))
+        end)
+    end
+end
+
+local function loadCustomScripts()
+    if isfile and isfile("WilsonHubCustomScripts.json") then
+        pcall(function()
+            local fileContent = readfile("WilsonHubCustomScripts.json")
+            local decoded = HttpService:JSONDecode(fileContent)
+            if type(decoded) == "table" then
+                customScripts = decoded
+            end
+        end)
+    end
+end
+loadCustomScripts() -- Скрипт басталғанда сақталған скрипттерді жүктеу
 
 -- Іздеу жолағы мен "Скрипт құру" батырмасына арналған контейнер
 local TopBar = Instance.new("Frame", MainPage)
@@ -1009,22 +1044,16 @@ local SearchBoxStroke = Instance.new("UIStroke", SearchBox)
 SearchBoxStroke.Color = currentTheme.main
 table.insert(themableObjects, { object = SearchBoxStroke, property = "Color", colorType = "main" })
 
--- Егер пайдаланушы рұқсат етілген болса, орналасуды өзгерту
 if isAuthorized then
     local TopBarLayout = Instance.new("UIListLayout", TopBar)
     TopBarLayout.FillDirection = Enum.FillDirection.Horizontal
     TopBarLayout.SortOrder = Enum.SortOrder.LayoutOrder
     TopBarLayout.Padding = UDim.new(0, 10)
 
-    local CreateScriptButton = createFunctionButton("create_script", TopBar, function()
-        -- Модальді терезені көрсету (төменде жасалады)
-    end)
+    local CreateScriptButton = createFunctionButton("create_script", TopBar, function() end)
     CreateScriptButton.Size = UDim2.new(0.4, 0, 1, 0)
-    
-    -- Іздеу жолағының өлшемін кішірейту
     SearchBox.Size = UDim2.new(0.6, -10, 1, 0)
 else
-    -- Басқа пайдаланушылар үшін іздеу жолағы толық енде қалады
     SearchBox.Size = UDim2.new(1, 0, 1, 0)
     SearchBox.Position = UDim2.new(0, 0, 0, 0)
 end
@@ -1043,8 +1072,6 @@ local function updateScriptsCanvasSize()
     ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y)
 end
 ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize)
-task.wait(0.1)
-updateScriptsCanvasSize()
 
 local function showExecutedNotification()
     Library.DefaultColor = Color3.fromRGB(0, 255, 0)
@@ -1052,109 +1079,62 @@ local function showExecutedNotification()
     Library.DefaultColor = Color3.fromRGB(255, 0, 0)
 end
 
--- [[ ЖАҢА СКРИПТ ҚҰРУ МОДАЛЬДІ ТЕРЕЗЕСІ (ТЕК АВТОРЛАР ҮШІН) ]]
-if isAuthorized then
-    local CreateScriptModal = Instance.new("Frame", MainFrame)
-    CreateScriptModal.Name = "CreateScriptModal"
-    CreateScriptModal.Size = UDim2.new(1, 0, 1, 0)
-    CreateScriptModal.Position = UDim2.new(0, 0, 0, 0)
-    CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    CreateScriptModal.BackgroundTransparency = 0.7
-    CreateScriptModal.ZIndex = 10
-    CreateScriptModal.Visible = false -- Басында көрінбейді
-
-    local ModalContent = Instance.new("Frame", CreateScriptModal)
-    ModalContent.Size = UDim2.new(0, 350, 0, 230)
-    ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115)
-    ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-    ModalContent.BorderSizePixel = 0
-    Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8)
-    local ModalStroke = Instance.new("UIStroke", ModalContent)
-    ModalStroke.Color = currentTheme.main
-    table.insert(themableObjects, { object = ModalStroke, property = "Color", colorType = "main" })
-
-    local ModalTitle = Instance.new("TextLabel", ModalContent)
-    ModalTitle.Size = UDim2.new(1, 0, 0, 30)
-    ModalTitle.BackgroundTransparency = 1
-    ModalTitle.Font = Enum.Font.SourceSansBold
-    ModalTitle.TextSize = 20
-    ModalTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
-    table.insert(translatableObjects, { object = ModalTitle, property = "Text", key = "create_script_modal_title" })
-
-    local ScriptNameInput = Instance.new("TextBox", ModalContent)
-    ScriptNameInput.Size = UDim2.new(1, -20, 0, 30)
-    ScriptNameInput.Position = UDim2.new(0, 10, 0, 40)
-    ScriptNameInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    ScriptNameInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Instance.new("UICorner", ScriptNameInput).CornerRadius = UDim.new(0, 6)
-    table.insert(translatableObjects, { object = ScriptNameInput, property = "PlaceholderText", key = "script_name_placeholder" })
-
-    local ScriptCodeInput = Instance.new("TextBox", ModalContent)
-    ScriptCodeInput.Size = UDim2.new(1, -20, 0, 80)
-    ScriptCodeInput.Position = UDim2.new(0, 10, 0, 80)
-    ScriptCodeInput.MultiLine = true
-    ScriptCodeInput.TextXAlignment = Enum.TextXAlignment.Left
-    ScriptCodeInput.TextYAlignment = Enum.TextYAlignment.Top
-    ScriptCodeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    ScriptCodeInput.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Instance.new("UICorner", ScriptCodeInput).CornerRadius = UDim.new(0, 6)
-    table.insert(translatableObjects, { object = ScriptCodeInput, property = "PlaceholderText", key = "script_code_placeholder" })
-
-    local ConfirmCreateButton = createFunctionButton("create_button", ModalContent, function()
-        local scriptName = ScriptNameInput.Text
-        local scriptCode = ScriptCodeInput.Text
-        if scriptName == "" then
-            sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5)
-            return
+-- Скрипт батырмасын жасау функциясы (жеке скрипттер үшін)
+local function createCustomScriptButton(name, code)
+    local newKey = "custom_script_" .. name:gsub("%s+", ""):lower()
+    translations[newKey] = {
+        text = { en = name, ru = name, kz = name, zh = name, fr = name }
+    }
+    createFunctionButton(newKey, ScriptsContainer, function()
+        showExecutedNotification()
+        local s, e = pcall(loadstring(code))
+        if not s then
+            sendTranslatedNotification("notif_executor_error_title", tostring(e), 5)
         end
-        if scriptCode == "" then
-            sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5)
-            return
-        end
-        
-        -- Жаңа скрипт үшін бірегей кілт жасау
-        local newKey = "custom_script_" .. scriptName:gsub("%s+", ""):lower()
-        -- Аудармалар кестесіне жаңа скрипті қосу
-        translations[newKey] = {
-            text = { en = scriptName, ru = scriptName, kz = scriptName, zh = scriptName, fr = scriptName }
-        }
-        -- Жаңа батырманы жасау
-        createFunctionButton(newKey, ScriptsContainer, function()
-            showExecutedNotification()
-            local s, e = pcall(loadstring(scriptCode))
-            if not s then
-                sendTranslatedNotification("notif_executor_error_title", tostring(e), 5)
-            end
-        end)
-        updateScriptsCanvasSize()
-        sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName})
-        -- Терезені жабу және тазалау
-        CreateScriptModal.Visible = false
-        ScriptNameInput.Text = ""
-        ScriptCodeInput.Text = ""
-    end)
-    ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35)
-    ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45)
-
-    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function()
-        CreateScriptModal.Visible = false
-        ScriptNameInput.Text = ""
-        ScriptCodeInput.Text = ""
-    end)
-    CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35)
-    CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45)
-    
-    -- "СКРИПТ ҚҰРУ" батырмасының негізгі функциясы
-    TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
-        CreateScriptModal.Visible = true
-        applyLanguage(settings.language) -- Тілді қайта қолдану
     end)
 end
 
--- Түпнұсқа скрипттер (осыларға тиіспе)
+if isAuthorized then
+    local CreateScriptModal = Instance.new("Frame", MainFrame)
+    CreateScriptModal.Name = "CreateScriptModal"; CreateScriptModal.Size = UDim2.new(1, 0, 1, 0); CreateScriptModal.Position = UDim2.new(0, 0, 0, 0); CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0); CreateScriptModal.BackgroundTransparency = 0.7; CreateScriptModal.ZIndex = 10; CreateScriptModal.Visible = false;
+    local ModalContent = Instance.new("Frame", CreateScriptModal); ModalContent.Size = UDim2.new(0, 350, 0, 230); ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115); ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45); ModalContent.BorderSizePixel = 0; Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8); local ModalStroke = Instance.new("UIStroke", ModalContent); ModalStroke.Color = currentTheme.main; table.insert(themableObjects, { object = ModalStroke, property = "Color", colorType = "main" });
+    local ModalTitle = Instance.new("TextLabel", ModalContent); ModalTitle.Size = UDim2.new(1, 0, 0, 30); ModalTitle.BackgroundTransparency = 1; ModalTitle.Font = Enum.Font.SourceSansBold; ModalTitle.TextSize = 20; ModalTitle.TextColor3 = Color3.fromRGB(255, 255, 255); table.insert(translatableObjects, { object = ModalTitle, property = "Text", key = "create_script_modal_title" });
+    local ScriptNameInput = Instance.new("TextBox", ModalContent); ScriptNameInput.Size = UDim2.new(1, -20, 0, 30); ScriptNameInput.Position = UDim2.new(0, 10, 0, 40); ScriptNameInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptNameInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptNameInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptNameInput, property = "PlaceholderText", key = "script_name_placeholder" });
+    local ScriptCodeInput = Instance.new("TextBox", ModalContent); ScriptCodeInput.Size = UDim2.new(1, -20, 0, 80); ScriptCodeInput.Position = UDim2.new(0, 10, 0, 80); ScriptCodeInput.MultiLine = true; ScriptCodeInput.TextXAlignment = Enum.TextXAlignment.Left; ScriptCodeInput.TextYAlignment = Enum.TextYAlignment.Top; ScriptCodeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptCodeInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptCodeInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptCodeInput, property = "PlaceholderText", key = "script_code_placeholder" });
+    
+    local ConfirmCreateButton = createFunctionButton("create_button", ModalContent, function()
+        local scriptName = ScriptNameInput.Text; local scriptCode = ScriptCodeInput.Text
+        if scriptName == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5) return end
+        if scriptCode == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5) return end
+        
+        -- Скрипті тізімге қосып, сақтау
+        table.insert(customScripts, { name = scriptName, code = scriptCode })
+        saveCustomScripts()
+        
+        -- Жаңа батырманы интерфейске қосу
+        createCustomScriptButton(scriptName, scriptCode)
+        updateScriptsCanvasSize()
+        sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName})
+        
+        CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
+    end)
+    ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35); ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45)
+    
+    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function()
+        CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
+    end)
+    CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35); CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45)
+    
+    TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
+        CreateScriptModal.Visible = true; applyLanguage(settings.language)
+    end)
+end
+
+-- [[ БАРЛЫҚ СКРИПТТЕРДІ ҚҰРУ ]]
+-- 1. Түпнұсқа скрипттер
 createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
+-- ... (басқа барлық createFunctionButton шақырулары осында қалады) ...
 createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
-SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then local textLabel = b:FindFirstChild("Text"); if textLabel then b.Visible = textLabel.Text:lower():find(s, 1, true) else b.Visible = b.Text:lower():find(s, 1, true) end end end end)
 createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
 createFunctionButton("script_wallhop", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
 createFunctionButton("script_clicktp", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
@@ -1192,6 +1172,17 @@ createFunctionButton("script_firepart", ScriptsContainer, function() showExecute
 createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
 createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
 createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
+
+-- 2. Сақталған жеке скрипттер
+for _, scriptData in ipairs(customScripts) do
+    createCustomScriptButton(scriptData.name, scriptData.code)
+end
+
+-- Іздеу функциясы
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then local textLabel = b:FindFirstChild("Text"); if textLabel then b.Visible = textLabel.Text:lower():find(s, 1, true) else b.Visible = b.Text:lower():find(s, 1, true) end end end end)
+
+task.wait(0.2)
+updateScriptsCanvasSize()
         -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
