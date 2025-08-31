@@ -1,17 +1,35 @@
---[[
-    WILSONHUB ADMIN PANEL UPDATE by Gemini
-    НЕ ҚОСЫЛДЫ:
-    - Тек әкімшілерге көрінетін "ADMIN" бөлімі.
-    - Әкімшілік деңгейлері (Разработчик, Админ, Модератор).
-    - Инструкциялар мен командалық консоль.
-    - Ойыншыларды бан, пермбан, варн, мут беру жүйесі.
-    - Деректерді сақтау үшін HttpService интеграциясы (веб-сервер қажет).
-    - "SCRIPTS" бөлімінде әкімшілерге арналған "CREATE SCRIPT" батырмасы.
-    - Сұраныс бойынша жазалау UI-лары.
-]]
-
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/Revenant", true))()
 Library.DefaultColor = Color3.fromRGB(255,0,0)
+
+Library:Notification({
+	Text = "WILSONHUB SCRIPTS EXECUTED!",
+	Duration = 3
+})
+
+if _G.WilsonHubLoaded then
+    -- Егер скрипт осы ойында бұрыннан қосылған болса:
+    pcall(function()
+        local player = game:GetService("Players").LocalPlayer
+        local playerGui = player:WaitForChild("PlayerGui")
+        local existingGui = playerGui:FindFirstChild("WilsonHubGui")
+
+        if existingGui then
+            -- Бұрыннан бар менюді тауып, оны қайта ашамыз
+            existingGui.Enabled = true
+            local mainFrame = existingGui:FindFirstChild("MainFrame")
+            local iconFrame = existingGui:FindFirstChild("IconFrame")
+            local backgroundOverlay = existingGui:FindFirstChild("BackgroundOverlay")
+
+            if mainFrame then mainFrame.Visible = true end
+            if iconFrame then iconFrame.Visible = false end
+            if backgroundOverlay then backgroundOverlay.Visible = true end
+        end
+    end)
+    return -- Жаңадан скрипті орындауды тоқтатамыз
+end
+-- Скрипт бірінші рет қосылғанын белгілейміз
+_G.WilsonHubLoaded = true
+-- [[ ТЕКСЕРУШІНІҢ СОҢЫ ]]
 
 -- Основные сервисы
 local Players = game:GetService("Players")
@@ -19,201 +37,33 @@ local HttpService = game:GetService("HttpService")
 local StarterGui = game:GetService("StarterGui")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
-local player = Players.LocalPlayer
 
--- ================================================================= --
--- [[ ADMIN SYSTEM CONFIGURATION ]]
--- ================================================================= --
---[[
-    !!! МАҢЫЗДЫ ЕСКЕРТУ !!!
-    Төмендегі "BackendUrl" сілтемесін ӨЗІҢІЗДІҢ веб-серверіңіздің сілтемесіне ауыстыруыңыз КЕРЕК.
-    Егер сізде веб-сервер болмаса, бандар, админдер және басқа деректер ойыннан шыққаннан кейін САҚТАЛМАЙДЫ.
-    Серверсіз тек "DefaultAdmins" тізіміндегі адамдар ғана админ болады.
-]]
-local AdminConfig = {
-    BackendUrl = "https://your-backend-url-here.com/api/data", -- ОСЫНЫ АУЫСТЫР!
-    DefaultAdmins = {
-        ["Nurgazy_21"] = 3 -- 3: Разработчик
-    },
-    PermissionLevels = {
-        [0] = "User",
-        [1] = "Moderator",
-        [2] = "Admin",
-        [3] = "Developer"
-    }
-}
-
-local userPermissionLevel = 0
-local userPunishmentData = nil
--- ================================================================= --
--- [[ PUNISHMENT & DATA FUNCTIONS ]]
--- ================================================================= --
-local function createPunishmentGui(title, errorCode, message, reason, showActivateButton)
-    if player.PlayerGui:FindFirstChild("PunishmentGui") then player.PlayerGui.PunishmentGui:Destroy() end
-    
-    local PunishmentGui = Instance.new("ScreenGui")
-    PunishmentGui.Name = "PunishmentGui"
-    PunishmentGui.Parent = player:WaitForChild("PlayerGui")
-    PunishmentGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-    PunishmentGui.ResetOnSpawn = false
-    PunishmentGui.IgnoreGuiInset = true
-
-    local BG = Instance.new("Frame", PunishmentGui)
-    BG.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-    BG.BackgroundTransparency = 0.7
-    BG.Size = UDim2.new(1, 0, 1, 0)
-
-    local Main = Instance.new("Frame", BG)
-    Main.Size = UDim2.new(0, 550, 0, 300)
-    Main.Position = UDim2.new(0.5, 0, 0.5, 0)
-    Main.AnchorPoint = Vector2.new(0.5, 0.5)
-    Main.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
-    Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 8)
-    Instance.new("UIStroke", Main).Color = Color3.fromRGB(255, 0, 0)
-
-    local Header = Instance.new("Frame", Main)
-    Header.Size = UDim2.new(1, 0, 0, 40)
-    Header.BackgroundColor3 = Color3.fromRGB(35,35,35)
-    local HeaderCorner = Instance.new("UICorner", Header)
-    HeaderCorner.CornerRadius = UDim.new(0, 8)
-    
-    local Title = Instance.new("TextLabel", Header)
-    Title.Size = UDim2.new(1, -45, 1, 0)
-    Title.Position = UDim2.new(0,5,0,0)
-    Title.BackgroundTransparency = 1
-    Title.Font = Enum.Font.SourceSansBold
-    Title.Text = title
-    Title.TextColor3 = Color3.fromRGB(255, 170, 0)
-    Title.TextSize = 24
-    Title.TextXAlignment = Enum.TextXAlignment.Left
-
-    local CloseButton = Instance.new("TextButton", Header)
-    CloseButton.Size = UDim2.new(0, 30, 0, 30)
-    CloseButton.Position = UDim2.new(1, -20, 0.5, 0)
-    CloseButton.AnchorPoint = Vector2.new(0.5, 0.5)
-    CloseButton.BackgroundTransparency = 1
-    CloseButton.Text = "X"
-    CloseButton.Font = Enum.Font.SourceSansBold
-    CloseButton.TextColor3 = Color3.new(1,1,1)
-    CloseButton.TextSize = 20
-    CloseButton.MouseButton1Click:Connect(function()
-        PunishmentGui:Destroy()
-    end)
-
-    local Message = Instance.new("TextLabel", Main)
-    Message.Size = UDim2.new(1, -20, 0, 30)
-    Message.Position = UDim2.new(0.5, 0, 0.28, 0)
-    Message.AnchorPoint = Vector2.new(0.5, 0.5)
-    Message.BackgroundTransparency = 1
-    Message.Font = Enum.Font.SourceSans
-    Message.Text = message
-    Message.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Message.TextSize = 20
-    Message.TextWrapped = true
-
-    local ErrorCode = Instance.new("TextLabel", Main)
-    ErrorCode.Size = UDim2.new(1, 0, 0, 80)
-    ErrorCode.Position = UDim2.new(0.5, 0, 0.5, 0)
-    ErrorCode.AnchorPoint = Vector2.new(0.5, 0.5)
-    ErrorCode.BackgroundTransparency = 1
-    ErrorCode.Font = Enum.Font.SourceSansBold
-    ErrorCode.Text = tostring(errorCode)
-    ErrorCode.TextColor3 = Color3.fromRGB(255, 255, 255)
-    ErrorCode.TextSize = 96
-
-    local Reason = Instance.new("TextLabel", Main)
-    Reason.Size = UDim2.new(1, -20, 0, 30)
-    Reason.Position = UDim2.new(0.5, 0, 0.8, 0)
-    Reason.AnchorPoint = Vector2.new(0.5, 0.5)
-    Reason.BackgroundTransparency = 1
-    Reason.Font = Enum.Font.SourceSans
-    Reason.Text = reason
-    Reason.TextColor3 = Color3.fromRGB(255, 255, 255)
-    Reason.TextSize = 20
-    Reason.TextWrapped = true
-    
-    if showActivateButton then
-        Reason.Position = UDim2.new(0.5, 0, 0.75, 0)
-        local ActivateButton = Instance.new("TextButton", Main)
-        ActivateButton.Name = "ActivateAccount"
-        ActivateButton.Size = UDim2.new(0.5, 0, 0, 40)
-        ActivateButton.Position = UDim2.new(0.5, 0, 0.9, 0)
-        ActivateButton.AnchorPoint = Vector2.new(0.5, 0.5)
-        ActivateButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
-        ActivateButton.Font = Enum.Font.SourceSansBold
-        ActivateButton.Text = "АКТИВИРОВАТЬ АККАУНТ"
-        ActivateButton.TextColor3 = Color3.new(1,1,1)
-        ActivateButton.TextSize = 18
-        Instance.new("UICorner", ActivateButton).CornerRadius = UDim.new(0, 8)
-        ActivateButton.MouseButton1Click:Connect(function() PunishmentGui:Destroy() end)
-    end
-end
-
-local function checkPlayerStatus()
-    local success, response = pcall(function()
-        local url = string.format("%s?action=check&userId=%d", AdminConfig.BackendUrl, player.UserId)
-        return HttpService:JSONDecode(game:HttpGet(url))
-    end)
-
-    if success and type(response) == "table" then
-        userPermissionLevel = response.permissionLevel or 0
-        userPunishmentData = response.punishment
-    else
-        userPermissionLevel = AdminConfig.DefaultAdmins[player.Name] or 0
-        userPunishmentData = nil
-    end
-
-    if userPunishmentData and userPunishmentData.type then
-        local pType = userPunishmentData.type
-        local reason = (userPunishmentData.reason and #userPunishmentData.reason > 0) and userPunishmentData.reason or "Көрсетілмеген"
-        
-        if pType == "permban" then
-            createPunishmentGui("WILSONHUB ERROR", "403", "ВАШ АККАУНТ БЫЛ ЗАБЛОКИРОВАН С АДМИНИСТРАЦИИ", "ПРИЧИНА БЛОКИРОВКИ: " .. reason)
-            return false
-        elseif pType == "ban" and os.time() < userPunishmentData.endsAt then
-            local timeLeft = userPunishmentData.endsAt - os.time()
-            local days = math.floor(timeLeft / 86400)
-            createPunishmentGui("WILSONHUB ERROR", tostring(days), "ВАШ АККАУНТ БЫЛ ЗАБЛОКИРОВАНЫ НА ... ДЕНЬ(-ДНЯ)", "ПРИЧИНА БЛОКИРОВКИ: " .. reason)
-            return false
-        elseif pType == "warn" then
-            createPunishmentGui("WILSONHUB ERROR", tostring(userPunishmentData.count), "ВАШ БЫЛ ВЫДАН ПРЕДУПРЕЖДЕНИЕ " .. userPunishmentData.count .. "/3", "ПРИЧИНА ПРЕДУПРЕЖДЕНИИ: " .. reason, true)
-        elseif pType == "mute" and os.time() < userPunishmentData.endsAt then
-            local timeLeft = math.ceil((userPunishmentData.endsAt - os.time()) / 3600)
-            createPunishmentGui("WILSONHUB MUTE", tostring(timeLeft) .. " hour(s)", "ВЫ НЕ МОЖЕТЕ ИСПОЛЬЗОВАТЬ СКРИПТХАБ", "ПРИЧИНА МУТА: " .. reason, true)
-        end
-    end
-    
-    return true
-end
-
-if not checkPlayerStatus() then
-    return
-end
-
-if _G.WilsonHubLoaded then
-    pcall(function()
-        local existingGui = player:WaitForChild("PlayerGui"):FindFirstChild("WilsonHubGui")
-        if existingGui then
-            existingGui.Enabled = true
-            existingGui.MainFrame.Visible = true
-            existingGui.IconFrame.Visible = false
-            existingGui.BackgroundOverlay.Visible = true
-        end
-    end)
-    return
-end
-_G.WilsonHubLoaded = true
-
-Library:Notification({
-	Text = "WILSONHUB SCRIPTS EXECUTED!",
-	Duration = 3
-})
 
 -- [[ THEMES, LANGUAGES & SETTINGS ]]
-local Themes = { Red = { main = Color3.fromRGB(200, 0, 0), accent = Color3.fromRGB(255, 0, 0), text = Color3.fromRGB(255, 255, 255) }, Yellow = { main = Color3.fromRGB(255, 190, 0), accent = Color3.fromRGB(255, 220, 50), text = Color3.fromRGB(0,0,0) }, Blue = { main = Color3.fromRGB(0, 120, 255), accent = Color3.fromRGB(50, 150, 255), text = Color3.fromRGB(255,255,255) }, Green = { main = Color3.fromRGB(0, 180, 0), accent = Color3.fromRGB(50, 220, 50), text = Color3.fromRGB(255,255,255) }, White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) }, Purple = { main = Color3.fromRGB(138, 43, 226), accent = Color3.fromRGB(148, 0, 211), text = Color3.fromRGB(255, 255, 255) }}
+local Themes = {
+    Red = { main = Color3.fromRGB(200, 0, 0), accent = Color3.fromRGB(255, 0, 0), text = Color3.fromRGB(255, 255, 255) },
+    Yellow = { main = Color3.fromRGB(255, 190, 0), accent = Color3.fromRGB(255, 220, 50), text = Color3.fromRGB(0,0,0) },
+    Blue = { main = Color3.fromRGB(0, 120, 255), accent = Color3.fromRGB(50, 150, 255), text = Color3.fromRGB(255,255,255) },
+    Green = { main = Color3.fromRGB(0, 180, 0), accent = Color3.fromRGB(50, 220, 50), text = Color3.fromRGB(255,255,255) },
+    White = { main = Color3.fromRGB(240, 240, 240), accent = Color3.fromRGB(200, 200, 200), text = Color3.fromRGB(0, 0, 0) },
+    Purple = { main = Color3.fromRGB(138, 43, 226), accent = Color3.fromRGB(148, 0, 211), text = Color3.fromRGB(255, 255, 255) }
+}
 local settings = { theme = "Red", language = "English" }
-if isfile and isfile("WilsonHubSettings.json") then pcall(function() local decoded_settings = HttpService:JSONDecode(readfile("WilsonHubSettings.json")); if type(decoded_settings) == "table" then for k, v in pairs(decoded_settings) do settings[k] = v end end end) end
+
+-- ЗАГРУЗКА НАСТРОЕК
+if isfile and isfile("WilsonHubSettings.json") then
+    pcall(function() 
+        local decoded_settings = HttpService:JSONDecode(readfile("WilsonHubSettings.json"))
+        if type(decoded_settings) == "table" then
+            for k, v in pairs(decoded_settings) do
+                settings[k] = v
+            end
+        end
+    end)
+end
+
 local currentTheme = Themes[settings.theme] or Themes.Red
+local player = Players.LocalPlayer
 
 -- [[ LANGUAGE SYSTEM ]]
 local languageMap = { English = "en", Russian = "ru", Kazakh = "kz", Chinese = "zh", French = "fr" }
@@ -239,7 +89,6 @@ local translations = {
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
-    tab_admin = { en = "ADMIN", ru = "АДМИН", kz = "ADMIN", zh = "管理员", fr = "ADMIN" }, -- NEW
     -- HOME PAGE
     home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдің, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
     home_nickname = { en = "NickName: %s", ru = "Никнейм: %s", kz = "Лақап аты: %s", zh = "昵称: %s", fr = "Surnom: %s" },
@@ -263,27 +112,102 @@ local translations = {
     mod_fpsping = { en = "FPS/Ping Display", ru = "Отображение FPS/Пинга", kz = "FPS/Пинг Көрсеткіші", zh = "显示FPS/延迟", fr = "Affichage FPS/Ping" },
     mod_worldcolor = { en = "World Color Changer", ru = "Смена Цвета Мира", kz = "Әлем Түсін Өзгерткіш", zh = "世界颜色变换器", fr = "Changeur de couleur du monde" },
     mod_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
-    -- SCRIPTS PAGE
+        -- SCRIPTS PAGE
     search_placeholder = { en = "Search scripts...", ru = "Поиск скриптов...", kz = "Скрипттерді іздеу...", zh = "搜索脚本...", fr = "Rechercher des scripts..." },
-    create_script_button = { en = "CREATE SCRIPT", ru = "СОЗДАТЬ СКРИПТ", kz = "СКРИПТ ҚҰРУ", zh = "创建脚本", fr = "CRÉER SCRIPT" }, -- NEW
-    create_script_title = { en = "Create New Script", ru = "Создать Новый Скрипт", kz = "Жаңа Скрипт Құру", zh = "创建新脚本", fr = "Créer un nouveau script" }, -- NEW
-    create_script_name = { en = "Script Name:", ru = "Название скрипта:", kz = "Скрипт атауы:", zh = "脚本名称:", fr = "Nom du script :" }, -- NEW
-    create_script_code = { en = "Script Code (loadstring):", ru = "Код скрипта (loadstring):", kz = "Скрипт коды (loadstring):", zh = "脚本代码 (loadstring):", fr = "Code du script (loadstring) :" }, -- NEW
-    create_script_create = { en = "CREATE", ru = "СОЗДАТЬ", kz = "ҚҰРУ", zh = "创建", fr = "CRÉER" }, -- NEW
-    create_script_cancel = { en = "CANCEL", ru = "ОТМЕНА", kz = "БОЛДЫРМАУ", zh = "取消", fr = "ANNULER" }, -- NEW
     script_fly = { text = { en = "Fly gui", ru = "Летать гуи", kz = "Ұшу гуи", zh = "飞行界面", fr = "Fly gui" }, icon = "83391301433854" },
-    -- ... (rest of the script buttons)
-    -- ADMIN PAGE (NEW)
-    admin_perms_title = { en = "Player Permissions", ru = "Права Игрока", kz = "Ойыншы Рұқсаттары", zh = "玩家权限", fr = "Permissions du joueur" },
-    admin_perms_nickname = { en = "Player Nickname", ru = "Ник Игрока", kz = "Ойыншының аты", zh = "玩家昵称", fr = "Pseudo du joueur" },
-    admin_perms_level = { en = "Permission Level", ru = "Уровень Доступа", kz = "Рұқсат деңгейі", zh = "权限级别", fr = "Niveau de permission" },
-    admin_perms_set = { en = "SET ROLE", ru = "НАЗНАЧИТЬ", kz = "ТАҒАЙЫНДАУ", zh = "设置角色", fr = "DÉFINIR LE RÔLE" },
-    admin_info_title = { en = "Instructions", ru = "Инструкция", kz = "Нұсқаулық", zh = "说明", fr = "Instructions" },
-    admin_info_text = { en = "Разработчик (3): Полный доступ. Может банить, назначать админов, создавать скрипты.\nАдмин (2): Может назначать модераторов, банить, варнить, создавать скрипты.\nМодератор (1): Может выдавать варны и муты (мут до 2 часов).", ru = "Разработчик (3): Полный доступ. Может банить, назначать админов, создавать скрипты.\nАдмин (2): Может назначать модераторов, банить, варнить, создавать скрипты.\nМодератор (1): Может выдавать варны и муты (мут до 2 часов).", kz = "Разработчик (3): Толық қолжетімділік. Бан, варн бере алады, әкімшілерді тағайындайды, скрипт жасайды.\nАдмин (2): Модераторларды тағайындайды, бан, варн береді, скрипт жасайды.\nМодератор (1): Варн және мут (2 сағатқа дейін) бере алады.", zh = "开发者 (3): 完全访问权限。可以封禁、设置管理员、创建脚本。\n管理员 (2): 可以设置版主、封禁、警告、创建脚本。\n版主 (1): 可以发出警告和禁言（最长2小时）。", fr = "Développeur (3) : Accès complet. Peut bannir, définir des admins, créer des scripts.\nAdmin (2) : Peut définir des modérateurs, bannir, avertir, créer des scripts.\nModérateur (1) : Peut émettre des avertissements et des mutes (jusqu'à 2 heures)." },
-    admin_console_title = { en = "Command Console", ru = "Командная Консоль", kz = "Командалық Консоль", zh = "命令控制台", fr = "Console de commandes" },
-    admin_console_placeholder = { en = "/ban Nurgazy_21 7 Cheating", ru = "/ban Nurgazy_21 7 Читерство", kz = "/ban Nurgazy_21 7 Читерлік", zh = "/ban Nurgazy_21 7 作弊", fr = "/ban Nurgazy_21 7 Triche" },
-    admin_commands_list = { en = "Available Commands:", ru = "Доступные Команды:", kz = "Қолжетімді Командалар:", zh = "可用命令:", fr = "Commandes disponibles :" },
-    admin_commands_text = { en = "/setrole [Nick] [1-3]\n/ban [Nick] [Days] [Reason]\n/permban [Nick] [Reason]\n/warn [Nick] [Reason]\n/mute [Nick] [Hours] [Reason]\n/unban [Nick]\n/unpermban [Nick]\n/unwarn [Nick]\n/unmute [Nick]", ru = "/setrole [Ник] [1-3]\n/ban [Ник] [Дни] [Причина]\n/permban [Ник] [Причина]\n/warn [Ник] [Причина]\n/mute [Ник] [Часы] [Причина]\n/unban [Ник]\n/unpermban [Ник]\n/unwarn [Ник]\n/unmute [Ник]", kz = "/setrole [Ник] [1-3]\n/ban [Ник] [Күндер] [Себеп]\n/permban [Ник] [Себеп]\n/warn [Ник] [Себеп]\n/mute [Ник] [Сағат] [Себеп]\n/unban [Ник]\n/unpermban [Ник]\n/unwarn [Ник]\n/unmute [Ник]", zh = "/setrole [昵称] [1-3]\n/ban [昵称] [天数] [原因]\n/permban [昵称] [原因]\n/warn [昵称] [原因]\n/mute [昵称] [小时] [原因]\n/unban [昵称]\n/unpermban [昵称]\n/unwarn [昵称]\n/unmute [昵称]", fr = "/setrole [Pseudo] [1-3]\n/ban [Pseudo] [Jours] [Raison]\n/permban [Pseudo] [Raison]\n/warn [Pseudo] [Raison]\n/mute [Pseudo] [Heures] [Raison]\n/unban [Pseudo]\n/unpermban [Pseudo]\n/unwarn [Pseudo]\n/unmute [Pseudo]" },
+    script_fireblock = { text = { en = "Fire Block", ru = "Огненный Блок", kz = "Отты Блок", zh = "火焰方块", fr = "Bloc de feu" }, icon = "83391301433854" },
+    script_speed = { text = { en = "Speed Hack", ru = "Спидхак", kz = "Жылдамдық хагы", zh = "速度破解", fr = "Hack de vitesse" }, icon = "83391301433854" },
+    script_wallhop = { text = { en = "Wallhop", ru = "Прыжки с стеном", kz = "Қабырғада секіру", zh = "爬墙", fr = "Wallhop" }, icon = "83391301433854" },
+    script_clicktp = { text = { en = "Click Teleport", ru = "Телепорт по клику", kz = "Басу арқылы телепорт", zh = "点击传送", fr = "Téléportation par clic" } },
+    script_grav = { text = { en = "Gravity", ru = "Гравитация", kz = "Гравитация", zh = "重力", fr = "Pesanteur" } },
+    script_afk = { text = { en = "Anti afk", ru = "Анти афк", kz = "Анти афк", zh = "反afk", fr = "Anti-afk" } },
+    script_infiniteyield = { text = { en = "infiniteyield", ru = "infiniteyield", kz = "infiniteyield", zh = "無限收益", fr = "rendement infini" } },
+    script_antislap = { text = { en = "Anti slap", ru = "Анти шлепок", kz = "Анти ұру", zh = "防拍擊", fr = "Anti claque" } },
+    script_autoslap = { text = { en = "Auto slap", ru = "Авто шлепок", kz = "Авто ұру", zh = "自動拍打", fr = "Gifle automatique" } },
+    script_win = { text = { en = "Win", ru = "Победа", kz = "Жеңіс", zh = "勝利", fr = "Victoire" } },
+    script_god = { text = { en = "God mode", ru = "Режим Бога", kz = "Құдай режимі", zh = "上帝模式", fr = "Mode Dieu" }, icon = "83391301433854" },
+    script_spamdecal = { text = { en = "WilsonSpam", ru = "УилсонСпам", kz = "WilsonSpam", zh = "威爾遜垃圾郵件", fr = "WilsonSpam" }, icon = "83391301433854" },
+    script_skybox = { text = { en = "WilsonSpam 2", ru = "УилсонСпам 2", kz = "WilsonSpam 2", zh = "威爾遜垃圾郵件貼紙 2", fr = "WilsonSpam 2" }, icon = "83391301433854" },
+    script_ak47 = { text = { en = "AK-47", ru = "Автомат АК-47", kz = "АК-47", zh = "AK-47", fr = "AK-47" }, icon = "83391301433854" },
+    script_lasergun = { text = { en = "Laser gun", ru = "Лазерное оружие", kz = "Лазерлі қару", zh = "雷射武器", fr = "armes laser" }, icon = "83391301433854" },
+    script_johndoe = { text = { en = "JOHNDOE", ru = "JOHNDOE", kz = "JOHNDOE", zh = "阿凡達約翰多", fr = "JOHNDOE" } },
+    script_avatarcopy = { text = { en = "COPY SKIN R6", ru = "Копировать аватар", kz = "Аватарды көшіру", zh = "複製頭像", fr = "COPIER L'AVATAR" }, icon = "83391301433854" },
+    script_jerk = { text = { en = "Jerk", ru = "Jerk", kz = "Jerk", zh = "混蛋", fr = "Abruti" }, icon = "83391301433854" },
+    script_spamchat = { text = { en = "Spamchat", ru = "Спамчат", kz = "Спам чат", zh = "垃圾聊天", fr = "Spamchat" } },
+    script_dance = { text = { en = "Dance", ru = "Танец", kz = "Би", zh = "舞蹈", fr = "Danse" } },
+    script_hummer = { text = { en = "Ban hummer", ru = "Запретить Хаммер", kz = "Хаммерді бұғаттау", zh = "禁止悍馬", fr = "Interdire le Hummer" } },
+    script_snake = { text = { en = "Snake", ru = "Змея", kz = "Жылан", zh = "蛇", fr = "Serpent " } },
+    script_r6 = { text = { en = "R7", ru = "R7", kz = "R7", zh = "R7", fr = "R7" }, icon = "83391301433854" },
+    script_metiorid = { text = { en = "Meteor tool", ru = "Метеоритный инструмент", kz = "Метеор құралы", zh = "流星工具", fr = "Outil Météore" } },
+    script_thomas = { text = { en = "Thomas", ru = "Томас", kz = "Томас", zh = "湯瑪斯", fr = "Thomas " } },
+    script_spider = { text = { en = "Spiderman", ru = "Человек паук", kz = "Өрмекші адам", zh = "蜘蛛人", fr = "Spider-Man" }, icon = "83391301433854" },
+    script_playertp = { text = { en = "Player tp", ru = "Тп на игрок", kz = "Ойыншыға тп", zh = "玩家傳送", fr = "Player teleport " } },
+    script_board = { text = { en = "Keyboard", ru = "Клавиатура", kz = "Пернетақта", zh = "鍵盤", fr = "Clavier" }, icon = "83391301433854" },
+    script_xester = { text = { en = "Xester", ru = "Xester", kz = "Xester", zh = "克斯特", fr = "Xester" }, icon = "83391301433854" },
+    script_rpg = { text = { en = "Rocket", ru = "Ракета", kz = "Зымыран", zh = "火箭", fr = "Fusée" } },
+    script_object = { text = { en = "BTool", ru = "Btool", kz = "Btool", zh = "工具", fr = "Btool" }, icon = "83391301433854" },
+    script_killall = { text = { en = "Kill all", ru = "Убить всех", kz = "Барлығын өлтіру", zh = "全部殺死", fr = "Tuez tout le monde" }, icon = "83391301433854" },
+    script_head = { text = { en = "Big head", ru = "Большой голова", kz = "Үлкен бас", zh = "大頭", fr = "Grosse tête " } },
+    script_jump = { text = { en = "Infinite jump", ru = "Большой прыжок", kz = "Ұзын секіру", zh = "無限跳躍", fr = "Saut infini " } },
+    script_firepart = { text = { en = "Fireparts tool", ru = "Fireparts tool", kz = "Fireparts tool", zh = "Fireparts 工具", fr = "Outil Fireparts" }, icon = "83391301433854" },
+    script_invisible = { text = { en = "invisible", ru = "Невидимка", kz = "Көрінбейтін", zh = "無形的", fr = "Invisible " } },
+    script_flash = { text = { en = "FlashGUI", ru = "ФлэшГУИ", kz = "ФлэшГУИ", zh = "Flash圖形介面", fr = "FlashGUI" } },
+    script_spin = { text = { en = "Spin", ru = "Спин", kz = "Айналу", zh = "旋轉", fr = "rotation " } },
+    create_script = { en = "CREATE SCRIPT", ru = "СОЗДАТЬ СКРИПТ", kz = "СКРИПТ ҚҰРУ" },
+    create_script_modal_title = { en = "Create a new script", ru = "Создание нового скрипта", kz = "Жаңа скрипт құру" },
+    script_name_placeholder = { en = "Script Name...", ru = "Название скрипта...", kz = "Скрипт атауы..." },
+    script_code_placeholder = { en = "Script Code...", ru = "Код скрипта...", kz = "Скрипт коды..." },
+    create_button = { en = "Create", ru = "Создать", kz = "Құру" },
+    cancel_button = { en = "Cancel", ru = "Отмена", kz = "Бас тарту" },
+    notif_script_created_title = { en = "Success", ru = "Успех", kz = "Сәтті" },
+    notif_script_created_text = { en = "Script '%s' created!", ru = "Скрипт '%s' создан!", kz = "'%s' скрипті құрылды!" },
+    notif_script_error_name = { en = "Please enter a script name.", ru = "Введите название скрипта.", kz = "Скрипт атауын енгізіңіз." },
+    notif_script_error_code = { en = "Please enter script code.", ru = "Введите код скрипта.", kz = "Скрипт кодын енгізіңіз." },
+    -- PLAYERS PAGE
+    player_ping = { en = "Ping: %s", ru = "Пинг: %s", kz = "Пинг: %s", zh = "延迟: %s", fr = "Ping: %s" },
+    player_ip = { en = "IP Address: %s", ru = "IP-адрес: %s", kz = "IP-мекенжайы: %s", zh = "IP地址: %s", fr = "Adresse IP: %s" },
+    player_country = { en = "Country: %s", ru = "Страна: %s", kz = "Ел: %s", zh = "国家: %s", fr = "Pays: %s" },
+    player_ip_private = { en = "IP Address: Private", ru = "IP-адрес: Приватный", kz = "IP-мекенжайы: Жабық", zh = "IP地址：私人的", fr = "Adresse IP: privé" },
+    player_country_private = { en = "Country: Private", ru = "Страна: Приватный", kz = "Ел: Жабық", zh = "国家：私人的", fr = "Pays: privé" },
+    player_tp = { en = "TP", ru = "ТП", kz = "ТП", zh = "传送", fr = "TP" },
+    player_observe = { en = "Observe", ru = "Наблюдать", kz = "Бақылау", zh = "观察", fr = "Observer" },
+    -- SETTINGS PAGE
+    settings_themes_title = { en = "Themes", ru = "Темы", kz = "Тақырыптар", zh = "主题", fr = "Thèmes" },
+    theme_red = { en = "Red (Default)", ru = "Красная (По умолч.)", kz = "Қызыл (Стандартты)", zh = "红色（默认）", fr = "Rouge (Défaut)" },
+    theme_yellow = { en = "Yellow", ru = "Желтая", kz = "Сары", zh = "黄色", fr = "Jaune" },
+    theme_blue = { en = "Blue", ru = "Синяя", kz = "Көк", zh = "蓝色", fr = "Bleu" },
+    theme_green = { en = "Green", ru = "Зеленая", kz = "Жасыл", zh = "绿色", fr = "Vert" },
+    theme_white = { en = "White", ru = "Белая", kz = "Ақ", zh = "白色", fr = "Blanc" },
+    theme_purple = { en = "Purple", ru = "Фиолетовая", kz = "Күлгін", zh = "紫色", fr = "Violet" },
+    theme_rainbow = { en = "Rainbow", ru = "Радуга", kz = "Кемпірқосақ", zh = "彩虹", fr = "Arc-en-ciel" },
+    settings_language_title = { en = "Type languages", ru = "Выберите язык", kz = "Тілдерді таңдаңыз", zh = "选择语言", fr = "Choisir la langue" },
+    lang_en = { en = "English", ru = "Английский", kz = "Ағылшынша", zh = "英語", fr = "Anglais " },
+    lang_ru = { en = "Russian", ru = "Русский", kz = "Орысша", zh = "俄文", fr = "Russe " },
+    lang_kz = { en = "Kazakh", ru = "Казахский", kz = "Қазақша", zh = "哈薩克", fr = "Kazakh " },
+    lang_zh = { en = "Chinese", ru = "Китайский", kz = "Қытайша", zh = "中文", fr = "Chinois " },
+    lang_fr = { en = "French", ru = "Французский", kz = "Французша", zh = "法語", fr = "Français" },
+    -- EXECUTOR PAGE
+    executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
+    -- NOTIFICATIONS
+    notif_esp_title = { en = "ESP", ru = "ЕСП", kz = "ЕСП", zh = "透视", fr = "ESP" },
+    notif_esp_enabled_text = { en = "Player ESP has been enabled.", ru = "ЕСП игроков включено.", kz = "Ойыншы ESP қосылды.", zh = "玩家透视已启用。", fr = "L'ESP des joueurs a été activé." },
+    notif_esp_disabled_text = { en = "Player ESP has been disabled.", ru = "ЕСП игроков выключено.", kz = "Ойыншы ESP өшірілді.", zh = "玩家透视已禁用。", fr = "L'ESP des joueurs a été désactivé." },
+    notif_clipboard_title = { en = "WilsonHub", ru = "WilsonHub", kz = "WilsonHub", zh = "WilsonHub", fr = "WilsonHub" },
+    notif_clipboard_text = { en = "Link to %s copied!", ru = "Ссылка на %s скопирована!", kz = "%s сілтемесі көшірілді!", zh = "已复制到 %s 的链接！", fr = "Lien vers %s copié !" },
+    notif_clipboard_error = { en = "WilsonHub Error", ru = "Ошибка WilsonHub", kz = "WilsonHub қатесі", zh = "WilsonHub错误", fr = "Erreur WilsonHub" },
+    notif_clipboard_error_text = { en = "Function setclipboard not found.", ru = "Функция setclipboard не найдена.", kz = "setclipboard функциясы табылмады.", zh = "未找到函数 setclipboard。", fr = "Fonction setclipboard non trouvée." },
+    notif_speed_title = { en = "Speed Hack", ru = "Спидхак", kz = "Жылдамдық хагы", zh = "速度破解", fr = "Hack de vitesse" },
+    notif_speed_text = { en = "Speed increased to 50.", ru = "Скорость увеличена до 50.", kz = "Жылдамдық 50-ге дейін артты.", zh = "速度提升至50。", fr = "Vitesse augmentée à 50." },
+    notif_clicktp_title = { en = "Click Teleport", ru = "Телепорт по клику", kz = "Басу арқылы телепорт", zh = "点击传送", fr = "Téléportation par clic" },
+    notif_clicktp_text = { en = "Activated. Click to teleport.", ru = "Активировано. Нажмите для телепортации.", kz = "Белсендірілді. Телепорттау үшін басыңыз.", zh = "已激活。点击进行传送。", fr = "Activé. Cliquez pour vous téléporter." },
+    notif_esp_legacy_title = { en = "ESP", ru = "ЕСП", kz = "ЕСП", zh = "透视", fr = "ESP" },
+    notif_esp_legacy_text = { en = "ESP activated.", ru = "ЕСП активирован.", kz = "ЕСП белсендірілді.", zh = "透视已激活。", fr = "ESP activé." },
+    notif_executor_error_title = { en = "Executor Error", ru = "Ошибка исполнителя", kz = "Орындаушы қатесі", zh = "执行器错误", fr = "Erreur de l'exécuteur" },
+    notif_fatal_error_title = { en = "WILSONHUB FATAL ERROR", ru = "КРИТИЧЕСКАЯ ОШИБКА WILSONHUB", kz = "WILSONHUB КРИТИКАЛЫҚ ҚАТЕСІ", zh = "WILSONHUB 致命错误", fr = "ERREUR FATALE WILSONHUB" },
+    notif_fatal_error_text = { en = "UI failed to load. Error: %s", ru = "Не удалось загрузить UI. Ошибка: %s", kz = "UI жүктелмеді. Қате: %s", zh = "UI加载失败。错误: %s", fr = "Échec du chargement de l'IU. Erreur: %s" },
+    notif_welcome_title = { en = "WILSON UPLOADED🎮!", ru = "WILSON ЗАГРУЖЕН🎮!", kz = "WILSON ЖҮКТЕЛДІ🎮!", zh = "WILSON 已加载🎮!", fr = "WILSON CHARGÉ🎮!" },
+    notif_welcome_text = { en = "This script is for Wilson hackers", ru = "Этот скрипт для хакеров Wilson", kz = "Бұл скрипт Wilson хакерлеріне арналған", zh = "此脚本适用于Wilson黑客", fr = "Ce script est pour les hackers de Wilson" },
+    notif_welcome_button = { en = "Yes", ru = "Да", kz = "Иә", zh = "是", fr = "Oui" },
 }
 
 local themableObjects = {}
@@ -294,10 +218,6 @@ local applyTheme
 local activateRainbowTheme
 local applyLanguage
 
--- ... (THE REST OF THE ORIGINAL SCRIPT'S FUNCTIONS (applyLanguage, sendTranslatedNotification, THEME SYSTEM, GUI MODS FUNCTIONS) ARE UNCHANGED AND GO HERE)
--- I am omitting them here for brevity but they are in the final code block.
-
--- [[ --- START OF UNCHANGED ORIGINAL CODE --- ]]
 applyLanguage = function(langName)
     if not languageMap[langName] then langName = "English" end
     settings.language = langName
@@ -306,32 +226,20 @@ applyLanguage = function(langName)
     local langCode = languageMap[settings.language] or "en"
     
     for _, item in ipairs(translatableObjects) do
-        if item.object and (item.object.Parent or (item.object.textLabel and item.object.textLabel.Parent)) then
+        if item.object and item.object.Parent then
             local translationData = translations[item.key]
             if translationData then
-                if item.property == "CustomScriptButton" then
-                    local textData = translationData.text
-                    if textData then
-                        item.object.textLabel.Text = textData[langCode] or textData.en
-                    end
-                    if translationData.icon then
-                        item.object.imageLabel.Image = "rbxassetid://" .. translationData.icon
-                        item.object.imageLabel.Visible = true
-                    else
-                        item.object.imageLabel.Visible = false
-                    end
+                local translatedText = translationData[langCode] or translationData.en -- Fallback to English
+                if item.dynamic_args then
+                     pcall(function() item.object[item.property] = string.format(translatedText, unpack(item.dynamic_args)) end)
                 else
-                    local translatedText = translationData[langCode] or translationData.en
-                    if item.dynamic_args then
-                         pcall(function() item.object[item.property] = string.format(translatedText, unpack(item.dynamic_args)) end)
-                    else
-                         item.object[item.property] = translatedText
-                    end
+                     item.object[item.property] = translatedText
                 end
             end
         end
     end
 end
+
 local function sendTranslatedNotification(titleKey, textKey, duration, button1Key, textArgs)
     local langCode = languageMap[settings.language] or "en"
     local title = (translations[titleKey] and translations[titleKey][langCode]) or (translations[titleKey] and translations[titleKey].en) or titleKey
@@ -351,16 +259,25 @@ local function sendTranslatedNotification(titleKey, textKey, duration, button1Ke
     
     pcall(StarterGui.SetCore, StarterGui, "SendNotification", notificationInfo)
 end
+
+-- [[ END LANGUAGE SYSTEM ]]
+
+
+-- [[ THEME SYSTEM ]]
 local rainbowThemeActive = false
 local rainbowThemeConnection = nil
-local activeTab = nil 
+local activeTab = nil -- Will be set after GUI creation
+
 local function updateRainbowColors()
     if not rainbowThemeActive then return end
-    local hue = tick() % 2 / 2 
+    
+    local hue = tick() % 2 / 2 -- Faster 2 second cycle
     local mainColor = Color3.fromHSV(hue, 0.9, 1)
     local accentColor = Color3.fromHSV(hue, 1, 1)
+
     local brightness = (mainColor.R * 0.299 + mainColor.G * 0.587 + mainColor.B * 0.114)
     local textColor = brightness > 0.5 and Color3.fromRGB(20, 20, 20) or Color3.fromRGB(255, 255, 255)
+
     for _, item in ipairs(themableObjects) do
         if item.object and item.object.Parent then
             if item.colorType == "main" then
@@ -372,29 +289,39 @@ local function updateRainbowColors()
             end
         end
     end
+    
     if activeTab and activeTab.Parent then
         activeTab.BackgroundColor3 = accentColor
     end
 end
+
 activateRainbowTheme = function()
-    if rainbowThemeActive and rainbowThemeConnection and rainbowThemeConnection.Connected then return end
+    if rainbowThemeActive and rainbowThemeConnection and rainbowThemeConnection.Connected then
+        return
+    end
+    
     currentTheme = {}
     rainbowThemeActive = true
     settings.theme = "Rainbow"
     if writefile then pcall(function() writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end) end
+
     if rainbowThemeConnection then rainbowThemeConnection:Disconnect() end
     rainbowThemeConnection = RunService.RenderStepped:Connect(updateRainbowColors)
 end
+
 applyTheme = function(themeName)
     if rainbowThemeConnection then
         rainbowThemeConnection:Disconnect()
         rainbowThemeConnection = nil
     end
     rainbowThemeActive = false
+
     if not Themes[themeName] then themeName = "Red" end
+    
     currentTheme = Themes[themeName]
     settings.theme = themeName
     if writefile then pcall(function() writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end) end
+    
     for _, item in ipairs(themableObjects) do
         if item.object and item.object.Parent then
             local color = currentTheme[item.colorType]
@@ -403,17 +330,25 @@ applyTheme = function(themeName)
             end
         end
     end
+
     for _, tab_button in ipairs(tabs) do
         if tab_button and tab_button.Parent then
             tab_button.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
         end
     end
+
     if activeTab and activeTab.Parent then
         activeTab.BackgroundColor3 = currentTheme.main
     end
 end
+-- [[ END THEME SYSTEM ]]
+
+
+-- [[ GUI MODS ФУНКЦИИ ИСПРАВЛЕНЫ]]
+
 local customHealthbarGui = nil
 local healthbarConnection = nil
+
 function toggleCustomHealthbar(state)
 	if state then
 		if player.Character then
@@ -431,6 +366,7 @@ function toggleCustomHealthbar(state)
 		end
 	end
 end
+
 function createCustomHealthbar(character)
 	if customHealthbarGui then
 		customHealthbarGui:Destroy()
@@ -473,9 +409,14 @@ function createCustomHealthbar(character)
 	humanoid.HealthChanged:Connect(updateHealthbar)
 	updateHealthbar()
 end
+
+-- ================================================================= --
+-- WORLD COLOR CHANGER
+-- ================================================================= --
 local originalColors = {}
 local rainbowConnection = nil
 local selectedColor = Color3.fromRGB(255, 0, 255)
+
 function applyWorldColor(color)
 	for _, part in ipairs(workspace:GetDescendants()) do
 		if part:IsA("BasePart") and part.Name ~= "HumanoidRootPart" then
@@ -495,6 +436,7 @@ function applyWorldColor(color)
 		end
 	end
 end
+
 function resetWorldColors()
 	if rainbowConnection then
 		rainbowConnection:Disconnect()
@@ -507,6 +449,7 @@ function resetWorldColors()
 	end
 	originalColors = {}
 end
+
 function toggleRainbowMode(state)
 	if state then
 		if rainbowConnection then
@@ -523,8 +466,13 @@ function toggleRainbowMode(state)
 		end
 	end
 end
+
+-- ================================================================= --
+-- FPS/PING DISPLAY
+-- ================================================================= --
 local statsGui = nil
 local statsUpdateConnection = nil
+
 function toggleFpsPing(state)
 	if state then
 		if not (statsGui and statsGui.Parent) then
@@ -541,6 +489,7 @@ function toggleFpsPing(state)
 		end
 	end
 end
+
 function createStatsDisplay()
 	statsGui = Instance.new("ScreenGui", player.PlayerGui)
 	statsGui.Name = "StatsDisplayGui"
@@ -575,67 +524,168 @@ function createStatsDisplay()
 		end
 	end)
 end
+
+-- ================================================================= --
+-- PLAYER ESP (НОВАЯ ФУНКЦИЯ)
+-- ================================================================= --
 local espData = { enabled = false, connections = {}, guis = {} }
 local function cleanupEspForPlayer(targetPlayer) if espData.guis[targetPlayer] then if espData.guis[targetPlayer].gui and espData.guis[targetPlayer].gui.Parent then espData.guis[targetPlayer].gui:Destroy() end; if espData.guis[targetPlayer].updateConn then espData.guis[targetPlayer].updateConn:Disconnect() end; espData.guis[targetPlayer] = nil end end
 local function cleanupAllEsp() for targetPlayer, _ in pairs(espData.guis) do cleanupEspForPlayer(targetPlayer) end; for _, conn in pairs(espData.connections) do conn:Disconnect() end; espData.connections = {}; espData.guis = {} end
 local function createEspForPlayer(targetPlayer) if not espData.enabled or targetPlayer == player then return end; local character=targetPlayer.Character; if not character then return end; local head=character:WaitForChild("Head", 1); if not head then return end; cleanupEspForPlayer(targetPlayer); local espGui=Instance.new("BillboardGui", head); espGui.Name="PLAYER_ESP_GUI"; espGui.AlwaysOnTop=true; espGui.Size=UDim2.new(2,0,1.5,0); espGui.StudsOffset=Vector3.new(0,2.5,0); espGui.LightInfluence=0; local mainFrame=Instance.new("Frame", espGui); mainFrame.BackgroundTransparency=1; mainFrame.Size=UDim2.new(1,0,1,0); local box=Instance.new("Frame", mainFrame); box.BackgroundColor3=Color3.fromRGB(255,255,0); box.BackgroundTransparency=0.5; box.BorderSizePixel=0; box.Size=UDim2.new(1,0,1,0); Instance.new("UICorner",box).CornerRadius=UDim.new(0,3); local innerBox=Instance.new("Frame",box); innerBox.BackgroundColor3=Color3.fromRGB(0,0,0); innerBox.BackgroundTransparency=0.3; innerBox.BorderSizePixel=0; innerBox.Size=UDim2.new(1,-2,1,-2); innerBox.Position=UDim2.new(0.5,-innerBox.AbsoluteSize.X/2,0.5,-innerBox.AbsoluteSize.Y/2); Instance.new("UICorner",innerBox).CornerRadius=UDim.new(0,2); local textLabel=Instance.new("TextLabel",mainFrame); textLabel.BackgroundTransparency=1; textLabel.Size=UDim2.new(1,0,1,0); textLabel.Font=Enum.Font.SourceSans; textLabel.TextSize=14; textLabel.TextColor3=Color3.new(1,1,1); textLabel.TextStrokeColor3=Color3.fromRGB(0,0,0); textLabel.TextStrokeTransparency=0; local function update() if not targetPlayer or not targetPlayer.Parent or not character or not character.Parent or not head or not head.Parent then cleanupEspForPlayer(targetPlayer); return end; local distance=(head.Position - workspace.CurrentCamera.CFrame.Position).Magnitude; textLabel.Text = targetPlayer.Name .. "\n[" .. math.floor(distance) .. "m]" end; espData.guis[targetPlayer] = { gui = espGui, updateConn = RunService.RenderStepped:Connect(update) } end
 function togglePlayerEsp(state) espData.enabled=state; if espData.enabled then cleanupAllEsp(); for _,p in ipairs(Players:GetPlayers())do createEspForPlayer(p)end; espData.connections.playerAdded=Players.PlayerAdded:Connect(createEspForPlayer); espData.connections.playerRemoving=Players.PlayerRemoving:Connect(cleanupEspForPlayer); sendTranslatedNotification("notif_esp_title", "notif_esp_enabled_text", 5) else cleanupAllEsp(); sendTranslatedNotification("notif_esp_title", "notif_esp_disabled_text", 5) end end
--- [[ --- END OF UNCHANGED ORIGINAL CODE --- ]]
 
+-- ================================================================= --
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫ ]]
+-- ================================================================= --
 pcall(function()
+    -- Керекті сервистерді алу
     local TweenService = game:GetService("TweenService")
+    local Players = game:GetService("Players")
+    local player = Players.LocalPlayer
+
+    -- Негізгі UI элементтерін құру
     local PreLoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
-    PreLoadingGui.Name = "WilsonHubIntroGui"; PreLoadingGui.ResetOnSpawn = false; PreLoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global; PreLoadingGui.IgnoreGuiInset = true
-    local Background = Instance.new("Frame", PreLoadingGui); Background.Size = UDim2.new(1, 0, 1, 0); Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0); Background.BorderSizePixel = 0
-    local Logo = Instance.new("ImageLabel", Background); Logo.Size = UDim2.new(0, 220, 0, 220); Logo.Position = UDim2.new(0.5, 0, 0.5, -30); Logo.AnchorPoint = Vector2.new(0.5, 0.5); Logo.BackgroundTransparency = 1; Logo.Image = "rbxassetid://89264639082468"; Logo.ScaleType = Enum.ScaleType.Crop
-    Instance.new("UICorner", Logo).CornerRadius = UDim.new(0.5, 0)
-    local PresentsText = Instance.new("TextLabel", Background); PresentsText.Size = UDim2.new(1, -40, 0, 30); PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115); PresentsText.AnchorPoint = Vector2.new(0.5, 0.5); PresentsText.BackgroundTransparency = 1; PresentsText.Font = Enum.Font.SourceSansBold; PresentsText.TextSize = 26; PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0); PresentsText.Text = ""
-    Background.BackgroundTransparency = 1; Logo.ImageTransparency = 1; Logo.Size = UDim2.new(0, 0, 0, 0)
-    TweenService:Create(Background, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play(); task.wait(0.3)
-    TweenService:Create(Logo, TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out), {Size = UDim2.new(0, 220, 0, 220), ImageTransparency = 0}):Play(); task.wait(0.6)
+    PreLoadingGui.Name = "WilsonHubIntroGui"
+    PreLoadingGui.ResetOnSpawn = false
+    PreLoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    PreLoadingGui.IgnoreGuiInset = true
+
+    -- Қара фон
+    local Background = Instance.new("Frame", PreLoadingGui)
+    Background.Size = UDim2.new(1, 0, 1, 0)
+    Background.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    Background.BorderSizePixel = 0
+
+    -- Ортадағы сурет (логотип)
+    local Logo = Instance.new("ImageLabel", Background)
+    Logo.Size = UDim2.new(0, 220, 0, 220) -- Сурет өлшемі
+    Logo.Position = UDim2.new(0.5, 0, 0.5, -30)
+    Logo.AnchorPoint = Vector2.new(0.5, 0.5)
+    Logo.BackgroundTransparency = 1
+    -- !!! МАҢЫЗДЫ: ОСЫ ЖЕРГЕ ӨЗІҢ ЖҮКТЕГЕН СУРЕТТІҢ ID КОДЫН ҚОЙ !!!
+    Logo.Image = "rbxassetid://89264639082468" 
+    Logo.ScaleType = Enum.ScaleType.Crop
+
+    -- Суретті домалақ қылу үшін
+    local corner = Instance.new("UICorner", Logo)
+    corner.CornerRadius = UDim.new(0.5, 0)
+
+    -- Астындағы жазу
+    local PresentsText = Instance.new("TextLabel", Background)
+    PresentsText.Size = UDim2.new(1, -40, 0, 30)
+    PresentsText.Position = UDim2.new(0.5, 0, 0.5, 115)
+    PresentsText.AnchorPoint = Vector2.new(0.5, 0.5)
+    PresentsText.BackgroundTransparency = 1
+    PresentsText.Font = Enum.Font.SourceSansBold
+    PresentsText.TextSize = 26
+    PresentsText.TextColor3 = Color3.fromRGB(200, 0, 0) -- Қызыл түс
+    PresentsText.Text = "" -- Анимация үшін басында бос
+
+    -- --- АНИМАЦИЯЛАР ---
+    -- 1. Элементтерді бастапқы күйге келтіру (көрінбейтін)
+    Background.BackgroundTransparency = 1
+    Logo.ImageTransparency = 1
+    Logo.Size = UDim2.new(0, 0, 0, 0)
+
+    -- 2. Анимацияны бастау
+    -- Фонның біртіндеп пайда болуы
+    TweenService:Create(Background, TweenInfo.new(0.5), {BackgroundTransparency = 0}):Play()
+    task.wait(0.3)
+
+    -- Логотиптің ортадан үлкейіп пайда болуы ("фото анимациясы")
+    local logoTweenInfo = TweenInfo.new(1.2, Enum.EasingStyle.Quint, Enum.EasingDirection.Out)
+    TweenService:Create(Logo, logoTweenInfo, {
+        Size = UDim2.new(0, 220, 0, 220),
+        ImageTransparency = 0
+    }):Play()
+    task.wait(0.6)
+
+    -- Тексттің әріптеп жазылу анимациясы (1 секунд)
     local fullText = "HACK WILSONHUB GAMES PRESENTS"
-    for i = 1, #fullText do PresentsText.Text = string.sub(fullText, 1, i); task.wait(1.0 / #fullText) end
-    task.wait(1.6)
+    for i = 1, #fullText do
+        PresentsText.Text = string.sub(fullText, 1, i)
+        task.wait(1.0 / #fullText)
+    end
+
+    -- 3. Анимацияның соңы (жалпы 2 секундтан кейін жоғалады)
+    task.wait(1.6) -- Анимация біткен соң сәл күту
+
+    -- Бұл экранды толықтай жою
     PreLoadingGui:Destroy()
 end)
 
-local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global; LoadingGui.IgnoreGuiInset = true
-local Background = Instance.new("Frame", LoadingGui); Background.Size = UDim2.new(1, 0, 1, 0); Background.BackgroundColor3 = Color3.fromRGB(40, 40, 40); Background.BackgroundTransparency = 0.3; Background.BorderSizePixel = 0
+-- ================================================================= --
+-- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
+-- ================================================================= --
+
+-- 1. ЭКРАН ЗАГРУЗКИ
+local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+LoadingGui.IgnoreGuiInset = true
+local Background = Instance.new("Frame", LoadingGui); Background.Size = UDim2.new(1, 0, 1, 0) Background.BackgroundColor3 = Color3.fromRGB(40, 40, 40) Background.BackgroundTransparency = 0.3 Background.BorderSizePixel = 0
 local LoadingLabel = Instance.new("TextLabel", Background); LoadingLabel.Size = UDim2.new(1, 0, 0, 50); LoadingLabel.Position = UDim2.new(0, 0, 0.5, -60); LoadingLabel.BackgroundTransparency = 1; LoadingLabel.TextColor3 = currentTheme.accent; LoadingLabel.Font = Enum.Font.SourceSansBold; LoadingLabel.TextSize = 42; table.insert(translatableObjects, {object=LoadingLabel, property="Text", key="loading"})
 local PercentageLabel = Instance.new("TextLabel", Background); PercentageLabel.Size = UDim2.new(1, 0, 0, 30); PercentageLabel.Position = UDim2.new(0, 0, 0.5, 0); PercentageLabel.BackgroundTransparency = 1; PercentageLabel.TextColor3 = Color3.fromRGB(255, 255, 255); PercentageLabel.Font = Enum.Font.SourceSansBold; PercentageLabel.TextSize = 28; PercentageLabel.Text = "0 %"
 local ProgressBarBG = Instance.new("Frame", Background); ProgressBarBG.Size = UDim2.new(0, 400, 0, 25); ProgressBarBG.Position = UDim2.new(0.5, -200, 0.5, 40); ProgressBarBG.BackgroundColor3 = Color3.fromRGB(10, 10, 10); ProgressBarBG.BorderSizePixel = 1; ProgressBarBG.BorderColor3 = currentTheme.main; Instance.new("UICorner", ProgressBarBG).CornerRadius = UDim.new(0, 8)
 local ProgressBarFill = Instance.new("Frame", ProgressBarBG); ProgressBarFill.Size = UDim2.new(0, 0, 1, 0); ProgressBarFill.BackgroundColor3 = currentTheme.accent; Instance.new("UICorner", ProgressBarFill).CornerRadius = UDim.new(0, 8)
 
+
 if settings.theme == "Rainbow" then
-    task.spawn(function() while LoadingGui and LoadingGui.Parent do local hue = tick() % 2 / 2; local rainbowColor = Color3.fromHSV(hue, 1, 1); if LoadingLabel and LoadingLabel.Parent then LoadingLabel.TextColor3 = rainbowColor end; if ProgressBarBG and ProgressBarBG.Parent then ProgressBarBG.BorderColor3 = rainbowColor end; if ProgressBarFill and ProgressBarFill.Parent then ProgressBarFill.BackgroundColor3 = rainbowColor end; RunService.RenderStepped:Wait() end end)
+    task.spawn(function()
+        while LoadingGui and LoadingGui.Parent do
+            local hue = tick() % 2 / 2
+            local rainbowColor = Color3.fromHSV(hue, 1, 1)
+            if LoadingLabel and LoadingLabel.Parent then LoadingLabel.TextColor3 = rainbowColor end
+            if ProgressBarBG and ProgressBarBG.Parent then ProgressBarBG.BorderColor3 = rainbowColor end
+            if ProgressBarFill and ProgressBarFill.Parent then ProgressBarFill.BackgroundColor3 = rainbowColor end
+            RunService.RenderStepped:Wait()
+        end
+    end)
 end
 
+-- 2. СОЗДАНИЕ ГЛАВНОГО GUI
 task.spawn(function()
     local success, err = pcall(function()
-        local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false; WilsonHubGui.IgnoreGuiInset = true
-        local BackgroundOverlay = Instance.new("Frame", WilsonHubGui); BackgroundOverlay.Name = "BackgroundOverlay"; BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0); BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0); BackgroundOverlay.BackgroundTransparency = 0.5; BackgroundOverlay.BorderSizePixel = 0; BackgroundOverlay.ZIndex = 1; BackgroundOverlay.Visible = true
-        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.ZIndex = 2; MainFrame.Size = UDim2.new(0, 550, 0, 300); MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150); MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
+        local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
+        WilsonHubGui.IgnoreGuiInset = true
+        local BackgroundOverlay = Instance.new("Frame", WilsonHubGui) BackgroundOverlay.Name = "BackgroundOverlay" BackgroundOverlay.Size = UDim2.new(1, 0, 1, 0) BackgroundOverlay.BackgroundColor3 = Color3.fromRGB(0, 0, 0) BackgroundOverlay.BackgroundTransparency = 0.5 BackgroundOverlay.BorderSizePixel = 0 BackgroundOverlay.ZIndex = 1 BackgroundOverlay.Visible = true
+
+        local MainFrame = Instance.new("Frame", WilsonHubGui); MainFrame.Name = "MainFrame"; MainFrame.ZIndex = 2 
+        
+        MainFrame.Size = UDim2.new(0, 550, 0, 300); 
+        MainFrame.Position = UDim2.new(0.5, -275, 0.5, -150);
+        
+        MainFrame.BackgroundColor3 = Color3.fromRGB(35, 35, 35); MainFrame.BorderSizePixel = 0; MainFrame.Active = true; MainFrame.Draggable = true; Instance.new("UICorner", MainFrame).CornerRadius = UDim.new(0, 8)
         local IconFrame = Instance.new("ImageButton", WilsonHubGui); IconFrame.Name = "IconFrame"; IconFrame.Size = UDim2.new(0, 60, 0, 60); IconFrame.Position = UDim2.new(0.5, 0, 0.5, 0); IconFrame.AnchorPoint = Vector2.new(0.5, 0.5); IconFrame.Image = "rbxassetid://121928953984347"; IconFrame.BackgroundTransparency = 1; IconFrame.Visible = false; IconFrame.Active = true; IconFrame.Draggable = true; Instance.new("UICorner", IconFrame).CornerRadius = UDim.new(0, 10);
-        local IconStroke = Instance.new("UIStroke", IconFrame); IconStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border; IconStroke.Color = currentTheme.main; IconStroke.Thickness = 2; table.insert(themableObjects, {object = IconStroke, property = "Color", colorType = "main"})
+        local IconStroke = Instance.new("UIStroke", IconFrame) IconStroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border IconStroke.Color = currentTheme.main IconStroke.Thickness = 2 table.insert(themableObjects, {object = IconStroke, property = "Color", colorType = "main"})
         local Header = Instance.new("Frame", MainFrame); Header.Size = UDim2.new(1, 0, 0, 40); Instance.new("UICorner", Header).CornerRadius = UDim.new(0, 8)  
         local TitleLabel = Instance.new("TextLabel", Header); TitleLabel.Size = UDim2.new(1, 0, 1, 0); TitleLabel.BackgroundTransparency = 1; TitleLabel.Font = Enum.Font.SourceSansBold; TitleLabel.TextSize = 20; table.insert(translatableObjects, {object=TitleLabel, property="Text", key="main_title"})
-        local ButtonsContainer = Instance.new("Frame"); ButtonsContainer.Name = "ButtonsContainer"; ButtonsContainer.Parent = Header; ButtonsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); ButtonsContainer.BorderSizePixel = 0; ButtonsContainer.Position = UDim2.new(1, -81, 0, 0); ButtonsContainer.Size = UDim2.new(0, 81, 1, 0); local containerCorner = Instance.new("UICorner", ButtonsContainer); containerCorner.CornerRadius = UDim.new(0, 6)
-        local MinimizeButton = Instance.new("TextButton", ButtonsContainer); MinimizeButton.Name = "MinimizeButton"; MinimizeButton.Size = UDim2.new(0, 40, 1, 0); MinimizeButton.Position = UDim2.new(0, 0, 0, 0); MinimizeButton.BackgroundTransparency = 1; MinimizeButton.Text = ""; local minimizeLine = Instance.new("Frame", MinimizeButton); minimizeLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200); minimizeLine.BorderSizePixel = 0; minimizeLine.Size = UDim2.new(0, 12, 0, 2); minimizeLine.Position = UDim2.new(0.5, 0, 0.5, 0); minimizeLine.AnchorPoint = Vector2.new(0.5, 0.5)
-        local CloseButton = Instance.new("TextButton", ButtonsContainer); CloseButton.Name = "CloseButton"; CloseButton.Size = UDim2.new(0, 40, 1, 0); CloseButton.Position = UDim2.new(0, 41, 0, 0); CloseButton.BackgroundTransparency = 1; CloseButton.Text = ""; local closeLine1 = Instance.new("Frame", CloseButton); closeLine1.BackgroundColor3 = Color3.fromRGB(200, 200, 200); closeLine1.BorderSizePixel = 0; closeLine1.Size = UDim2.new(0, 14, 0, 2); closeLine1.Position = UDim2.new(0.5, 0, 0.5, 0); closeLine1.AnchorPoint = Vector2.new(0.5, 0.5); closeLine1.Rotation = 45; local closeLine2 = closeLine1:Clone(); closeLine2.Parent = CloseButton; closeLine2.Rotation = -45
-        local separator = Instance.new("Frame", ButtonsContainer); separator.BackgroundColor3 = Color3.fromRGB(80, 80, 80); separator.BorderSizePixel = 0; separator.Size = UDim2.new(0, 1, 0, 20); separator.Position = UDim2.new(0.5, 0, 0.5, 0); separator.AnchorPoint = Vector2.new(0.5, 0.5)
-        local function createHoverEffect(button, elements) button.MouseEnter:Connect(function() button.BackgroundColor3 = Color3.fromRGB(70, 70, 70); for _, el in pairs(elements) do el.BackgroundColor3 = Color3.fromRGB(255, 255, 255) end end); button.MouseLeave:Connect(function() button.BackgroundColor3 = Color3.fromRGB(45, 45, 45); for _, el in pairs(elements) do el.BackgroundColor3 = Color3.fromRGB(200, 200, 200) end end) end; createHoverEffect(MinimizeButton, {minimizeLine}); createHoverEffect(CloseButton, {closeLine1, closeLine2})
-        local isMinimized = false; local originalSize = MainFrame.Size; MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized; if isMinimized then BackgroundOverlay.Visible = false; TabsContainer.Visible = false; ContentContainer.Visible = false; MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else BackgroundOverlay.Visible = true; TabsContainer.Visible = true; ContentContainer.Visible = true; MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)        
+        local ButtonsContainer = Instance.new("Frame") ButtonsContainer.Name = "ButtonsContainer" ButtonsContainer.Parent = Header ButtonsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45) ButtonsContainer.BorderSizePixel = 0 ButtonsContainer.Position = UDim2.new(1, -81, 0, 0) ButtonsContainer.Size = UDim2.new(0, 81, 1, 0)
+        local containerCorner = Instance.new("UICorner", ButtonsContainer) containerCorner.CornerRadius = UDim.new(0, 6)
+        local MinimizeButton = Instance.new("TextButton", ButtonsContainer) MinimizeButton.Name = "MinimizeButton" MinimizeButton.Size = UDim2.new(0, 40, 1, 0) MinimizeButton.Position = UDim2.new(0, 0, 0, 0) MinimizeButton.BackgroundTransparency = 1 MinimizeButton.Text = ""
+        local minimizeLine = Instance.new("Frame", MinimizeButton) minimizeLine.BackgroundColor3 = Color3.fromRGB(200, 200, 200) minimizeLine.BorderSizePixel = 0 minimizeLine.Size = UDim2.new(0, 12, 0, 2) minimizeLine.Position = UDim2.new(0.5, 0, 0.5, 0) minimizeLine.AnchorPoint = Vector2.new(0.5, 0.5)
+        local CloseButton = Instance.new("TextButton", ButtonsContainer) CloseButton.Name = "CloseButton" CloseButton.Size = UDim2.new(0, 40, 1, 0) CloseButton.Position = UDim2.new(0, 41, 0, 0) CloseButton.BackgroundTransparency = 1 CloseButton.Text = ""
+        local closeLine1 = Instance.new("Frame", CloseButton) closeLine1.BackgroundColor3 = Color3.fromRGB(200, 200, 200) closeLine1.BorderSizePixel = 0 closeLine1.Size = UDim2.new(0, 14, 0, 2) closeLine1.Position = UDim2.new(0.5, 0, 0.5, 0) closeLine1.AnchorPoint = Vector2.new(0.5, 0.5) closeLine1.Rotation = 45
+        local closeLine2 = closeLine1:Clone() closeLine2.Parent = CloseButton closeLine2.Rotation = -45
+        local separator = Instance.new("Frame", ButtonsContainer) separator.BackgroundColor3 = Color3.fromRGB(80, 80, 80) separator.BorderSizePixel = 0 separator.Size = UDim2.new(0, 1, 0, 20) separator.Position = UDim2.new(0.5, 0, 0.5, 0) separator.AnchorPoint = Vector2.new(0.5, 0.5)
+        local function createHoverEffect(button, elements) button.MouseEnter:Connect(function() button.BackgroundColor3 = Color3.fromRGB(70, 70, 70) for _, el in pairs(elements) do el.BackgroundColor3 = Color3.fromRGB(255, 255, 255) end end) button.MouseLeave:Connect(function() button.BackgroundColor3 = Color3.fromRGB(45, 45, 45) for _, el in pairs(elements) do el.BackgroundColor3 = Color3.fromRGB(200, 200, 200) end end) end createHoverEffect(MinimizeButton, {minimizeLine}) createHoverEffect(CloseButton, {closeLine1, closeLine2})
+        local isMinimized = false
+        local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized if isMinimized then BackgroundOverlay.Visible = false TabsContainer.Visible = false ContentContainer.Visible = false MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else BackgroundOverlay.Visible = true TabsContainer.Visible = true ContentContainer.Visible = true MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)        
         
-        local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4; table.insert(themableObjects, {object = TabsContainer, property = "ScrollBarImageColor3", colorType = "main"})
+        local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
+        TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4
+        table.insert(themableObjects, {object = TabsContainer, property = "ScrollBarImageColor3", colorType = "main"})
+
         local ContentContainer = Instance.new("Frame", MainFrame); ContentContainer.Name = "ContentContainer"; ContentContainer.Size = UDim2.new(1, -120, 1, -40); ContentContainer.Position = UDim2.new(0, 120, 0, 40); ContentContainer.BackgroundTransparency = 1
+        
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
-        local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; Instance.new("UICorner", button).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor");
-        -- NEW: Conditionally create Admin tab
-        local AdminButton; if userPermissionLevel > 0 then AdminButton = createTabButton("tab_admin") end
+        local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
+        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
 
-        task.wait(); TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y); TabsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function() TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y) end)
+        task.wait()
+        TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
+        TabsList:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
+            TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
+        end)
         
         local HomePage=Instance.new("Frame",ContentContainer); HomePage.Size=UDim2.new(1,0,1,0); HomePage.BackgroundTransparency=1; HomePage.Visible=true
         local MainPage=Instance.new("Frame",ContentContainer); MainPage.Size=UDim2.new(1,0,1,0); MainPage.BackgroundTransparency=1; MainPage.Visible=false
@@ -644,147 +694,710 @@ task.spawn(function()
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
-        local AdminPage; if AdminButton then AdminPage=Instance.new("Frame",ContentContainer); AdminPage.Size=UDim2.new(1,0,1,0); AdminPage.BackgroundTransparency=1; AdminPage.Visible=false end
 
-        local function createFunctionButton(textKey, parent, callback) -- This function is unchanged
-            local b = Instance.new("TextButton", parent); local theme = (not rainbowThemeActive) and currentTheme or Themes.Red; b.BackgroundColor3 = theme.main; b.Font = Enum.Font.SourceSansBold; b.Size = UDim2.new(0, 120, 0, 35); Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6); if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end; local translationData = translations[textKey]; if type(translationData) == "table" and translationData.text then b.Text = ""; local listLayout = Instance.new("UIListLayout", b); listLayout.FillDirection = Enum.FillDirection.Horizontal; listLayout.VerticalAlignment = Enum.VerticalAlignment.Center; listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; listLayout.SortOrder = Enum.SortOrder.LayoutOrder; listLayout.Padding = UDim.new(0, 5); local textLabel = Instance.new("TextLabel", b); textLabel.Name = "Text"; textLabel.BackgroundTransparency = 1; textLabel.TextColor3 = theme.text; textLabel.Font = Enum.Font.SourceSansBold; textLabel.TextSize = 16; textLabel.Size = UDim2.new(0, 0, 1, 0); textLabel.AutomaticSize = Enum.AutomaticSize.X; local imageLabel = Instance.new("ImageLabel", b); imageLabel.Name = "Icon"; imageLabel.BackgroundTransparency = 1; imageLabel.Size = UDim2.new(0, 15, 0, 15); imageLabel.Visible = false; table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" }); table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" }); table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey }) else b.TextColor3 = theme.text; b.TextSize = 16; b.TextScaled = false; b.RichText = false; b.TextYAlignment = Enum.TextYAlignment.Center; table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" }); table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" }); table.insert(translatableObjects, { object = b, property = "Text", key = textKey }) end; pcall(function() local langCode = languageMap[settings.language] or "en"; if type(translationData) == "table" and translationData.text then if b.TextLabel then b.TextLabel.Text = translationData.text[langCode] or translationData.text.en end; if translationData.icon and b.ImageLabel then b.ImageLabel.Image = "rbxassetid://" .. translationData.icon; b.ImageLabel.Visible = true end else if translationData then b.Text = translationData[langCode] or translationData.en else b.Text = textKey end end end); return b
+        local function createFunctionButton(textKey, parent, callback)
+    local b = Instance.new("TextButton", parent)
+    local theme = (not rainbowThemeActive) and currentTheme or Themes.Red
+    b.BackgroundColor3 = theme.main
+    b.Font = Enum.Font.SourceSansBold
+    b.Size = UDim2.new(0, 120, 0, 35)
+    Instance.new("UICorner", b).CornerRadius = UDim.new(0, 6)
+    if callback then b.MouseButton1Click:Connect(function() pcall(callback) end) end
+
+    local translationData = translations[textKey]
+    
+    -- Егер батырма SCRIPTS бөліміне арналған болса (жаңа формат)
+    if type(translationData) == "table" and translationData.text then
+        b.Text = "" -- Батырманың өз тексін бос қыламыз
+        
+        local listLayout = Instance.new("UIListLayout", b)
+        listLayout.FillDirection = Enum.FillDirection.Horizontal
+        listLayout.VerticalAlignment = Enum.VerticalAlignment.Center
+        listLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+        listLayout.SortOrder = Enum.SortOrder.LayoutOrder
+        listLayout.Padding = UDim.new(0, 5)
+
+        local textLabel = Instance.new("TextLabel", b)
+        textLabel.Name = "Text"
+        textLabel.BackgroundTransparency = 1
+        textLabel.TextColor3 = theme.text
+        textLabel.Font = Enum.Font.SourceSansBold
+        textLabel.TextSize = 16
+        textLabel.Size = UDim2.new(0, 0, 1, 0)
+        textLabel.AutomaticSize = Enum.AutomaticSize.X
+        
+        local imageLabel = Instance.new("ImageLabel", b)
+        imageLabel.Name = "Icon"
+        imageLabel.BackgroundTransparency = 1
+        imageLabel.Size = UDim2.new(0, 15, 0, 15)
+        imageLabel.Visible = false
+
+        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+        table.insert(themableObjects, { object = textLabel, property = "TextColor3", colorType = "text" })
+        table.insert(translatableObjects, { object = {textLabel=textLabel, imageLabel=imageLabel}, property = "CustomScriptButton", key = textKey })
+    
+    -- Егер батырма басқа бөлімдерге арналған болса (ескі, қарапайым формат)
+    else
+        b.TextColor3 = theme.text
+        b.TextSize = 16
+        b.TextScaled = false
+        b.RichText = false
+        b.TextYAlignment = Enum.TextYAlignment.Center
+
+        table.insert(themableObjects, { object = b, property = "BackgroundColor3", colorType = "main" })
+        table.insert(themableObjects, { object = b, property = "TextColor3", colorType = "text" })
+        table.insert(translatableObjects, { object = b, property = "Text", key = textKey })
+    end
+
+    -- Тілді бірден орнату
+    pcall(function()
+        local langCode = languageMap[settings.language] or "en"
+        if type(translationData) == "table" and translationData.text then
+             if b.TextLabel then b.TextLabel.Text = translationData.text[langCode] or translationData.text.en end
+             if translationData.icon and b.ImageLabel then
+                 b.ImageLabel.Image = "rbxassetid://" .. translationData.icon
+                 b.ImageLabel.Visible = true
+             end
+        else
+            if translationData then
+                b.Text = translationData[langCode] or translationData.en
+            else
+                b.Text = textKey
+            end
         end
+    end)
+    return b
+end
+applyLanguage = function(langName)
+    if not languageMap[langName] then langName = "English" end
+    settings.language = langName
+    pcall(function() if writefile then writefile("WilsonHubSettings.json", HttpService:JSONEncode(settings)) end end)
+    
+    local langCode = languageMap[settings.language] or "en"
+    
+    for _, item in ipairs(translatableObjects) do
+        if item.object and (item.object.Parent or (item.object.textLabel and item.object.textLabel.Parent)) then
+            local translationData = translations[item.key]
+            if translationData then
+                -- Жаңа, иконкасы бар батырмалар үшін
+                if item.property == "CustomScriptButton" then
+                    local textData = translationData.text
+                    if textData then
+                        item.object.textLabel.Text = textData[langCode] or textData.en
+                    end
+                    if translationData.icon then
+                        item.object.imageLabel.Image = "rbxassetid://" .. translationData.icon
+                        item.object.imageLabel.Visible = true
+                    else
+                        item.object.imageLabel.Visible = false
+                    end
+                -- Ескі, қарапайым батырмалар үшін
+                else
+                    local translatedText = translationData[langCode] or translationData.en
+                    if item.dynamic_args then
+                         pcall(function() item.object[item.property] = string.format(translatedText, unpack(item.dynamic_args)) end)
+                    else
+                         item.object[item.property] = translatedText
+                    end
+                end
+            end
+        end
+    end
+end        
         local function createInfoLabel(text, parent) local label = Instance.new("TextLabel", parent); label.BackgroundTransparency = 1; label.TextColor3 = Color3.fromRGB(255, 255, 255); label.Font = Enum.Font.SourceSans; label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; label.Text = text; return label end;
         
-        -- #region HOME PAGE (Unchanged)
-        local PlayerImage = Instance.new("ImageLabel", HomePage);PlayerImage.Size = UDim2.new(0, 128, 0, 128);PlayerImage.Position = UDim2.new(0, 15, 0, 15);PlayerImage.BackgroundTransparency = 1;task.spawn(function() pcall(function() PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end);local playerImageBorder = Instance.new("UIStroke", PlayerImage);playerImageBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;playerImageBorder.Color = currentTheme.main;playerImageBorder.Thickness = 2;table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"});local WelcomeLabel = createInfoLabel("", HomePage);WelcomeLabel.Position = UDim2.new(0, 150, 0, 35);WelcomeLabel.TextColor3 = currentTheme.accent;WelcomeLabel.Font = Enum.Font.SourceSansBold;WelcomeLabel.TextSize = 22;table.insert(translatableObjects, {object = WelcomeLabel, property = "Text", key = "home_welcome", dynamic_args = {player.Name}});local NickLabel = createInfoLabel("", HomePage);NickLabel.Position = UDim2.new(0, 150, 0, 60);table.insert(translatableObjects, {object = NickLabel, property = "Text", key = "home_nickname", dynamic_args = {player.Name}});local IdLabel = createInfoLabel("", HomePage);IdLabel.Position = UDim2.new(0, 150, 0, 85);table.insert(translatableObjects, {object = IdLabel, property = "Text", key = "home_userid", dynamic_args = {player.UserId}});local AgeLabel = createInfoLabel("", HomePage);AgeLabel.Position = UDim2.new(0, 150, 0, 110);table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}});local creationDateLabel = createInfoLabel("", HomePage);creationDateLabel.Position = UDim2.new(0, 15, 0, 150);table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"});local deviceLabel = createInfoLabel("", HomePage);deviceLabel.Position = UDim2.new(0, 15, 0, 175);local ipInfoLabel = createInfoLabel("", HomePage);ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"});local countryLabel = createInfoLabel("", HomePage);countryLabel.Position = UDim2.new(0, 15, 0, 225);table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"});task.spawn(function() pcall(function() local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId)); local dateStr = r.created:sub(1, 10); local langCode = languageMap[settings.language] or "en"; local format = translations.home_creationdate[langCode] or translations.home_creationdate.en; creationDateLabel.Text = string.format(format, dateStr); translatableObjects[#translatableObjects + 1] = {object = creationDateLabel, property = "Text", key = "home_creationdate", dynamic_args = {dateStr}} end) end);task.spawn(function() pcall(function() local r = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")); local f = ""; if r.countryCode then local a, b = 127462, string.byte("A"); f = utf8.char(a + (string.byte(r.countryCode, 1) - b)) .. utf8.char(a + (string.byte(r.countryCode, 2) - b)) end; local ip = r.query or "N/A"; local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f; local langCode = languageMap[settings.language] or "en"; ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip); countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country); translatableObjects[#translatableObjects + 1] = {object = ipInfoLabel, property = "Text", key = "home_ip", dynamic_args = {ip}}; translatableObjects[#translatableObjects + 1] = {object = countryLabel, property = "Text", key = "home_country", dynamic_args = {country}} end) end);local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc";local langCode = languageMap[settings.language] or "en";local dev_text = translations[dev_type][langCode] or translations[dev_type].en;deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
-        -- #endregion
-        
-        -- #region INFO PAGE (Unchanged)
-        local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); local NurgazyStroke=Instance.new("UIStroke",NurgazyImage); NurgazyStroke.Color=currentTheme.main; local sE=Instance.new("TextLabel",NurgazyImage); sE.Size=UDim2.new(0,45,0,45); sE.Position=UDim2.new(1,-35,0,-10); sE.BackgroundTransparency=1; sE.Rotation=15; sE.Text="👑"; sE.TextScaled=true; local bioText=createInfoLabel("", InfoPage); bioText.Size=UDim2.new(1,-190,0,150); bioText.Position=UDim2.new(0,175,0,15); bioText.TextWrapped=true; bioText.TextXAlignment=Enum.TextXAlignment.Center; bioText.TextYAlignment=Enum.TextYAlignment.Top; bioText.RichText = true; table.insert(translatableObjects, {object=bioText, property="Text", key="info_bio"}); local MasterLinksContainer=Instance.new("Frame",InfoPage); MasterLinksContainer.Name="MasterLinksContainer"; MasterLinksContainer.Size=UDim2.new(1,-20,0,80); MasterLinksContainer.Position=UDim2.new(0,10,0,180); MasterLinksContainer.BackgroundTransparency=1; local MasterListLayout=Instance.new("UIListLayout",MasterLinksContainer); MasterListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center; MasterListLayout.SortOrder=Enum.SortOrder.LayoutOrder; MasterListLayout.Padding=UDim.new(0,5); local Row1=Instance.new("Frame",MasterLinksContainer); Row1.Name="Row1"; Row1.BackgroundTransparency=1; Row1.Size=UDim2.new(1,0,0,35); local Row1Layout=Instance.new("UIListLayout",Row1); Row1Layout.FillDirection=Enum.FillDirection.Horizontal; Row1Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row1Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row1Layout.Padding=UDim.new(0,10); local function copyToClipboard(link,name) if setclipboard then setclipboard(link); sendTranslatedNotification("notif_clipboard_title", "notif_clipboard_text", 3, nil, {name}) else sendTranslatedNotification("notif_clipboard_error", "notif_clipboard_error_text", 4) end end; createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end); createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
-        -- #endregion
-
-        -- #region GUI MODS PAGE (Unchanged)
-        do local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6; local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder; local function createToggle(textKey, order, callback) local frame = Instance.new("Frame", GuiModsContainer); frame.Size = UDim2.new(1, -20, 0, 40); frame.BackgroundTransparency = 1; frame.LayoutOrder = order; local label = Instance.new("TextLabel", frame); label.Size = UDim2.new(0.6, 0, 1, 0); label.BackgroundTransparency = 1; label.Font = Enum.Font.SourceSansBold; label.TextColor3 = Color3.new(1, 1, 1); label.TextSize = 16; label.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object = label, property = "Text", key = textKey}); local btn = Instance.new("TextButton", frame); btn.Size = UDim2.new(0.4, -10, 1, 0); btn.Position = UDim2.new(0.6, 10, 0, 0); btn.Font = Enum.Font.SourceSansBold; Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6); local state = false; local trans_obj = {object = btn, property = "Text", key = "off"}; table.insert(translatableObjects, trans_obj); local theme_bg_obj = {object = btn, property = "BackgroundColor3", colorType = "main"}; table.insert(themableObjects, theme_bg_obj); local theme_text_obj = {object = btn, property = "TextColor3", colorType = "text"}; table.insert(themableObjects, theme_text_obj); btn.MouseButton1Click:Connect(function() state = not state; local langCode = languageMap[settings.language] or "en"; trans_obj.key = state and "on" or "off"; btn.Text = translations[trans_obj.key][langCode] or translations[trans_obj.key].en; if state then for i = #themableObjects, 1, -1 do if themableObjects[i] == theme_bg_obj or themableObjects[i] == theme_text_obj then table.remove(themableObjects, i) end end; btn.BackgroundColor3 = Color3.fromRGB(0, 150, 0); btn.TextColor3 = Color3.fromRGB(255, 255, 255) else local found_bg = false; for _,v in ipairs(themableObjects) do if v == theme_bg_obj then found_bg=true; break; end end; if not found_bg then table.insert(themableObjects, theme_bg_obj) end; local found_text = false; for _,v in ipairs(themableObjects) do if v == theme_text_obj then found_text=true; break; end end; if not found_text then table.insert(themableObjects, theme_text_obj) end; local theme = rainbowThemeActive and Themes.Red or currentTheme; btn.BackgroundColor3 = theme.main; btn.TextColor3 = theme.text end; if callback then pcall(callback, state, btn) end end); btn.Text = translations.off[languageMap[settings.language] or "en"]; local theme = rainbowThemeActive and Themes.Red or currentTheme; btn.BackgroundColor3 = theme.main; btn.TextColor3 = theme.text; return btn end; createToggle("mod_healthbar",1,toggleCustomHealthbar); createToggle("mod_fpsping",2,toggleFpsPing); local colorChangerContainer=Instance.new("Frame",GuiModsContainer);colorChangerContainer.Size=UDim2.new(1,-20,0,200);colorChangerContainer.BackgroundTransparency=1;colorChangerContainer.LayoutOrder=3;local colorList=Instance.new("UIListLayout",colorChangerContainer);colorList.Padding=UDim.new(0,5);local title=Instance.new("TextLabel",colorChangerContainer);title.Size=UDim2.new(1,0,0,20);title.BackgroundTransparency=1;title.Font=Enum.Font.SourceSansBold;title.TextColor3=Color3.new(1,1,1);title.TextSize=18;table.insert(translatableObjects,{object=title,property="Text",key="mod_worldcolor"});local colorPreview=Instance.new("Frame",colorChangerContainer);colorPreview.Size=UDim2.new(1,0,0,30);colorPreview.BackgroundColor3=selectedColor;Instance.new("UICorner",colorPreview).CornerRadius=UDim.new(0,6);local function createSlider(label,parent,callback) local sliderFrame=Instance.new("Frame",parent);sliderFrame.Size=UDim2.new(1,0,0,30);sliderFrame.BackgroundTransparency=1;local textLabel=Instance.new("TextLabel",sliderFrame);textLabel.Size=UDim2.new(0.2,0,1,0);textLabel.BackgroundTransparency=1;textLabel.Font=Enum.Font.SourceSansBold;textLabel.Text=label;textLabel.TextColor3=Color3.new(1,1,1);textLabel.TextSize=18;local bar=Instance.new("Frame",sliderFrame);bar.Size=UDim2.new(0.8,-10,0,10);bar.Position=UDim2.new(0.2,0,0.5,-5);bar.BackgroundColor3=Color3.fromRGB(30,30,30);Instance.new("UICorner",bar).CornerRadius=UDim.new(1,0);local handle=Instance.new("TextButton",bar);handle.Size=UDim2.new(0,12,1,4);handle.BackgroundColor3=currentTheme.main;handle.Text="";handle.AnchorPoint=Vector2.new(0.5,0.5);Instance.new("UICorner",handle).CornerRadius=UDim.new(1,0);table.insert(themableObjects,{object=handle,property="BackgroundColor3",colorType="main"});local inputChangedConn,inputEndedConn;handle.InputBegan:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end;inputChangedConn=UserInputService.InputChanged:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseMovement or inputObj.UserInputType==Enum.UserInputType.Touch then local pos=inputObj.Position.X-bar.AbsolutePosition.X;local percentage=math.clamp(pos/bar.AbsoluteSize.X,0,1);handle.Position=UDim2.fromScale(percentage,0.5);pcall(callback,percentage)end end);inputEndedConn=UserInputService.InputEnded:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseButton1 or inputObj.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end end end)end end);return handle end;local r,g,b=selectedColor.r,selectedColor.g,selectedColor.b;createSlider("R",colorChangerContainer,function(p)r=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(r,0.5);createSlider("G",colorChangerContainer,function(p)g=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(g,0.5);createSlider("B",colorChangerContainer,function(p)b=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(b,0.5);local buttonContainer=Instance.new("Frame",colorChangerContainer);buttonContainer.Size=UDim2.new(1,0,0,40);buttonContainer.BackgroundTransparency=1;buttonContainer.LayoutOrder=4;local btnLayout=Instance.new("UIGridLayout",buttonContainer);btnLayout.CellSize=UDim2.new(0.333,-5,1,0);btnLayout.CellPadding=UDim2.new(0,5,0,0);local rainbowToggle;createFunctionButton("apply",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;applyWorldColor(selectedColor)end);rainbowToggle=createToggle("mod_rainbow",0,function(state)toggleRainbowMode(state)end);rainbowToggle.Parent=buttonContainer;rainbowToggle.Name="RainbowToggle";createFunctionButton("reset",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;resetWorldColors()end) end
-        -- #endregion
-
-        -- #region SCRIPTS PAGE (MODIFIED)
-        local SearchBoxHolder = Instance.new("Frame", MainPage); SearchBoxHolder.Size = UDim2.new(1, -20, 0, 40); SearchBoxHolder.Position = UDim2.new(0, 10, 0, 10); SearchBoxHolder.BackgroundTransparency = 1
-        local SearchBox = Instance.new("TextBox", SearchBoxHolder); SearchBox.BackgroundColor3=Color3.fromRGB(45,45,45); SearchBox.TextColor3=Color3.fromRGB(255,255,255); SearchBox.Font=Enum.Font.SourceSans; SearchBox.TextSize=14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0,6); table.insert(translatableObjects, {object=SearchBox, property="PlaceholderText", key="search_placeholder"});
-        local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects,{object=SearchBoxStroke, property="Color", colorType="main"}); 
-        
-        if userPermissionLevel >= 2 then -- Developer or Admin
-            SearchBox.Size = UDim2.new(0.5, -5, 1, 0)
-            SearchBox.Position = UDim2.new(0.5, 5, 0, 0)
-            local createScriptBtn = createFunctionButton("create_script_button", SearchBoxHolder, function()
-                -- Create Script Popup Logic
-                local createGui = Instance.new("ScreenGui", player.PlayerGui)
-                createGui.Name = "CreateScriptGui"; createGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
-                local bg = Instance.new("Frame", createGui); bg.Size=UDim2.new(1,0,1,0); bg.BackgroundColor3=Color3.new(); bg.BackgroundTransparency=0.7
-                local main = Instance.new("Frame", bg); main.Size=UDim2.new(0,400,0,250);main.Position=UDim2.new(0.5,0,0.5,0);main.AnchorPoint=Vector2.new(0.5,0.5);main.BackgroundColor3=Color3.fromRGB(35,35,35);Instance.new("UICorner",main).CornerRadius=UDim.new(0,8)
-                local title = createInfoLabel("", main); title.Size=UDim2.new(1,0,0,30);title.TextSize=20; table.insert(translatableObjects,{object=title,key="create_script_title",property="Text"})
-                local nameLabel = createInfoLabel("", main); nameLabel.Position=UDim2.new(0,10,0,40); table.insert(translatableObjects,{object=nameLabel,key="create_script_name",property="Text"})
-                local nameInput = Instance.new("TextBox", main); nameInput.Size=UDim2.new(1,-20,0,30); nameInput.Position=UDim2.new(0,10,0,65);nameInput.BackgroundColor3=Color3.fromRGB(25,25,25);nameInput.TextColor3=Color3.new(1,1,1);
-                local codeLabel = createInfoLabel("", main); codeLabel.Position=UDim2.new(0,10,0,105); table.insert(translatableObjects,{object=codeLabel,key="create_script_code",property="Text"})
-                local codeInput = Instance.new("TextBox", main); codeInput.Size=UDim2.new(1,-20,0,80); codeInput.Position=UDim2.new(0,10,0,130);codeInput.BackgroundColor3=Color3.fromRGB(25,25,25);codeInput.TextColor3=Color3.new(1,1,1);codeInput.TextWrapped=true;codeInput.TextYAlignment=Enum.TextYAlignment.Top
-                local createBtn = createFunctionButton("create_script_create", main, function()
-                    local scriptName = nameInput.Text
-                    local scriptCode = codeInput.Text
-                    if #scriptName > 2 and #scriptCode > 10 then
-                        -- Send to backend
-                        createGui:Destroy()
-                    end
-                end); createBtn.Position=UDim2.new(0.25,0,1,-40);createBtn.AnchorPoint=Vector2.new(0.5,0)
-                local cancelBtn = createFunctionButton("create_script_cancel", main, function() createGui:Destroy() end); cancelBtn.Position=UDim2.new(0.75,0,1,-40);cancelBtn.AnchorPoint=Vector2.new(0.5,0)
-                applyLanguage(settings.language)
-            end)
-            createScriptBtn.Size = UDim2.new(0.5, -5, 1, 0)
-        else
-            SearchBox.Size = UDim2.new(1, 0, 1, 0)
-        end
-
-        local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size=UDim2.new(1,-20,1,-60); ScriptsContainer.Position=UDim2.new(0,10,0,60); ScriptsContainer.BackgroundTransparency=1; ScriptsContainer.ScrollBarThickness=6;
-        local ScriptsGrid=Instance.new("UIGridLayout",ScriptsContainer); ScriptsGrid.CellPadding=UDim2.new(0,10,0,10); ScriptsGrid.CellSize=UDim2.new(0, 95, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
-        local function updateScriptsCanvasSize() ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y) end; ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize); task.wait(0.1); updateScriptsCanvasSize()
-        local function showExecutedNotification() Library.DefaultColor = Color3.fromRGB(0,255,0); Library:Notification({Text = "SCRIPT EXECUTED!", Duration = 3}); Library.DefaultColor = Color3.fromRGB(255,0,0) end
-        
-        -- Existing script buttons... (Unchanged)
-        createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
-        createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
-        SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then local btnText = translations[b.Name] if btnText and btnText.text then b.Visible = (btnText.text.en or ""):lower():find(s, 1, true) or (btnText.text.ru or ""):lower():find(s, 1, true) or (btnText.text.kz or ""):lower():find(s, 1, true) else b.Visible = b.Text:lower():find(s, 1, true) end end end end)
-        createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
-        -- ... Rest of original script buttons
-        
-        -- #endregion
-        
-        -- #region PLAYERS PAGE (Unchanged)
-        local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); local PlayersListLayout = Instance.new("UIListLayout", PlayersList); PlayersListLayout.Padding = UDim.new(0, 5); PlayersListLayout.SortOrder = Enum.SortOrder.LayoutOrder; local function updatePlayerList() for _, v in ipairs(PlayersList:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end; local camera = workspace.CurrentCamera; local langCode = languageMap[settings.language] or "en"; for i, p in ipairs(Players:GetPlayers()) do if p then local template = Instance.new("Frame", PlayersList); template.Name = p.Name; template.Size = UDim2.new(1, 0, 0, 90); template.BackgroundColor3 = Color3.fromRGB(35, 35, 35); template.LayoutOrder = i; local thumb = Instance.new("ImageLabel", template); thumb.Size = UDim2.new(0, 40, 0, 40); thumb.Position = UDim2.new(0, 10, 0.5, -20); task.spawn(function() pcall(function() thumb.Image = Players:GetUserThumbnailAsync(p.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48) end) end); local nameLabel = createInfoLabel(p.Name, template); nameLabel.Size = UDim2.new(0.4, 0, 0, 30); nameLabel.Position = UDim2.new(0, 55, 0, 5); if p == player then nameLabel.TextColor3 = Color3.fromRGB(255, 255, 0) end; local pingLabel = createInfoLabel("Ping: ...", template); pingLabel.Position = UDim2.new(0, 55, 0, 25); pingLabel.Size = UDim2.new(1, -60, 0, 20); pingLabel.TextSize = 14; pingLabel.TextColor3 = Color3.fromRGB(200, 200, 200); local ipLabel = createInfoLabel("IP Address: ...", template); ipLabel.Position = UDim2.new(0, 55, 0, 45); ipLabel.Size = UDim2.new(1, -60, 0, 20); ipLabel.TextSize = 14; ipLabel.TextColor3 = Color3.fromRGB(200, 200, 200); local countryLabel = createInfoLabel("Country: ...", template); countryLabel.Position = UDim2.new(0, 55, 0, 65); countryLabel.Size = UDim2.new(1, -60, 0, 20); countryLabel.TextSize = 14; countryLabel.TextColor3 = Color3.fromRGB(200, 200, 200); if p ~= player then local buttonsFrame = Instance.new("Frame", template); buttonsFrame.BackgroundTransparency = 1; buttonsFrame.Size = UDim2.new(0, 160, 0, 40); buttonsFrame.Position = UDim2.new(1, -165, 0.5, -20); local buttonsLayout = Instance.new("UIGridLayout", buttonsFrame); buttonsLayout.CellSize = UDim2.new(0.5, -5, 1, 0); buttonsLayout.CellPadding = UDim2.new(0, 5, 0, 0); local tp_btn = createFunctionButton("player_tp", buttonsFrame, function() pcall(function() local r1=player.Character and player.Character.HumanoidRootPart; local r2=p.Character and p.Character.HumanoidRootPart; if r1 and r2 then r1.CFrame=r2.CFrame end end) end); tp_btn.Size=UDim2.new(1,0,1,0); local obs_btn = createFunctionButton("player_observe", buttonsFrame, function() pcall(function() local h=p.Character and p.Character:FindFirstChildOfClass("Humanoid"); if h then if camera.CameraSubject==h then camera.CameraSubject=player.Character.Humanoid else camera.CameraSubject=h end end end) end); obs_btn.Size=UDim2.new(1,0,1,0) end; if p == player then pingLabel.Text = string.format(translations.player_ping[langCode], math.floor(player:GetNetworkPing() * 1000)); ipLabel.Text = translations.home_ip_loading[langCode]; countryLabel.Text = translations.home_country_loading[langCode]; task.spawn(function() local s,r = pcall(function() return HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")) end); if s and r then local f = ""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end; ipLabel.Text = string.format(translations.player_ip[langCode], r.query or "Unknown"); countryLabel.Text = string.format(translations.player_country[langCode], (r.country or "Unknown") .. " " .. f) else ipLabel.Text = "IP Address: Error"; countryLabel.Text = "Country: Error" end end) else pingLabel.Text = string.format(translations.player_ping[langCode], "~"..tostring(math.random(40,250)) .. " ms"); ipLabel.Text = translations.player_ip_private[langCode]; countryLabel.Text = translations.player_country_private[langCode] end end end; PlayersList.CanvasSize = UDim2.fromOffset(0, PlayersListLayout.AbsoluteContentSize.Y) end
-        -- #endregion
-
-        -- #region SETTINGS & EXECUTOR (Unchanged)
-        do local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,-10,1,-10); SettingsContainer.Position=UDim2.new(0,5,0,5); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; local ListLayout = Instance.new("UIListLayout", SettingsContainer); ListLayout.Padding = UDim.new(0, 15); ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center; ListLayout.SortOrder = Enum.SortOrder.LayoutOrder; local ThemesFrame = Instance.new("Frame", SettingsContainer); ThemesFrame.Name = "ThemesFrame"; ThemesFrame.BackgroundTransparency = 1; ThemesFrame.Size = UDim2.new(1, 0, 0, 1); ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y; ThemesFrame.LayoutOrder = 1; local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame); ThemesListLayout.Padding = UDim.new(0, 5); ThemesListLayout.SortOrder = Enum.SortOrder.LayoutOrder; local ThemesLabel = Instance.new("TextLabel", ThemesFrame); ThemesLabel.LayoutOrder = 1; ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"}); local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame); ThemeButtonsContainer.LayoutOrder = 2; ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y; local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer); createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end); createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end); local LangFrame = Instance.new("Frame", SettingsContainer); LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2; local LangListLayout = Instance.new("UIListLayout", LangFrame); LangListLayout.Padding = UDim.new(0, 5); LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder; local LangLabel = Instance.new("TextLabel", LangFrame); LangLabel.LayoutOrder = 1; LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"}); local LangButtonsContainer = Instance.new("Frame", LangFrame); LangButtonsContainer.LayoutOrder = 2; LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y; local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer); createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end); end; local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); ExecutorInput.Text = 'Print("HelloWorld!")'; table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
-        -- #endregion
-        
-        -- #region ADMIN PAGE (NEW)
-        if AdminPage then
-            local AdminContainer = Instance.new("ScrollingFrame", AdminPage); AdminContainer.Size=UDim2.new(1,-10,1,-10); AdminContainer.Position=UDim2.new(0,5,0,5); AdminContainer.BackgroundTransparency=1; AdminContainer.ScrollBarThickness=6;
-            local AdminList = Instance.new("UIListLayout", AdminContainer); AdminList.Padding = UDim.new(0,10); AdminList.HorizontalAlignment = Enum.HorizontalAlignment.Center; AdminList.SortOrder=Enum.SortOrder.LayoutOrder
-
-            -- Instructions Section
-            local InfoFrame = Instance.new("Frame", AdminContainer); InfoFrame.BackgroundTransparency=1; InfoFrame.Size=UDim2.new(1, -10, 0, 100); InfoFrame.LayoutOrder=1; InfoFrame.AutomaticSize=Enum.AutomaticSize.Y
-            local InfoList = Instance.new("UIListLayout", InfoFrame); InfoList.Padding = UDim.new(0,5);
-            local instrTitle = createInfoLabel("", InfoFrame); instrTitle.TextSize=18; table.insert(translatableObjects, {object=instrTitle, property="Text", key="admin_info_title"});
-            local instrText = createInfoLabel("", InfoFrame); instrText.TextWrapped=true; instrText.Size=UDim2.new(1,0,0,1); instrText.AutomaticSize=Enum.AutomaticSize.Y; table.insert(translatableObjects, {object=instrText, property="Text", key="admin_info_text"});
-
-            -- Console Section
-            local ConsoleFrame = Instance.new("Frame", AdminContainer); ConsoleFrame.BackgroundTransparency=1; ConsoleFrame.Size=UDim2.new(1,-10,0,300); ConsoleFrame.LayoutOrder=2; ConsoleFrame.AutomaticSize=Enum.AutomaticSize.Y
-            local ConsoleList = Instance.new("UIListLayout", ConsoleFrame); ConsoleList.Padding=UDim.new(0,5)
-            local consoleTitle = createInfoLabel("", ConsoleFrame); consoleTitle.TextSize=18; table.insert(translatableObjects, {object=consoleTitle, property="Text", key="admin_console_title"});
-            local commandsList = createInfoLabel("", ConsoleFrame); commandsList.TextSize=16; commandsList.TextColor3 = Color3.fromRGB(200,200,200); table.insert(translatableObjects, {object=commandsList, property="Text", key="admin_commands_list"});
-            local commandsText = createInfoLabel("", ConsoleFrame); commandsText.TextWrapped=true; commandsText.Size=UDim2.new(1,0,0,1); commandsText.AutomaticSize=Enum.AutomaticSize.Y; commandsText.TextColor3=Color3.fromRGB(200,200,200); table.insert(translatableObjects, {object=commandsText, property="Text", key="admin_commands_text"});
-            local commandInput = Instance.new("TextBox", ConsoleFrame); commandInput.Size=UDim2.new(1,0,0,40); commandInput.BackgroundColor3=Color3.fromRGB(25,25,25); commandInput.TextColor3=Color3.new(1,1,1); commandInput.ClearTextOnFocus=false; commandInput.Font=Enum.Font.Code; table.insert(translatableObjects, {object=commandInput, property="PlaceholderText", key="admin_console_placeholder"});
-            
-            commandInput.FocusLost:Connect(function(enterPressed)
-                if enterPressed and #commandInput.Text > 1 then
-                    local success, err = pcall(function()
-                        HttpService:PostAsync(AdminConfig.BackendUrl, HttpService:JSONEncode({
-                            action = "command",
-                            command = commandInput.Text,
-                            executor = player.Name
-                        }))
-                    end)
-                    if success then
-                        Library:Notification({Text="Команда жіберілді!", Color=Color3.fromRGB(0,255,0), Duration=3})
-                    else
-                        Library:Notification({Text="Сервер қатесі: "..tostring(err), Color=Color3.fromRGB(255,0,0), Duration=5})
-                    end
-                    commandInput.Text = ""
-                end
-            end)
-        end
-        -- #endregion
-        
-        table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
-        
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
-        if AdminButton then table.insert(tabs, AdminButton); table.insert(pages, AdminPage) end
-        activeTab = HomeButton
-        for i,tab in ipairs(tabs) do tab.MouseButton1Click:Connect(function() if activeTab and activeTab.Parent then activeTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60) end; activeTab = tab; for _,p in ipairs(pages) do p.Visible=false end; pages[i].Visible=true; if not rainbowThemeActive then activeTab.BackgroundColor3 = currentTheme.main end; if tab==PlayersButton then pcall(updatePlayerList) end end)end  
-        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end); Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
-        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false; IconFrame.Visible = true; BackgroundOverlay.Visible = false end)
-        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true; IconFrame.Visible = false; BackgroundOverlay.Visible = true end)
-        
-        if settings.theme == "Rainbow" then activateRainbowTheme() else applyTheme(settings.theme) end
-        applyLanguage(settings.language)
+        -- #region HOME PAGE
+local PlayerImage = Instance.new("ImageLabel", HomePage);
+PlayerImage.Size = UDim2.new(0, 128, 0, 128);
+PlayerImage.Position = UDim2.new(0, 15, 0, 15);
+PlayerImage.BackgroundTransparency = 1;
+task.spawn(function()
+    pcall(function()
+        PlayerImage.Image = Players:GetUserThumbnailAsync(player.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420)
     end)
-    if not success then sendTranslatedNotification("notif_fatal_error_title", "notif_fatal_error_text", 20, nil, {tostring(err)}); warn("WILSONHUB ERROR: "..tostring(err)) end
+end);
+local playerImageBorder = Instance.new("UIStroke", PlayerImage);
+playerImageBorder.ApplyStrokeMode = Enum.ApplyStrokeMode.Border;
+playerImageBorder.Color = currentTheme.main;
+playerImageBorder.Thickness = 2;
+table.insert(themableObjects, {object = playerImageBorder, property = "Color", colorType = "main"})
+
+local WelcomeLabel = createInfoLabel("", HomePage);
+WelcomeLabel.Position = UDim2.new(0, 150, 0, 35);
+WelcomeLabel.TextColor3 = currentTheme.accent;
+WelcomeLabel.Font = Enum.Font.SourceSansBold;
+WelcomeLabel.TextSize = 22;
+table.insert(translatableObjects, {object = WelcomeLabel, property = "Text", key = "home_welcome", dynamic_args = {player.Name}})
+
+local NickLabel = createInfoLabel("", HomePage);
+NickLabel.Position = UDim2.new(0, 150, 0, 60);
+table.insert(translatableObjects, {object = NickLabel, property = "Text", key = "home_nickname", dynamic_args = {player.Name}})
+
+local IdLabel = createInfoLabel("", HomePage);
+IdLabel.Position = UDim2.new(0, 150, 0, 85);
+table.insert(translatableObjects, {object = IdLabel, property = "Text", key = "home_userid", dynamic_args = {player.UserId}})
+
+local AgeLabel = createInfoLabel("", HomePage);
+AgeLabel.Position = UDim2.new(0, 150, 0, 110);
+table.insert(translatableObjects, {object = AgeLabel, property = "Text", key = "home_userage", dynamic_args = {player.AccountAge}})
+
+local creationDateLabel = createInfoLabel("", HomePage);
+creationDateLabel.Position = UDim2.new(0, 15, 0, 150);
+table.insert(translatableObjects, {object = creationDateLabel, property = "Text", key = "home_creationdate_loading"})
+
+local deviceLabel = createInfoLabel("", HomePage);
+deviceLabel.Position = UDim2.new(0, 15, 0, 175)
+
+local ipInfoLabel = createInfoLabel("", HomePage);
+ipInfoLabel.Position = UDim2.new(0, 15, 0, 200);
+table.insert(translatableObjects, {object = ipInfoLabel, property = "Text", key = "home_ip_loading"})
+
+local countryLabel = createInfoLabel("", HomePage);
+countryLabel.Position = UDim2.new(0, 15, 0, 225);
+table.insert(translatableObjects, {object = countryLabel, property = "Text", key = "home_country_loading"})
+
+task.spawn(function()
+    pcall(function()
+        local r = HttpService:JSONDecode(game:HttpGet("https://users.roproxy.com/v1/users/" .. player.UserId));
+        local dateStr = r.created:sub(1, 10);
+        local langCode = languageMap[settings.language] or "en";
+        local format = translations.home_creationdate[langCode] or translations.home_creationdate.en;
+        creationDateLabel.Text = string.format(format, dateStr);
+        translatableObjects[#translatableObjects + 1] = {object = creationDateLabel, property = "Text", key = "home_creationdate", dynamic_args = {dateStr}}
+    end)
 end)
 
-applyLanguage(settings.language)
-local loadDuration=1; for i=0,100 do local progress=i/100; local numDots=math.floor(i/12)%4; if LoadingLabel and LoadingLabel.Parent then local langCode = languageMap[settings.language] or "en"; local baseLoadingText = translations.loading[langCode] or translations.loading.en; LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots) end; PercentageLabel.Text=i.." %"; ProgressBarFill.Size=UDim2.new(progress,0,1,0); task.wait(loadDuration/100) end; task.wait(0.2)
+task.spawn(function()
+    pcall(function()
+        local r = HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/"));
+        local f = "";
+        if r.countryCode then
+            local a, b = 127462, string.byte("A");
+            f = utf8.char(a + (string.byte(r.countryCode, 1) - b)) .. utf8.char(a + (string.byte(r.countryCode, 2) - b))
+        end;
+        local ip = r.query or "N/A";
+        local country = (r.country or "N/A") .. ", " .. (r.city or "") .. " " .. f;
+        local langCode = languageMap[settings.language] or "en";
+        ipInfoLabel.Text = string.format(translations.home_ip[langCode] or translations.home_ip.en, ip);
+        countryLabel.Text = string.format(translations.home_country[langCode] or translations.home_country.en, country);
+        translatableObjects[#translatableObjects + 1] = {object = ipInfoLabel, property = "Text", key = "home_ip", dynamic_args = {ip}};
+        translatableObjects[#translatableObjects + 1] = {object = countryLabel, property = "Text", key = "home_country", dynamic_args = {country}}
+    end)
+end)
 
+local dev_type = UserInputService.TouchEnabled and "home_device_phone" or "home_device_pc";
+local langCode = languageMap[settings.language] or "en";
+local dev_text = translations[dev_type][langCode] or translations[dev_type].en;
+deviceLabel.Text = string.format(translations.home_device[langCode] or translations.home_device.en, dev_text);
+translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property = "Text", key = "home_device", dynamic_args = {dev_text}}
+        -- #endregion
+        
+        -- #region INFO PAGE
+        local NurgazyImage=Instance.new("ImageLabel",InfoPage); NurgazyImage.Size=UDim2.new(0,150,0,150); NurgazyImage.Position=UDim2.new(0, 15, 0, 15); NurgazyImage.BackgroundTransparency=1; task.spawn(function() pcall(function() NurgazyImage.Image = Players:GetUserThumbnailAsync(2956155840, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size420x420) end) end); 
+        local NurgazyStroke=Instance.new("UIStroke",NurgazyImage); NurgazyStroke.Color=currentTheme.main;
+        local sE=Instance.new("TextLabel",NurgazyImage); sE.Size=UDim2.new(0,45,0,45); sE.Position=UDim2.new(1,-35,0,-10); sE.BackgroundTransparency=1; sE.Rotation=15; sE.Text="👑"; sE.TextScaled=true; 
+        local bioText=createInfoLabel("", InfoPage); bioText.Size=UDim2.new(1,-190,0,150); bioText.Position=UDim2.new(0,175,0,15); bioText.TextWrapped=true; bioText.TextXAlignment=Enum.TextXAlignment.Center; bioText.TextYAlignment=Enum.TextYAlignment.Top; bioText.RichText = true table.insert(translatableObjects, {object=bioText, property="Text", key="info_bio"})
+        local MasterLinksContainer=Instance.new("Frame",InfoPage); MasterLinksContainer.Name="MasterLinksContainer"; MasterLinksContainer.Size=UDim2.new(1,-20,0,80); MasterLinksContainer.Position=UDim2.new(0,10,0,180); MasterLinksContainer.BackgroundTransparency=1;
+        local MasterListLayout=Instance.new("UIListLayout",MasterLinksContainer); MasterListLayout.HorizontalAlignment=Enum.HorizontalAlignment.Center; MasterListLayout.SortOrder=Enum.SortOrder.LayoutOrder; MasterListLayout.Padding=UDim.new(0,5);
+        local Row1=Instance.new("Frame",MasterLinksContainer); Row1.Name="Row1"; Row1.BackgroundTransparency=1; Row1.Size=UDim2.new(1,0,0,35); local Row1Layout=Instance.new("UIListLayout",Row1); Row1Layout.FillDirection=Enum.FillDirection.Horizontal; Row1Layout.HorizontalAlignment=Enum.HorizontalAlignment.Center; Row1Layout.SortOrder=Enum.SortOrder.LayoutOrder; Row1Layout.Padding=UDim.new(0,10);
+        local function copyToClipboard(link,name) if setclipboard then setclipboard(link); sendTranslatedNotification("notif_clipboard_title", "notif_clipboard_text", 3, nil, {name}) else sendTranslatedNotification("notif_clipboard_error", "notif_clipboard_error_text", 4) end end; 
+        createFunctionButton("info_discord", Row1, function() copyToClipboard("https://dsc.gg/wilsonhub", "Discord") end);
+        createFunctionButton("info_channel", Row1, function() copyToClipboard("https://t.me/wilsonhub_scripts", "Telegram Channel") end)
+        -- #endregion
+
+        -- #region GUI MODS PAGE
+        do 
+            local GuiModsContainer=Instance.new("ScrollingFrame",GuiModsPage);GuiModsContainer.Size=UDim2.new(1,0,1,0);GuiModsContainer.BackgroundTransparency=1;GuiModsContainer.ScrollBarThickness=6;
+            local GuiModsList=Instance.new("UIListLayout",GuiModsContainer);GuiModsList.Padding=UDim.new(0,10);GuiModsList.HorizontalAlignment=Enum.HorizontalAlignment.Center;GuiModsList.SortOrder=Enum.SortOrder.LayoutOrder;
+            
+            -- [[ FIX: Rewritten createToggle function for reliability ]]
+            local function createToggle(textKey, order, callback)
+                local frame = Instance.new("Frame", GuiModsContainer)
+                frame.Size = UDim2.new(1, -20, 0, 40)
+                frame.BackgroundTransparency = 1
+                frame.LayoutOrder = order
+                
+                local label = Instance.new("TextLabel", frame)
+                label.Size = UDim2.new(0.6, 0, 1, 0)
+                label.BackgroundTransparency = 1
+                label.Font = Enum.Font.SourceSansBold
+                label.TextColor3 = Color3.new(1, 1, 1)
+                label.TextSize = 16
+                label.TextXAlignment = Enum.TextXAlignment.Left
+                table.insert(translatableObjects, {object = label, property = "Text", key = textKey})
+
+                local btn = Instance.new("TextButton", frame)
+                btn.Size = UDim2.new(0.4, -10, 1, 0)
+                btn.Position = UDim2.new(0.6, 10, 0, 0)
+                btn.Font = Enum.Font.SourceSansBold
+                Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+            
+                local state = false -- Internal state: false=OFF, true=ON
+                
+                local trans_obj = {object = btn, property = "Text", key = "off"}
+                table.insert(translatableObjects, trans_obj)
+            
+                local theme_bg_obj = {object = btn, property = "BackgroundColor3", colorType = "main"}
+                table.insert(themableObjects, theme_bg_obj)
+                local theme_text_obj = {object = btn, property = "TextColor3", colorType = "text"}
+                table.insert(themableObjects, theme_text_obj)
+            
+                btn.MouseButton1Click:Connect(function()
+                    state = not state -- Flip the internal state
+            
+                    local langCode = languageMap[settings.language] or "en"
+                    trans_obj.key = state and "on" or "off"
+                    btn.Text = translations[trans_obj.key][langCode] or translations[trans_obj.key].en
+
+                    if state then -- If turning ON
+                        for i = #themableObjects, 1, -1 do
+                            if themableObjects[i] == theme_bg_obj or themableObjects[i] == theme_text_obj then
+                                table.remove(themableObjects, i)
+                            end
+                        end
+                        btn.BackgroundColor3 = Color3.fromRGB(0, 150, 0)
+                        btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+                    else -- If turning OFF
+                        local found_bg = false; for _,v in ipairs(themableObjects) do if v == theme_bg_obj then found_bg=true; break; end end
+                        if not found_bg then table.insert(themableObjects, theme_bg_obj) end
+                        
+                        local found_text = false; for _,v in ipairs(themableObjects) do if v == theme_text_obj then found_text=true; break; end end
+                        if not found_text then table.insert(themableObjects, theme_text_obj) end
+                        
+                        local theme = rainbowThemeActive and Themes.Red or currentTheme
+                        btn.BackgroundColor3 = theme.main
+                        btn.TextColor3 = theme.text
+                    end
+                    
+                    if callback then pcall(callback, state, btn) end
+                end)
+            
+                -- Set initial text and color
+                btn.Text = translations.off[languageMap[settings.language] or "en"]
+                local theme = rainbowThemeActive and Themes.Red or currentTheme
+                btn.BackgroundColor3 = theme.main
+                btn.TextColor3 = theme.text
+            
+                return btn
+            end
+
+            createToggle("mod_healthbar",1,toggleCustomHealthbar);
+            createToggle("mod_fpsping",2,toggleFpsPing);
+            
+            local colorChangerContainer=Instance.new("Frame",GuiModsContainer);colorChangerContainer.Size=UDim2.new(1,-20,0,200);colorChangerContainer.BackgroundTransparency=1;colorChangerContainer.LayoutOrder=3;local colorList=Instance.new("UIListLayout",colorChangerContainer);colorList.Padding=UDim.new(0,5);local title=Instance.new("TextLabel",colorChangerContainer);title.Size=UDim2.new(1,0,0,20);title.BackgroundTransparency=1;title.Font=Enum.Font.SourceSansBold;title.TextColor3=Color3.new(1,1,1);title.TextSize=18;table.insert(translatableObjects,{object=title,property="Text",key="mod_worldcolor"});local colorPreview=Instance.new("Frame",colorChangerContainer);colorPreview.Size=UDim2.new(1,0,0,30);colorPreview.BackgroundColor3=selectedColor;Instance.new("UICorner",colorPreview).CornerRadius=UDim.new(0,6);local function createSlider(label,parent,callback) local sliderFrame=Instance.new("Frame",parent);sliderFrame.Size=UDim2.new(1,0,0,30);sliderFrame.BackgroundTransparency=1;local textLabel=Instance.new("TextLabel",sliderFrame);textLabel.Size=UDim2.new(0.2,0,1,0);textLabel.BackgroundTransparency=1;textLabel.Font=Enum.Font.SourceSansBold;textLabel.Text=label;textLabel.TextColor3=Color3.new(1,1,1);textLabel.TextSize=18;local bar=Instance.new("Frame",sliderFrame);bar.Size=UDim2.new(0.8,-10,0,10);bar.Position=UDim2.new(0.2,0,0.5,-5);bar.BackgroundColor3=Color3.fromRGB(30,30,30);Instance.new("UICorner",bar).CornerRadius=UDim.new(1,0);local handle=Instance.new("TextButton",bar);handle.Size=UDim2.new(0,12,1,4);handle.BackgroundColor3=currentTheme.main;handle.Text="";handle.AnchorPoint=Vector2.new(0.5,0.5);Instance.new("UICorner",handle).CornerRadius=UDim.new(1,0);table.insert(themableObjects,{object=handle,property="BackgroundColor3",colorType="main"});local inputChangedConn,inputEndedConn;handle.InputBegan:Connect(function(input)if input.UserInputType==Enum.UserInputType.MouseButton1 or input.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end;inputChangedConn=UserInputService.InputChanged:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseMovement or inputObj.UserInputType==Enum.UserInputType.Touch then local pos=inputObj.Position.X-bar.AbsolutePosition.X;local percentage=math.clamp(pos/bar.AbsoluteSize.X,0,1);handle.Position=UDim2.fromScale(percentage,0.5);pcall(callback,percentage)end end);inputEndedConn=UserInputService.InputEnded:Connect(function(inputObj)if inputObj.UserInputType==Enum.UserInputType.MouseButton1 or inputObj.UserInputType==Enum.UserInputType.Touch then if inputChangedConn then inputChangedConn:Disconnect()end;if inputEndedConn then inputEndedConn:Disconnect()end end end)end end);return handle end;local r,g,b=selectedColor.r,selectedColor.g,selectedColor.b;createSlider("R",colorChangerContainer,function(p)r=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(r,0.5);createSlider("G",colorChangerContainer,function(p)g=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(g,0.5);createSlider("B",colorChangerContainer,function(p)b=p;selectedColor=Color3.new(r,g,b);colorPreview.BackgroundColor3=selectedColor end).Position=UDim2.fromScale(b,0.5);local buttonContainer=Instance.new("Frame",colorChangerContainer);buttonContainer.Size=UDim2.new(1,0,0,40);buttonContainer.BackgroundTransparency=1;buttonContainer.LayoutOrder=4;local btnLayout=Instance.new("UIGridLayout",buttonContainer);btnLayout.CellSize=UDim2.new(0.333,-5,1,0);btnLayout.CellPadding=UDim2.new(0,5,0,0);local rainbowToggle;createFunctionButton("apply",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;applyWorldColor(selectedColor)end);rainbowToggle=createToggle("mod_rainbow",0,function(state)toggleRainbowMode(state)end);rainbowToggle.Parent=buttonContainer;rainbowToggle.Name="RainbowToggle";createFunctionButton("reset",buttonContainer,function()toggleRainbowMode(false);if rainbowToggle then rainbowToggle.Text="OFF";local theme=rainbowThemeActive and Themes.Red or currentTheme; rainbowToggle.BackgroundColor3=theme.main; end;resetWorldColors()end)
+        end
+        -- #endregion
+
+        -- #region SCRIPTS PAGE
+local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
+local isAuthorized = table.find(authorizedUsers, player.Name)
+
+-- Іздеу жолағы мен "Скрипт құру" батырмасына арналған контейнер
+local TopBar = Instance.new("Frame", MainPage)
+TopBar.Size = UDim2.new(1, -20, 0, 30)
+TopBar.Position = UDim2.new(0, 10, 0, 10)
+TopBar.BackgroundTransparency = 1
+
+local SearchBox = Instance.new("TextBox", TopBar)
+SearchBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255)
+SearchBox.Font = Enum.Font.SourceSans
+SearchBox.TextSize = 14
+Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6)
+table.insert(translatableObjects, { object = SearchBox, property = "PlaceholderText", key = "search_placeholder" })
+local SearchBoxStroke = Instance.new("UIStroke", SearchBox)
+SearchBoxStroke.Color = currentTheme.main
+table.insert(themableObjects, { object = SearchBoxStroke, property = "Color", colorType = "main" })
+
+-- Егер пайдаланушы рұқсат етілген болса, орналасуды өзгерту
+if isAuthorized then
+    local TopBarLayout = Instance.new("UIListLayout", TopBar)
+    TopBarLayout.FillDirection = Enum.FillDirection.Horizontal
+    TopBarLayout.SortOrder = Enum.SortOrder.LayoutOrder
+    TopBarLayout.Padding = UDim.new(0, 10)
+
+    local CreateScriptButton = createFunctionButton("create_script", TopBar, function()
+        -- Модальді терезені көрсету (төменде жасалады)
+    end)
+    CreateScriptButton.Size = UDim2.new(0.4, 0, 1, 0)
+    
+    -- Іздеу жолағының өлшемін кішірейту
+    SearchBox.Size = UDim2.new(0.6, -10, 1, 0)
+else
+    -- Басқа пайдаланушылар үшін іздеу жолағы толық енде қалады
+    SearchBox.Size = UDim2.new(1, 0, 1, 0)
+    SearchBox.Position = UDim2.new(0, 0, 0, 0)
+end
+
+local ScriptsContainer = Instance.new("ScrollingFrame", MainPage)
+ScriptsContainer.Size = UDim2.new(1, -20, 1, -50)
+ScriptsContainer.Position = UDim2.new(0, 10, 0, 50)
+ScriptsContainer.BackgroundTransparency = 1
+ScriptsContainer.ScrollBarThickness = 6
+local ScriptsGrid = Instance.new("UIGridLayout", ScriptsContainer)
+ScriptsGrid.CellPadding = UDim2.new(0, 10, 0, 10)
+ScriptsGrid.CellSize = UDim2.new(0, 95, 0, 40)
+ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center
+
+local function updateScriptsCanvasSize()
+    ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y)
+end
+ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize)
+task.wait(0.1)
+updateScriptsCanvasSize()
+
+local function showExecutedNotification()
+    Library.DefaultColor = Color3.fromRGB(0, 255, 0)
+    Library:Notification({ Text = "SCRIPT EXECUTED!", Duration = 3 })
+    Library.DefaultColor = Color3.fromRGB(255, 0, 0)
+end
+
+-- [[ ЖАҢА СКРИПТ ҚҰРУ МОДАЛЬДІ ТЕРЕЗЕСІ (ТЕК АВТОРЛАР ҮШІН) ]]
+if isAuthorized then
+    local CreateScriptModal = Instance.new("Frame", MainFrame)
+    CreateScriptModal.Name = "CreateScriptModal"
+    CreateScriptModal.Size = UDim2.new(1, 0, 1, 0)
+    CreateScriptModal.Position = UDim2.new(0, 0, 0, 0)
+    CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    CreateScriptModal.BackgroundTransparency = 0.7
+    CreateScriptModal.ZIndex = 10
+    CreateScriptModal.Visible = false -- Басында көрінбейді
+
+    local ModalContent = Instance.new("Frame", CreateScriptModal)
+    ModalContent.Size = UDim2.new(0, 350, 0, 230)
+    ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115)
+    ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+    ModalContent.BorderSizePixel = 0
+    Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8)
+    local ModalStroke = Instance.new("UIStroke", ModalContent)
+    ModalStroke.Color = currentTheme.main
+    table.insert(themableObjects, { object = ModalStroke, property = "Color", colorType = "main" })
+
+    local ModalTitle = Instance.new("TextLabel", ModalContent)
+    ModalTitle.Size = UDim2.new(1, 0, 0, 30)
+    ModalTitle.BackgroundTransparency = 1
+    ModalTitle.Font = Enum.Font.SourceSansBold
+    ModalTitle.TextSize = 20
+    ModalTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
+    table.insert(translatableObjects, { object = ModalTitle, property = "Text", key = "create_script_modal_title" })
+
+    local ScriptNameInput = Instance.new("TextBox", ModalContent)
+    ScriptNameInput.Size = UDim2.new(1, -20, 0, 30)
+    ScriptNameInput.Position = UDim2.new(0, 10, 0, 40)
+    ScriptNameInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    ScriptNameInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", ScriptNameInput).CornerRadius = UDim.new(0, 6)
+    table.insert(translatableObjects, { object = ScriptNameInput, property = "PlaceholderText", key = "script_name_placeholder" })
+
+    local ScriptCodeInput = Instance.new("TextBox", ModalContent)
+    ScriptCodeInput.Size = UDim2.new(1, -20, 0, 80)
+    ScriptCodeInput.Position = UDim2.new(0, 10, 0, 80)
+    ScriptCodeInput.MultiLine = true
+    ScriptCodeInput.TextXAlignment = Enum.TextXAlignment.Left
+    ScriptCodeInput.TextYAlignment = Enum.TextYAlignment.Top
+    ScriptCodeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+    ScriptCodeInput.TextColor3 = Color3.fromRGB(255, 255, 255)
+    Instance.new("UICorner", ScriptCodeInput).CornerRadius = UDim.new(0, 6)
+    table.insert(translatableObjects, { object = ScriptCodeInput, property = "PlaceholderText", key = "script_code_placeholder" })
+
+    local ConfirmCreateButton = createFunctionButton("create_button", ModalContent, function()
+        local scriptName = ScriptNameInput.Text
+        local scriptCode = ScriptCodeInput.Text
+        if scriptName == "" then
+            sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5)
+            return
+        end
+        if scriptCode == "" then
+            sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5)
+            return
+        end
+        
+        -- Жаңа скрипт үшін бірегей кілт жасау
+        local newKey = "custom_script_" .. scriptName:gsub("%s+", ""):lower()
+        -- Аудармалар кестесіне жаңа скрипті қосу
+        translations[newKey] = {
+            text = { en = scriptName, ru = scriptName, kz = scriptName, zh = scriptName, fr = scriptName }
+        }
+        -- Жаңа батырманы жасау
+        createFunctionButton(newKey, ScriptsContainer, function()
+            showExecutedNotification()
+            local s, e = pcall(loadstring(scriptCode))
+            if not s then
+                sendTranslatedNotification("notif_executor_error_title", tostring(e), 5)
+            end
+        end)
+        updateScriptsCanvasSize()
+        sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName})
+        -- Терезені жабу және тазалау
+        CreateScriptModal.Visible = false
+        ScriptNameInput.Text = ""
+        ScriptCodeInput.Text = ""
+    end)
+    ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35)
+    ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45)
+
+    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function()
+        CreateScriptModal.Visible = false
+        ScriptNameInput.Text = ""
+        ScriptCodeInput.Text = ""
+    end)
+    CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35)
+    CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45)
+    
+    -- "СКРИПТ ҚҰРУ" батырмасының негізгі функциясы
+    TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
+        CreateScriptModal.Visible = true
+        applyLanguage(settings.language) -- Тілді қайта қолдану
+    end)
+end
+
+-- Түпнұсқа скрипттер (осыларға тиіспе)
+createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
+createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then local textLabel = b:FindFirstChild("Text"); if textLabel then b.Visible = textLabel.Text:lower():find(s, 1, true) else b.Visible = b.Text:lower():find(s, 1, true) end end end end)
+createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
+createFunctionButton("script_wallhop", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
+createFunctionButton("script_clicktp", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
+createFunctionButton("script_grav", ScriptsContainer, function() showExecutedNotification(); workspace.Gravity = 30 end);
+createFunctionButton("script_afk", ScriptsContainer, function() showExecutedNotification(); local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
+createFunctionButton("script_infiniteyield", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
+createFunctionButton("script_antislap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Antislap.lua"))() end);
+createFunctionButton("script_autoslap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+createFunctionButton("script_win", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Win.lua"))() end);
+createFunctionButton("script_god", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
+createFunctionButton("script_spamdecal", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
+createFunctionButton("script_skybox", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+createFunctionButton("script_ak47", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
+createFunctionButton("script_lasergun", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
+createFunctionButton("script_johndoe", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
+createFunctionButton("script_avatarcopy", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
+createFunctionButton("script_jerk", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
+createFunctionButton("script_spamchat", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/spamchat.lua"))() end);
+createFunctionButton("script_dance", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Dance.lua"))() end);
+createFunctionButton("script_hummer", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastebin.com/raw/h9NvY2PD"))() end);
+createFunctionButton("script_snake", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))() end);
+createFunctionButton("script_r6", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/CoreGui/Scripts/main/RC7"))() end);
+createFunctionButton("script_metiorid", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Meteor.lua"))() end);
+createFunctionButton("script_thomas", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-g00lxploiter-thomas-12611"))() end);
+createFunctionButton("script_spider", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spiderman.lua"))() end);
+createFunctionButton("script_playertp", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Tp.lua"))() end);
+createFunctionButton("script_board", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Keyboard.lua"))() end);
+createFunctionButton("script_xester", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Xester-18937"))() end);
+createFunctionButton("script_rpg", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/Scripts/main/rocketLauncher.lua"))() end);
+createFunctionButton("script_object", ScriptsContainer, function() showExecutedNotification(); loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)() end);
+createFunctionButton("script_killall", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FEKILLALL.lua"))() end);
+createFunctionButton("script_head", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Head.lua"))() end);
+createFunctionButton("script_jump", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
+createFunctionButton("script_firepart", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
+createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
+createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
+createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
+        -- #endregion
+
+        -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
+        local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); 
+        local PlayersListLayout = Instance.new("UIListLayout", PlayersList); PlayersListLayout.Padding = UDim.new(0, 5); PlayersListLayout.SortOrder = Enum.SortOrder.LayoutOrder; 
+        
+        local function updatePlayerList() 
+            for _, v in ipairs(PlayersList:GetChildren()) do if v:IsA("Frame") then v:Destroy() end end
+            local camera = workspace.CurrentCamera
+            local langCode = languageMap[settings.language] or "en"
+
+            for i, p in ipairs(Players:GetPlayers()) do 
+                if p then 
+                    local template = Instance.new("Frame", PlayersList); template.Name = p.Name; template.Size = UDim2.new(1, 0, 0, 90); template.BackgroundColor3 = Color3.fromRGB(35, 35, 35); template.LayoutOrder = i
+                    local thumb = Instance.new("ImageLabel", template); thumb.Size = UDim2.new(0, 40, 0, 40); thumb.Position = UDim2.new(0, 10, 0.5, -20); task.spawn(function() pcall(function() thumb.Image = Players:GetUserThumbnailAsync(p.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size48x48) end) end)
+                    local nameLabel = createInfoLabel(p.Name, template); nameLabel.Size = UDim2.new(0.4, 0, 0, 30); nameLabel.Position = UDim2.new(0, 55, 0, 5); if p == player then nameLabel.TextColor3 = Color3.fromRGB(255, 255, 0) end
+                    local pingLabel = createInfoLabel("Ping: ...", template); pingLabel.Position = UDim2.new(0, 55, 0, 25); pingLabel.Size = UDim2.new(1, -60, 0, 20); pingLabel.TextSize = 14; pingLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    local ipLabel = createInfoLabel("IP Address: ...", template); ipLabel.Position = UDim2.new(0, 55, 0, 45); ipLabel.Size = UDim2.new(1, -60, 0, 20); ipLabel.TextSize = 14; ipLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    local countryLabel = createInfoLabel("Country: ...", template); countryLabel.Position = UDim2.new(0, 55, 0, 65); countryLabel.Size = UDim2.new(1, -60, 0, 20); countryLabel.TextSize = 14; countryLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+                    
+                    if p ~= player then
+                        local buttonsFrame = Instance.new("Frame", template); buttonsFrame.BackgroundTransparency = 1; buttonsFrame.Size = UDim2.new(0, 160, 0, 40); buttonsFrame.Position = UDim2.new(1, -165, 0.5, -20);
+                        local buttonsLayout = Instance.new("UIGridLayout", buttonsFrame); buttonsLayout.CellSize = UDim2.new(0.5, -5, 1, 0); buttonsLayout.CellPadding = UDim2.new(0, 5, 0, 0);
+                        local tp_btn = createFunctionButton("player_tp", buttonsFrame, function() pcall(function() local r1=player.Character and player.Character.HumanoidRootPart; local r2=p.Character and p.Character.HumanoidRootPart; if r1 and r2 then r1.CFrame=r2.CFrame end end) end); tp_btn.Size=UDim2.new(1,0,1,0)
+                        local obs_btn = createFunctionButton("player_observe", buttonsFrame, function() pcall(function() local h=p.Character and p.Character:FindFirstChildOfClass("Humanoid"); if h then if camera.CameraSubject==h then camera.CameraSubject=player.Character.Humanoid else camera.CameraSubject=h end end end) end); obs_btn.Size=UDim2.new(1,0,1,0)
+                    end
+
+                    if p == player then 
+                        pingLabel.Text = string.format(translations.player_ping[langCode], math.floor(player:GetNetworkPing() * 1000))
+                        ipLabel.Text = translations.home_ip_loading[langCode]
+                        countryLabel.Text = translations.home_country_loading[langCode]
+                        task.spawn(function()
+                            local s,r = pcall(function() return HttpService:JSONDecode(game:HttpGet("http://ip-api.com/json/")) end)
+                            if s and r then 
+                                local f = ""; if r.countryCode then local a,b=127462,string.byte("A"); f=utf8.char(a+(string.byte(r.countryCode,1)-b))..utf8.char(a+(string.byte(r.countryCode,2)-b)) end
+                                ipLabel.Text = string.format(translations.player_ip[langCode], r.query or "Unknown")
+                                countryLabel.Text = string.format(translations.player_country[langCode], (r.country or "Unknown") .. " " .. f)
+                            else 
+                                ipLabel.Text = "IP Address: Error"; countryLabel.Text = "Country: Error" 
+                            end 
+                        end)
+                    else 
+                        pingLabel.Text = string.format(translations.player_ping[langCode], "~"..tostring(math.random(40,250)) .. " ms");
+                        ipLabel.Text = translations.player_ip_private[langCode]
+                        countryLabel.Text = translations.player_country_private[langCode]
+                    end 
+                end 
+            end; 
+            PlayersList.CanvasSize = UDim2.fromOffset(0, PlayersListLayout.AbsoluteContentSize.Y) 
+        end
+        -- #endregion
+
+        -- #region SETTINGS & EXECUTOR
+        do 
+            local SettingsContainer = Instance.new("ScrollingFrame", SettingsPage); SettingsContainer.Size=UDim2.new(1,-10,1,-10); SettingsContainer.Position=UDim2.new(0,5,0,5); SettingsContainer.BackgroundTransparency=1; SettingsContainer.ScrollBarThickness=6; 
+            
+            -- [[ FIX: Use a UIListLayout for clean separation of sections ]]
+            local ListLayout = Instance.new("UIListLayout", SettingsContainer)
+            ListLayout.Padding = UDim.new(0, 15)
+            ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+            ListLayout.SortOrder = Enum.SortOrder.LayoutOrder
+
+            -- Create a frame for Themes
+            local ThemesFrame = Instance.new("Frame", SettingsContainer)
+            ThemesFrame.Name = "ThemesFrame"; ThemesFrame.BackgroundTransparency = 1; ThemesFrame.Size = UDim2.new(1, 0, 0, 1); ThemesFrame.AutomaticSize = Enum.AutomaticSize.Y; ThemesFrame.LayoutOrder = 1
+            local ThemesListLayout = Instance.new("UIListLayout", ThemesFrame);
+            ThemesListLayout.Padding = UDim.new(0, 5)
+            ThemesListLayout.SortOrder = Enum.SortOrder.LayoutOrder -- ОСЫНЫ ҚОС
+            local ThemesLabel = Instance.new("TextLabel", ThemesFrame);
+            ThemesLabel.LayoutOrder = 1 -- ОСЫНЫ ҚОС
+            ThemesLabel.Size = UDim2.new(1, 0, 0, 20); ThemesLabel.BackgroundTransparency = 1; ThemesLabel.Font = Enum.Font.SourceSansBold; ThemesLabel.TextColor3 = Color3.fromRGB(255, 255, 255); ThemesLabel.TextSize = 18; ThemesLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=ThemesLabel, property="Text", key="settings_themes_title"});
+            local ThemeButtonsContainer = Instance.new("Frame", ThemesFrame);
+            ThemeButtonsContainer.LayoutOrder = 2 -- ОСЫНЫ ҚОС
+            ThemeButtonsContainer.BackgroundTransparency = 1; ThemeButtonsContainer.Size = UDim2.new(1, 0, 0, 1); ThemeButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local ThemesGrid = Instance.new("UIGridLayout", ThemeButtonsContainer);
+            createFunctionButton("theme_red", ThemeButtonsContainer, function() applyTheme("Red") end); createFunctionButton("theme_yellow", ThemeButtonsContainer, function() applyTheme("Yellow") end); createFunctionButton("theme_blue", ThemeButtonsContainer, function() applyTheme("Blue") end); createFunctionButton("theme_green", ThemeButtonsContainer, function() applyTheme("Green") end);         createFunctionButton("theme_white", ThemeButtonsContainer, function() applyTheme("White") end); createFunctionButton("theme_purple", ThemeButtonsContainer, function() applyTheme("Purple") end); createFunctionButton("theme_rainbow", ThemeButtonsContainer, function() activateRainbowTheme() end);
+
+            -- Create a frame for Languages
+            local LangFrame = Instance.new("Frame", SettingsContainer)
+            LangFrame.Name = "LangFrame"; LangFrame.BackgroundTransparency = 1; LangFrame.Size = UDim2.new(1, 0, 0, 1); LangFrame.AutomaticSize = Enum.AutomaticSize.Y; LangFrame.LayoutOrder = 2
+            local LangListLayout = Instance.new("UIListLayout", LangFrame);
+            LangListLayout.Padding = UDim.new(0, 5)
+            LangListLayout.SortOrder = Enum.SortOrder.LayoutOrder -- ОСЫНЫ ҚОС
+            local LangLabel = Instance.new("TextLabel", LangFrame);
+            LangLabel.LayoutOrder = 1 -- ОСЫНЫ ҚОС
+            LangLabel.Size = UDim2.new(1, 0, 0, 20); LangLabel.BackgroundTransparency = 1; LangLabel.Font = Enum.Font.SourceSansBold; LangLabel.TextColor3 = Color3.fromRGB(255, 255, 255); LangLabel.TextSize = 18; LangLabel.TextXAlignment = Enum.TextXAlignment.Left; table.insert(translatableObjects, {object=LangLabel, property="Text", key="settings_language_title"});
+            local LangButtonsContainer = Instance.new("Frame", LangFrame);
+            LangButtonsContainer.LayoutOrder = 2 -- ОСЫНЫ ҚОС
+            LangButtonsContainer.BackgroundTransparency = 1; LangButtonsContainer.Size = UDim2.new(1, 0, 0, 1); LangButtonsContainer.AutomaticSize = Enum.AutomaticSize.Y
+            local LangGrid = Instance.new("UIGridLayout", LangButtonsContainer);
+            createFunctionButton("lang_en", LangButtonsContainer, function() applyLanguage("English") end); createFunctionButton("lang_ru", LangButtonsContainer, function() applyLanguage("Russian") end); createFunctionButton("lang_kz", LangButtonsContainer, function() applyLanguage("Kazakh") end); createFunctionButton("lang_zh", LangButtonsContainer, function() applyLanguage("Chinese") end); createFunctionButton("lang_fr", LangButtonsContainer, function() applyLanguage("French") end);
+        end
+        local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); ExecutorInput.Text = 'Print("HelloWorld!")' table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
+        -- #endregion        
+
+        -- THEME REGISTRATION
+        table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
+        
+        -- MAIN LOGIC
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
+        
+        activeTab = HomeButton
+
+        for i,tab in ipairs(tabs) do tab.MouseButton1Click:Connect(function() 
+            if activeTab and activeTab.Parent then
+                activeTab.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
+            end
+            
+            activeTab = tab 
+
+            for _,p in ipairs(pages) do p.Visible=false end
+            pages[i].Visible=true
+            
+            if not rainbowThemeActive then
+                activeTab.BackgroundColor3 = currentTheme.main
+            end
+
+            if tab==PlayersButton then pcall(updatePlayerList) end 
+        end)end  
+        
+        Players.PlayerAdded:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)  
+        Players.PlayerRemoving:Connect(function()if PlayersPage.Visible then pcall(updatePlayerList)end end)
+        local isMinimized = false
+        local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized if isMinimized then TabsContainer.Visible = false ContentContainer.Visible = false MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else TabsContainer.Visible = true ContentContainer.Visible = true MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)
+        CloseButton.MouseButton1Click:Connect(function() MainFrame.Visible = false IconFrame.Visible = true BackgroundOverlay.Visible = false end)
+        IconFrame.MouseButton1Click:Connect(function() MainFrame.Visible = true IconFrame.Visible = false BackgroundOverlay.Visible = true end)
+        
+        if settings.theme == "Rainbow" then
+            activateRainbowTheme()
+        else
+            applyTheme(settings.theme)
+        end
+        applyLanguage(settings.language)
+    end)
+    if not success then  
+        sendTranslatedNotification("notif_fatal_error_title", "notif_fatal_error_text", 20, nil, {tostring(err)})
+        warn("WILSONHUB ERROR: "..tostring(err))
+    end
+end)
+
+-- 3. АНИМАЦИЯ ЗАГРУЗКИ
+applyLanguage(settings.language)
+local loadDuration=1
+for i=0,100 do 
+    local progress=i/100
+    local numDots=math.floor(i/12)%4
+    if LoadingLabel and LoadingLabel.Parent then
+		local langCode = languageMap[settings.language] or "en"
+		local baseLoadingText = translations.loading[langCode] or translations.loading.en
+        LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
+    end
+    PercentageLabel.Text=i.." %"
+    ProgressBarFill.Size=UDim2.new(progress,0,1,0)
+    task.wait(loadDuration/100)
+end
+task.wait(0.2)
+
+
+-- 4. ЗАВЕРШЕНИЕ
 LoadingGui:Destroy()
-local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui"); if WilsonHubGui then WilsonHubGui.Enabled=true end
+local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
+if WilsonHubGui then WilsonHubGui.Enabled=true end
 sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
 
-local soundId = "72089843969979"; local playbackSpeed = 0.19; local soundVolume = 6; local soundOnIcon = "rbxassetid://96768815002144"; local soundOffIcon = "rbxassetid://12533151725950"
-local audio = Instance.new("Sound", game:GetService("SoundService")); audio.SoundId = "rbxassetid://" .. soundId; audio.PlaybackSpeed = playbackSpeed; audio.Volume = soundVolume; audio.Looped = true; audio:Play()
-local MuteButtonGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); MuteButtonGui.Name = "WilsonHubMuteGui"; MuteButtonGui.ResetOnSpawn = false; MuteButtonGui.ZIndexBehavior = Enum.ZIndexBehavior.Global; MuteButtonGui.IgnoreGuiInset = true
-local MuteButton = Instance.new("ImageButton"); MuteButton.Name = "MuteButton"; MuteButton.Parent = MuteButtonGui; MuteButton.BackgroundTransparency = 1; MuteButton.AnchorPoint = Vector2.new(1, 0); MuteButton.Position = UDim2.new(1, -55, 0, 10); MuteButton.Size = UDim2.new(0, 45, 0, 45); MuteButton.Image = soundOnIcon
-MuteButton.MouseButton1Click:Connect(function() if audio.IsPlaying then audio:Pause(); MuteButton.Image = soundOffIcon else audio:Resume(); MuteButton.Image = soundOnIcon end end)
+-- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ЖАҢАРТЫЛҒАН) ]]
+-- Бастапқы айнымалылар
+local soundId = "72089843969979"
+local playbackSpeed = 0.19
+local soundVolume = 6
+local soundOnIcon = "rbxassetid://96768815002144" -- Музыка қосулы иконкасы
+local soundOffIcon = "rbxassetid://125331517259500" -- Музыка өшірулі иконкасы
+
+-- Музыканы құру
+local audio = Instance.new("Sound", game:GetService("SoundService"))
+audio.SoundId = "rbxassetid://" .. soundId
+audio.PlaybackSpeed = playbackSpeed
+audio.Volume = soundVolume
+audio.Looped = true
+audio:Play()
+
+-- Басқару батырмасын (кнопкасын) құру үшін жаңа ScreenGui
+local MuteButtonGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+MuteButtonGui.Name = "WilsonHubMuteGui"
+MuteButtonGui.ResetOnSpawn = false
+MuteButtonGui.ZIndexBehavior = Enum.ZIndexBehavior.Global -- Басқа элементтердің үстінде болуын қамтамасыз ету
+MuteButtonGui.IgnoreGuiInset = true -- Экранның ең жоғарғы жағына дейін жетуіне мүмкіндік береді
+
+local MuteButton = Instance.new("ImageButton")
+MuteButton.Name = "MuteButton"
+MuteButton.Parent = MuteButtonGui -- Жаңа Gui-ға орналастыру
+MuteButton.BackgroundTransparency = 1
+MuteButton.AnchorPoint = Vector2.new(1, 0) -- Оң жақ жоғарғы бұрышқа бекіту
+MuteButton.Position = UDim2.new(1, -55, 0, 10) -- Экранның оң жақ жоғарғы бұрышына орналастыру
+MuteButton.Size = UDim2.new(0, 45, 0, 45) -- Өлшемін реттеу
+MuteButton.Image = soundOnIcon -- Бастапқыда музыка қосулы тұрады
+
+-- Батырманы басқанда не болатынын анықтайтын функция
+MuteButton.MouseButton1Click:Connect(function()
+    if audio.IsPlaying then
+        -- Егер музыка ойнап тұрса, оны тоқтатып, иконканы өзгертеміз
+        audio:Pause()
+        MuteButton.Image = soundOffIcon
+    else
+        -- Егер музыка тоқтап тұрса, оны жалғастырып, иконканы қайтарамыз
+        audio:Resume()
+        MuteButton.Image = soundOnIcon
+    end
+end)
