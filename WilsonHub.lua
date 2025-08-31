@@ -1001,7 +1001,7 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 
         -- #region SCRIPTS PAGE
 -- Рұқсат етілген пайдаланушылар тізімі
-local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
+local authorizedUsers = { "Adhdkbxbxnx", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
 local customScripts = {}
 
