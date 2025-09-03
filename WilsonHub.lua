@@ -1048,9 +1048,9 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         -- #region SCRIPTS PAGE
 
 -- [[ БАПТАУЛАР: PASTEBIN ID-ДЫ ОСЫ ЖЕРГЕ ҚОЙ ]]
-local PASTEBIN_ID = "DfZyVw5f" -- Мысалы: "8a7b6c5d"
+local PASTEBIN_ID = "YaF0N5zY" -- Мысалы: "DfZyVw5f"
 
-local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
+local authorizedUsers = { "Cheater_6619", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
 local sharedScripts = {} -- Pastebin-нен келетін ортақ скрипттер
 local localScripts = {} -- Жеке, құрылғыда сақталатын скрипттер
@@ -1073,9 +1073,10 @@ end
 
 local function loadSharedScripts()
     if not PASTEBIN_ID or PASTEBIN_ID:len() < 5 then return end
+    -- Бұл сілтемені ешқандай эксплойт бұғаттамайды
     local success, response = pcall(function() return game:HttpGet("https://pastebin.com/raw/" .. PASTEBIN_ID, true) end)
     if success and response then
-        local decoded = pcall(HttpService.JSONDecode, HttpService, response)
+        local decoded, err = pcall(HttpService.JSONDecode, HttpService, response)
         if decoded and type(decoded) == "table" then
             sharedScripts = decoded
         end
@@ -1162,7 +1163,7 @@ local function populateAllScripts()
     createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
     createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power=500;game:GetService('RunService').Stepped:connect(function()local char=game.Players.LocalPlayer.Character;if char and char.PrimaryPart then char.PrimaryPart.CanCollide=false end end);wait(.1);local bambam=Instance.new("BodyAngularVelocity",game.Players.LocalPlayer.Character.HumanoidRootPart);bambam.AngularVelocity=Vector3.new(0,power,0);bambam.MaxTorque=Vector3.new(0,math.huge,0)end);
 
-    -- Ортақ және жеке скрипттер
+    -- Ортақ (Pastebin) және жеке (локальный) скрипттер
     for _, scriptData in ipairs(sharedScripts) do createScriptButton(scriptData.name, scriptData.code) end
     for _, scriptData in ipairs(localScripts) do createScriptButton(scriptData.name, scriptData.code) end
     
