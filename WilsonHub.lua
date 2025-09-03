@@ -1002,44 +1002,41 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         -- #region SCRIPTS PAGE
 
 -- [[ МАҢЫЗДЫ: ОСЫ ЖЕРЛЕРДІ ӨЗІҢНІҢ АҚПАРАТЫҢМЕН ТОЛТЫР! ]]
-local GIST_ID = "СЕНІҢ GIST ID-ЫҢДЫ ОСЫНДА ҚОЙ" -- Мысалы: "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
-local GITHUB_TOKEN = "СЕНІҢ GITHUB TOKEN-ІҢДІ ОСЫНДА ҚОЙ" -- Мысалы: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-local GIST_FILENAME = "wilsonhub_scripts.json" -- БҰҒАН ТИІСПЕ
+-- Егер Gist ID мен Token-ді қалай алуды білмесең, маған айт, мен нұсқаулық жіберемін.
+local GIST_ID = "8bdcaa48641bf5948091d038c9905ebf" -- Мысалы: "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
+local GITHUB_TOKEN = "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" -- Мысалы: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+local GIST_FILENAME = "wilsonhub_scripts.json"
 
--- Рұқсат етілген пайдаланушылар тізімі
+-- Скрипт құруға рұқсаты бар ойыншылар
 local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
-local customScripts = {} -- Барлық жеке скрипттер осында сақталады
+local customScripts = {} -- Онлайн базадан жүктелген скрипттер осында сақталады
 
--- [[ Онлайн базадан (Gist) скрипттерді оқу және жазу функциялары ]]
-local function saveCustomScripts()
-    if not isAuthorized or GITHUB_TOKEN == "СЕНІҢ GITHUB TOKEN-ІҢДІ ОСЫНДА ҚОЙ" then return end
+-- [[ Онлайн базадан (Gist) скрипттерді оқу/жазу функциялары ]]
+local function saveCustomScriptsToGist()
+    if not isAuthorized or not GITHUB_TOKEN:find("ghp_") then return end
     
-    local payload = {
-        files = {
-            [GIST_FILENAME] = {
-                content = HttpService:JSONEncode(customScripts)
-            }
-        }
-    }
-    local headers = {
-        ["Authorization"] = "Bearer " .. GITHUB_TOKEN,
-        ["Accept"] = "application/vnd.github.v3+json"
-    }
-    
-    pcall(function()
+    local success, err = pcall(function()
         HttpService:RequestAsync({
             Url = "https://api.github.com/gists/" .. GIST_ID,
             Method = "PATCH",
-            Headers = headers,
-            Body = HttpService:JSONEncode(payload)
+            Headers = {
+                ["Authorization"] = "Bearer " .. GITHUB_TOKEN,
+                ["Accept"] = "application/vnd.github.v3+json"
+            },
+            Body = HttpService:JSONEncode({
+                files = { [GIST_FILENAME] = { content = HttpService:JSONEncode(customScripts) } }
+            })
         })
     end)
+    if not success then
+        warn("WILSONHUB GIST SAVE ERROR: ", err)
+    end
 end
 
-local function loadCustomScripts()
-    if GIST_ID == "<script src="8bdcaa48641bf5948091d038c9905ebf" then return end
-
+local function loadCustomScriptsFromGist()
+    if GIST_ID:len() < 10 then return end
+    
     local success, response = pcall(function()
         return HttpService:GetAsync("https://api.github.com/gists/" .. GIST_ID, true)
     end)
@@ -1047,16 +1044,17 @@ local function loadCustomScripts()
     if success and response then
         local gistData = HttpService:JSONDecode(response)
         if gistData and gistData.files and gistData.files[GIST_FILENAME] then
-            local fileContent = gistData.files[GIST_FILENAME].content
-            local decodedScripts = HttpService:JSONDecode(fileContent)
-            if type(decodedScripts) == "table" then
-                customScripts = decodedScripts
+            local decoded = HttpService:JSONDecode(gistData.files[GIST_FILENAME].content)
+            if type(decoded) == "table" then
+                customScripts = decoded
             end
         end
+    else
+        warn("WILSONHUB GIST LOAD ERROR: ", response)
     end
 end
 
--- Іздеу жолағы мен "Скрипт құру" батырмасына арналған контейнер
+-- [[ Интерфейс элементтерін құру ]]
 local TopBar = Instance.new("Frame", MainPage)
 TopBar.Size = UDim2.new(1, -20, 0, 30); TopBar.Position = UDim2.new(0, 10, 0, 10); TopBar.BackgroundTransparency = 1;
 local SearchBox = Instance.new("TextBox", TopBar)
@@ -1064,12 +1062,12 @@ SearchBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45); SearchBox.TextColor3 = 
 
 if isAuthorized then
     local TopBarLayout = Instance.new("UIListLayout", TopBar)
-    TopBarLayout.FillDirection = Enum.FillDirection.Horizontal; TopBarLayout.SortOrder = Enum.SortOrder.LayoutOrder; TopBarLayout.Padding = UDim.new(0, 10);
+    TopBarLayout.FillDirection = Enum.FillDirection.Horizontal; TopBarLayout.Padding = UDim.new(0, 10);
     local CreateScriptButton = createFunctionButton("create_script", TopBar, function() end)
     CreateScriptButton.Size = UDim2.new(0.4, 0, 1, 0)
     SearchBox.Size = UDim2.new(0.6, -10, 1, 0)
 else
-    SearchBox.Size = UDim2.new(1, 0, 1, 0); SearchBox.Position = UDim2.new(0, 0, 0, 0);
+    SearchBox.Size = UDim2.new(1, 0, 1, 0)
 end
 
 local ScriptsContainer = Instance.new("ScrollingFrame", MainPage)
@@ -1084,60 +1082,87 @@ local function showExecutedNotification()
 end
 
 local function createCustomScriptButton(name, code)
-    local newKey = "custom_script_" .. name:gsub("%s+", ""):lower() .. math.random(1000)
+    local newKey = "custom_script_" .. name:gsub("%W", "") .. math.random(1000, 9999)
     translations[newKey] = { text = { en = name, ru = name, kz = name } }
-    local btn = createFunctionButton(newKey, ScriptsContainer, function()
+    createFunctionButton(newKey, ScriptsContainer, function()
         showExecutedNotification()
         local s, e = pcall(loadstring(code)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end
     end)
-    return btn
 end
 
 if isAuthorized then
     local CreateScriptModal = Instance.new("Frame", MainFrame)
-    CreateScriptModal.Name = "CreateScriptModal"; CreateScriptModal.Size = UDim2.new(1, 0, 1, 0); CreateScriptModal.Position = UDim2.new(0, 0, 0, 0); CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0); CreateScriptModal.BackgroundTransparency = 0.7; CreateScriptModal.ZIndex = 10; CreateScriptModal.Visible = false;
-    local ModalContent = Instance.new("Frame", CreateScriptModal); ModalContent.Size = UDim2.new(0, 350, 0, 230); ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115); ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45); ModalContent.BorderSizePixel = 0; Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8); local ModalStroke = Instance.new("UIStroke", ModalContent); ModalStroke.Color = currentTheme.main; table.insert(themableObjects, { object = ModalStroke, property = "Color", colorType = "main" });
+    CreateScriptModal.Name = "CreateScriptModal"; CreateScriptModal.Size = UDim2.new(1, 0, 1, -40); CreateScriptModal.Position = UDim2.new(0, 0, 0, 40); CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0); CreateScriptModal.BackgroundTransparency = 0.7; CreateScriptModal.ZIndex = 10; CreateScriptModal.Visible = false;
+    local ModalContent = Instance.new("Frame", CreateScriptModal); ModalContent.Size = UDim2.new(0, 350, 0, 230); ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115); ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45); Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8);
     local ModalTitle = Instance.new("TextLabel", ModalContent); ModalTitle.Size = UDim2.new(1, 0, 0, 30); ModalTitle.BackgroundTransparency = 1; ModalTitle.Font = Enum.Font.SourceSansBold; ModalTitle.TextSize = 20; ModalTitle.TextColor3 = Color3.fromRGB(255, 255, 255); table.insert(translatableObjects, { object = ModalTitle, property = "Text", key = "create_script_modal_title" });
     local ScriptNameInput = Instance.new("TextBox", ModalContent); ScriptNameInput.Size = UDim2.new(1, -20, 0, 30); ScriptNameInput.Position = UDim2.new(0, 10, 0, 40); ScriptNameInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptNameInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptNameInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptNameInput, property = "PlaceholderText", key = "script_name_placeholder" });
     local ScriptCodeInput = Instance.new("TextBox", ModalContent); ScriptCodeInput.Size = UDim2.new(1, -20, 0, 80); ScriptCodeInput.Position = UDim2.new(0, 10, 0, 80); ScriptCodeInput.MultiLine = true; ScriptCodeInput.TextXAlignment = Enum.TextXAlignment.Left; ScriptCodeInput.TextYAlignment = Enum.TextYAlignment.Top; ScriptCodeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptCodeInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptCodeInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptCodeInput, property = "PlaceholderText", key = "script_code_placeholder" });
     
     local ConfirmCreateButton = createFunctionButton("create_button", ModalContent, function()
-        local scriptName = ScriptNameInput.Text; local scriptCode = ScriptCodeInput.Text
-        if scriptName == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5) return end
-        if scriptCode == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5) return end
+        local scriptName, scriptCode = ScriptNameInput.Text, ScriptCodeInput.Text
+        if scriptName:gsub("%s", "") == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5) return end
+        if scriptCode:gsub("%s", "") == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5) return end
         
         table.insert(customScripts, { name = scriptName, code = scriptCode })
-        saveCustomScripts()
+        saveCustomScriptsToGist()
         createCustomScriptButton(scriptName, scriptCode)
         updateScriptsCanvasSize()
         sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName})
-        
         CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
     end)
     ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35); ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45)
     
-    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function()
-        CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
-    end)
+    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function() CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = "" end)
     CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35); CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45)
     
-    TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function()
-        CreateScriptModal.Visible = true; applyLanguage(settings.language)
-    end)
+    TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function() CreateScriptModal.Visible = true; applyLanguage(settings.language) end)
 end
 
--- [[ БАРЛЫҚ СКРИПТТЕРДІ ҚҰРУ ]]
 local function populateAllScripts()
-    -- Алдымен онлайн базадан скрипттерді жүктеу
-    loadCustomScripts()
-    -- 1. Түпнұсқа (стандартты) скрипттер
+    -- Онлайн базадан жүктеп алу
+    loadCustomScriptsFromGist()
+    
+    -- 1. Стандартты (түпнұсқа) скрипттер
     createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
     createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
     createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
     createFunctionButton("script_wallhop", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/ScpGuest666/Random-Roblox-script/refs/heads/main/Roblox%20WallHop%20script'))() end);
-    -- ... (БАСҚА БАРЛЫҚ СТАНДАРТТЫ СКРИПТТЕР ОСЫНДА ҚАЛАДЫ) ...
+    createFunctionButton("script_clicktp", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local m=p:GetMouse();sendTranslatedNotification("notif_clicktp_title","notif_clicktp_text",7);m.Button1Down:Connect(function()if m.Target and p.Character and p.Character:FindFirstChild("HumanoidRootPart")then p.Character.HumanoidRootPart.CFrame=CFrame.new(m.Hit.Position+Vector3.new(0,3,0))end end)end)
+    createFunctionButton("script_grav", ScriptsContainer, function() showExecutedNotification(); workspace.Gravity = 30 end);
+    createFunctionButton("script_afk", ScriptsContainer, function() showExecutedNotification(); local VirtualUser = game:GetService("VirtualUser") game.Players.LocalPlayer.Idled:Connect(function() VirtualUser:Button2Down(Vector2.new(0,0),workspace.CurrentCamera.CFrame) wait(1) VirtualUser:Button2Up(Vector2.new(0,0),workspace.CurrentCamera.CFrame) end) end);
+    createFunctionButton("script_infiniteyield", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source"))() end);
+    createFunctionButton("script_antislap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Antislap.lua"))() end);
+    createFunctionButton("script_autoslap", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Slap-spam-op/refs/heads/main/Slap%20spam%20op"))() end);
+    createFunctionButton("script_win", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Win.lua"))() end);
+    createFunctionButton("script_god", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Godmode.lua"))() end);
+    createFunctionButton("script_spamdecal", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Decalspam.lua"))() end);
+    createFunctionButton("script_skybox", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spamdecalwilson.lua"))() end);
+    createFunctionButton("script_ak47", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/sinret/rbxscript.com-scripts-reuploads-/main/ak47", true))() end);
+    createFunctionButton("script_lasergun", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/THELAKI/FE_GUN_THELAKI2/main/FE_GUN.lua"))() end);
+    createFunctionButton("script_johndoe", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Client-Replication-John-doe-up-by-gojohdkaisenkt-34198"))() end);
+    createFunctionButton("script_avatarcopy", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/GhostPlayer352/Test4/refs/heads/main/Copy%20Avatar'))() end);
+    createFunctionButton("script_jerk", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastefy.app/wa3v2Vgm/raw"))("Spider Script") end);
+    createFunctionButton("script_spamchat", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/spamchat.lua"))() end);
+    createFunctionButton("script_dance", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Dance.lua"))() end);
+    createFunctionButton("script_hummer", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://pastebin.com/raw/h9NvY2PD"))() end);
+    createFunctionButton("script_snake", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet('https://raw.githubusercontent.com/Avtor1zaTion/NO-FE-SNAKE/refs/heads/main/NO-FE-Snake.txt'))() end);
+    createFunctionButton("script_r6", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/CoreGui/Scripts/main/RC7"))() end);
+    createFunctionButton("script_metiorid", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Meteor.lua"))() end);
+    createFunctionButton("script_thomas", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-g00lxploiter-thomas-12611"))() end);
+    createFunctionButton("script_spider", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Spiderman.lua"))() end);
+    createFunctionButton("script_playertp", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Tp.lua"))() end);
+    createFunctionButton("script_board", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Keyboard.lua"))() end);
+    createFunctionButton("script_xester", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Prison-Life-Xester-18937"))() end);
+    createFunctionButton("script_rpg", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/notpoiu/Scripts/main/rocketLauncher.lua"))() end);
+    createFunctionButton("script_object", ScriptsContainer, function() showExecutedNotification(); loadstring(game:GetObjects("rbxassetid://6695644299")[1].Source)() end);
+    createFunctionButton("script_killall", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FEKILLALL.lua"))() end);
+    createFunctionButton("script_head", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Head.lua"))() end);
+    createFunctionButton("script_jump", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Jump.lua"))() end);
+    createFunctionButton("script_firepart", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/FireParts.lua"))() end);
+    createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
+    createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
     createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
-
+    
     -- 2. Онлайн базадан жүктелген жеке скрипттер
     for _, scriptData in ipairs(customScripts) do
         createCustomScriptButton(scriptData.name, scriptData.code)
@@ -1147,12 +1172,20 @@ local function populateAllScripts()
     updateScriptsCanvasSize()
 end
 
-populateAllScripts() -- Барлық скрипттерді интерфейске шығару
+populateAllScripts()
 
--- Іздеу функциясы
-SearchBox:GetPropertyChangedSignal("Text"):Connect(function() local s = SearchBox.Text:lower(); for _, b in ipairs(ScriptsContainer:GetChildren()) do if b:IsA("TextButton") then local textLabel = b:FindFirstChild("Text"); if textLabel then b.Visible = textLabel.Text:lower():find(s, 1, true) else b.Visible = b.Text:lower():find(s, 1, true) end end end end)
+SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
+    local s = SearchBox.Text:lower()
+    for _, b in ipairs(ScriptsContainer:GetChildren()) do
+        if b:IsA("TextButton") then
+            local textLabel = b:FindFirstChild("Text")
+            if textLabel then b.Visible = textLabel.Text:lower():find(s, 1, true)
+            else b.Visible = b.Text:lower():find(s, 1, true) end
+        end
+    end
+end)
 
--- #endregion
+        -- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
         local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); 
