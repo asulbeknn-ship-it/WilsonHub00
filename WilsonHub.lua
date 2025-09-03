@@ -618,7 +618,7 @@ end)
 -- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
 -- ================================================================= --
 
--- 1. ЭКРАН ЗАГРУЗКИ (ЖЫЛДАМДАТЫЛҒАН)
+-- 1. ЭКРАН ЗАГРУЗКИ (ЖАҢАРТЫЛҒАН)
 local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); 
 LoadingGui.Name = "LoadingGui"; 
 LoadingGui.ResetOnSpawn = false; 
@@ -627,17 +627,18 @@ LoadingGui.IgnoreGuiInset = true
 
 local Background = Instance.new("Frame", LoadingGui)
 Background.Size = UDim2.new(1, 0, 1, 0) 
-Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Фон түсін қараңғылау еттім
 Background.BorderSizePixel = 0
 
+-- Файл аттарын көрсететін жаңа жазу
 local FileNameLabel = Instance.new("TextLabel", Background)
 FileNameLabel.Size = UDim2.new(1, 0, 0, 30)
-FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95)
+FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95) -- "Loading..." жазуының үстіне
 FileNameLabel.BackgroundTransparency = 1
-FileNameLabel.Font = Enum.Font.Code
+FileNameLabel.Font = Enum.Font.Code -- Хакер стиліндегі шрифт
 FileNameLabel.TextSize = 22
-FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
-FileNameLabel.Text = ""
+FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Жасыл хакер түсі
+FileNameLabel.Text = "" -- Анимация үшін басында бос
 
 local LoadingLabel = Instance.new("TextLabel", Background)
 LoadingLabel.Size = UDim2.new(1, 0, 0, 50); 
@@ -712,14 +713,11 @@ task.spawn(function()
         local isMinimized = false
         local originalSize = MainFrame.Size MinimizeButton.MouseButton1Click:Connect(function() isMinimized = not isMinimized if isMinimized then BackgroundOverlay.Visible = false TabsContainer.Visible = false ContentContainer.Visible = false MainFrame:TweenSize(UDim2.new(originalSize.X.Scale, originalSize.X.Offset, 0, Header.AbsoluteSize.Y), Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) else BackgroundOverlay.Visible = true TabsContainer.Visible = true ContentContainer.Visible = true MainFrame:TweenSize(originalSize, Enum.EasingDirection.Out, Enum.EasingStyle.Quad, 0.2) end end)        
         
-        local LogoContainer = Instance.new("Frame", MainFrame) LogoContainer.Name = "LogoContainer" LogoContainer.Size = UDim2.new(0, 120, 1, -40) LogoContainer.Position = UDim2.new(0, 0, 0, 40) LogoContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45) LogoContainer.BorderSizePixel = 0
-        local LogoImage = Instance.new("ImageLabel", LogoContainer) LogoImage.Image = "rbxassetid://121928953984347" LogoImage.BackgroundTransparency = 1 LogoImage.Size = UDim2.new(0.9, 0, 0.9, 0)  LogoImage.Position = UDim2.new(0.5, 0, 0.5, 0) LogoImage.AnchorPoint = Vector2.new(0.5, 0.5) LogoImage.ScaleType = Enum.ScaleType.Fit -- Суретті созбай, әдемілеп сыйғызады
-        local Divider = Instance.new("Frame", MainFrame) Divider.Name = "Divider" Divider.Size = UDim2.new(0, 1, 1, -40) Divider.Position = UDim2.new(0, 120, 0, 40) Divider.BackgroundColor3 = Color3.fromRGB(25, 25, 25) -- Сызықтың түсі Divider.BorderSizePixel = 0
-        local TabsContainer = Instance.new("ScrollingFrame", LogoContainer) TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
+        local TabsContainer = Instance.new("ScrollingFrame", MainFrame); TabsContainer.Name = "TabsContainer"; TabsContainer.Size = UDim2.new(0, 120, 1, -40); TabsContainer.Position = UDim2.new(0, 0, 0, 40); TabsContainer.BackgroundColor3 = Color3.fromRGB(45, 45, 45); TabsContainer.BorderSizePixel = 0; 
         TabsContainer.ScrollBarThickness = 8; TabsContainer.ScrollBarImageColor3 = currentTheme.main; TabsContainer.ScrollBarImageTransparency = 0.4
         table.insert(themableObjects, {object = TabsContainer, property = "ScrollBarImageColor3", colorType = "main"})
 
-        local ContentContainer = Instance.new("Frame", MainFrame); ContentContainer.Name = "ContentContainer"; ContentContainer.Size = UDim2.new(1, -120, 1, -40); ContentContainer.Position = UDim2.new(0, 121, 0, 40); ContentContainer.BackgroundTransparency = 1
+        local ContentContainer = Instance.new("Frame", MainFrame); ContentContainer.Name = "ContentContainer"; ContentContainer.Size = UDim2.new(1, -120, 1, -40); ContentContainer.Position = UDim2.new(0, 120, 0, 40); ContentContainer.BackgroundTransparency = 1
         
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
@@ -1333,32 +1331,37 @@ task.spawn(function()
         "EXECUTING..."
     }
     
-    -- [[ ЖЫЛДАМДЫҚТЫ ОСЫ ЖЕРДЕН ӨЗГЕРТТІМ ]]
-    local totalDuration = 3.0 -- Анимацияның жалпы ұзақтығы (3 секунд)
+    local totalDuration = 4.5 -- Анимацияның жалпы ұзақтығы (4.5 секунд)
     local timePerFile = totalDuration / #filesToLoad
 
+    -- Анимация циклі
     for i, fileName in ipairs(filesToLoad) do
+        -- Файл атын біртіндеп жазу эффектісі
         FileNameLabel.Text = ""
         for j = 1, #fileName do
             FileNameLabel.Text = string.sub(fileName, 1, j)
-            task.wait(0.02) -- Әріптердің шығуын да сәл тездеттім
+            task.wait(0.03) -- Әр әріп арасындағы кідіріс
         end
         
+        -- Прогресс барды және пайызды жаңарту
         local progress = i / #filesToLoad
         local percent = math.floor(progress * 100)
         
+        -- Прогресс барды жайлап толтыру
         TweenService:Create(ProgressBarFill, TweenInfo.new(timePerFile * 0.5), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
         
+        -- Пайызды санау эффектісі
         local currentPercent = tonumber(PercentageLabel.Text:match("%d+")) or 0
         for p = currentPercent + 1, percent do
             PercentageLabel.Text = tostring(p) .. " %"
-            task.wait((timePerFile * 0.5) / (percent - currentPercent + 1))
+            task.wait((timePerFile * 0.5) / (percent - currentPercent))
         end
         PercentageLabel.Text = tostring(percent) .. " %"
     end
     
-    task.wait(0.3)
+    task.wait(0.3) -- Аяқталған соң сәл күту
 
+    -- GUI-ды жою және негізгісін қосу
     LoadingGui:Destroy()
     local WilsonHubGui = player.PlayerGui:FindFirstChild("WilsonHubGui")
     if WilsonHubGui then WilsonHubGui.Enabled = true end
