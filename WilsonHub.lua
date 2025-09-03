@@ -1002,6 +1002,8 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
         -- #region SCRIPTS PAGE
 
 -- [[ МАҢЫЗДЫ: GIST ID МЕН GITHUB TOKEN ОСЫ ЖЕРДЕ ТҰРУЫ КЕРЕК ]]
+-- GitHub қолданушы атыңды да осында жаз.
+local GITHUB_USERNAME = "asulbeknn-ship-it" -- СЕНІҢ GITHUB-ТАҒЫ АТЫҢ
 local GIST_ID = "8bdcaa48641bf5948091d038c9905ebf" -- СЕНІҢ GIST ID-ЫҢ
 local GITHUB_TOKEN = "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" -- СЕНІҢ GITHUB TOKEN-ІҢ
 local GIST_FILENAME = "wilsonhub_scripts.json"
@@ -1010,7 +1012,7 @@ local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
 local customScripts = {}
 
--- [[ Онлайн базамен жұмыс істейтін функциялар (ТҮЗЕТІЛГЕН) ]]
+-- [[ Онлайн базамен жұмыс істейтін функциялар ]]
 local function saveCustomScriptsToGist()
     if not isAuthorized or not GITHUB_TOKEN:find("ghp_") then return end
     pcall(function()
@@ -1025,21 +1027,15 @@ end
 
 local function loadCustomScriptsFromGist()
     if not GIST_ID or GIST_ID:len() < 20 then return end
-    local rawUrl = "https://gist.githubusercontent.com/asulbeknn-ship-it/" .. GIST_ID .. "/raw/"
+    local rawUrl = "https://gist.githubusercontent.com/" .. GITHUB_USERNAME .. "/" .. GIST_ID .. "/raw/"
     local success, response = pcall(function() return HttpService:GetAsync(rawUrl, true) end)
     if success and response then
-        local decoded, decode_err = pcall(HttpService.JSONDecode, HttpService, response)
-        if decoded and type(decoded) == "table" then
-            customScripts = decoded
-        else
-            warn("WILSONHUB GIST DECODE ERROR: ", decode_err or "Response was not valid JSON.")
-        end
-    else
-        warn("WILSONHUB GIST LOAD ERROR: ", response)
+        local decoded = pcall(HttpService.JSONDecode, HttpService, response)
+        if decoded and type(decoded) == "table" then customScripts = decoded end
     end
 end
 
--- [[ Интерфейс элементтері (өзгеріссіз) ]]
+-- [[ Интерфейс ]]
 local TopBar = Instance.new("Frame", MainPage); TopBar.Size = UDim2.new(1, -20, 0, 30); TopBar.Position = UDim2.new(0, 10, 0, 10); TopBar.BackgroundTransparency = 1;
 local SearchBox = Instance.new("TextBox", TopBar); SearchBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45); SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255); SearchBox.Font = Enum.Font.SourceSans; SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = SearchBox, property = "PlaceholderText", key = "search_placeholder" }); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects, { object = SearchBoxStroke, property = "Color", colorType = "main" });
 if isAuthorized then
@@ -1116,12 +1112,9 @@ local function populateAllScripts()
     createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
     createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
     createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
-
-    -- Онлайн базадан жүктелген жеке скрипттер
-    for _, scriptData in ipairs(customScripts) do createCustomScriptButton(scriptData.name, scriptData.code) end
     
-    task.wait(0.3)
-    updateScriptsCanvasSize()
+    for _, scriptData in ipairs(customScripts) do createCustomScriptButton(scriptData.name, scriptData.code) end
+    task.wait(0.3); updateScriptsCanvasSize()
 end
 
 populateAllScripts()
