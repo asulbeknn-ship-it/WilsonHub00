@@ -1518,3 +1518,54 @@ MuteButton.MouseButton1Click:Connect(function()
         MuteButton.Image = soundOnIcon
     end
 end)
+
+-- [[ СУ БЕЛГІСІ (WATERMARK) ]]
+task.spawn(function()
+    -- Ойын жүктелгенше сәл күту
+    task.wait(2)
+
+    -- Негізгі элементтерді алу
+    local player = game:GetService("Players").LocalPlayer
+    local RunService = game:GetService("RunService")
+    
+    -- Су белгісіне арналған жаңа ScreenGui
+    local WatermarkGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui"))
+    WatermarkGui.Name = "WilsonHubWatermark"
+    WatermarkGui.ResetOnSpawn = false
+    WatermarkGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+    WatermarkGui.IgnoreGuiInset = true
+
+    -- Жазу орналасатын негізгі контейнер
+    local TextContainer = Instance.new("TextLabel", WatermarkGui)
+    TextContainer.Name = "WatermarkLabel"
+    TextContainer.AnchorPoint = Vector2.new(0, 1) -- Төменгі сол жақ бұрышқа бекіту
+    TextContainer.Position = UDim2.new(0, 10, 1, -10) -- Сол жақтан және төменнен 10 пиксель қашықтықта
+    TextContainer.Size = UDim2.new(0, 350, 0, 25) -- Өлшемін автоматты түрде реттеуге де болады
+    TextContainer.AutomaticSize = Enum.AutomaticSize.X -- Ені жазуға қарай өзгереді
+    TextContainer.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    TextContainer.BackgroundTransparency = 0.4 -- Сәл мөлдір фон
+    TextContainer.BorderSizePixel = 0
+    
+    -- Мәтіннің өзі
+    TextContainer.Font = Enum.Font.SourceSans -- Шрифт
+    TextContainer.TextSize = 16 -- Өлшемі
+    TextContainer.TextColor3 = Color3.fromRGB(255, 255, 255) -- Ақ түс
+    TextContainer.TextXAlignment = Enum.TextXAlignment.Left -- Сол жаққа туралау
+    TextContainer.PaddingLeft = UDim.new(0, 8) -- Сол жақтан бос орын
+    TextContainer.PaddingRight = UDim.new(0, 8) -- Оң жақтан бос орын
+
+    -- Контейнердің бұрыштарын дөңгелектеу
+    Instance.new("UICorner", TextContainer).CornerRadius = UDim.new(0, 5)
+
+    -- Сағатты және жазуды жаңартып тұратын цикл
+    RunService.RenderStepped:Connect(function()
+        -- Жергілікті уақытты алу (сағат:минут:секунд форматында)
+        local currentTime = os.date("%H:%M:%S")
+        
+        -- Негізгі жазуды құрастыру
+        local watermarkText = string.format("Build WILSONHUB || V 1.1.0 || %s || %s", player.Name, currentTime)
+        
+        -- Жазуды жаңарту
+        TextContainer.Text = watermarkText
+    end)
+end)
