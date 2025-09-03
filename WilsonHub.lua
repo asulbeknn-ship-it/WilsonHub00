@@ -89,6 +89,7 @@ local translations = {
     tab_players = { en = "PLAYERS", ru = "ИГРОКИ", kz = "ОЙЫНШЫЛАР", zh = "玩家", fr = "JOUEURS" },
     tab_settings = { en = "SETTINGS", ru = "НАСТРОЙКИ", kz = "БАПТАУЛАР", zh = "设置", fr = "RÉGLAGES" },
     tab_executor = { en = "EXECUTOR", ru = "ИСПОЛНИТЕЛЬ", kz = "ОРЫНДАУШЫ", zh = "执行器", fr = "EXÉCUTEUR" },
+    tab_console = { en = "CONSOLE", ru = "КОНСОЛЬ", kz = "КОНСОЛЬ" },
     -- HOME PAGE
     home_welcome = { en = "Welcome, %s", ru = "Добро пожаловать, %s", kz = "Қош келдің, %s", zh = "欢迎, %s", fr = "Bienvenue, %s" },
     home_nickname = { en = "NickName: %s", ru = "Никнейм: %s", kz = "Лақап аты: %s", zh = "昵称: %s", fr = "Surnom: %s" },
@@ -188,6 +189,8 @@ local translations = {
     lang_fr = { en = "French", ru = "Французский", kz = "Французша", zh = "法語", fr = "Français" },
     -- EXECUTOR PAGE
     executor_placeholder = { en = "--[[ Paste your script here ]]--", ru = "--[[ Вставьте свой скрипт сюда ]]--", kz = "--[[ Скриптіңізді осы жерге қойыңыз ]]--", zh = "--[[ 在此处粘贴您的脚本 ]]--", fr = "--[[ Collez votre script ici ]]--" },
+    -- CONSOLE PAGE
+    console_placeholder = { en = "Enter command...", ru = "Введите команду...", kz = "Команда енгізіңіз..." },
     -- NOTIFICATIONS
     notif_esp_title = { en = "ESP", ru = "ЕСП", kz = "ЕСП", zh = "透视", fr = "ESP" },
     notif_esp_enabled_text = { en = "Player ESP has been enabled.", ru = "ЕСП игроков включено.", kz = "Ойыншы ESP қосылды.", zh = "玩家透视已启用。", fr = "L'ESP des joueurs a été activé." },
@@ -721,8 +724,7 @@ task.spawn(function()
         
         local TabsList = Instance.new("UIListLayout", TabsContainer); TabsList.Padding = UDim.new(0, 10); TabsList.HorizontalAlignment = Enum.HorizontalAlignment.Center
         
-        local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  
-        local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor")
+        local function createTabButton(textKey) local button = Instance.new("TextButton", TabsContainer); button.Size = UDim2.new(1, -10, 0, 40); button.BackgroundColor3 = Color3.fromRGB(60, 60, 60); button.TextColor3 = Color3.fromRGB(255, 255, 255); button.Font = Enum.Font.SourceSansBold; button.TextSize = 18; table.insert(translatableObjects, {object=button, property="Text", key=textKey}); return button end  local HomeButton=createTabButton("tab_home"); local MainButton=createTabButton("tab_scripts"); local InfoButton=createTabButton("tab_info"); local GuiModsButton=createTabButton("tab_guimods"); local PlayersButton=createTabButton("tab_players"); local SettingsButton=createTabButton("tab_settings"); local ExecutorButton=createTabButton("tab_executor"); local ConsoleButton=createTabButton("tab_console")
 
         task.wait()
         TabsContainer.CanvasSize = UDim2.fromOffset(0, TabsList.AbsoluteContentSize.Y)
@@ -737,6 +739,7 @@ task.spawn(function()
         local PlayersPage=Instance.new("Frame",ContentContainer); PlayersPage.Size=UDim2.new(1,0,1,0); PlayersPage.BackgroundTransparency=1; PlayersPage.Visible=false
         local SettingsPage=Instance.new("Frame",ContentContainer); SettingsPage.Size=UDim2.new(1,0,1,0); SettingsPage.BackgroundTransparency=1; SettingsPage.Visible=false
         local ExecutorPage=Instance.new("Frame",ContentContainer); ExecutorPage.Size=UDim2.new(1,0,1,0); ExecutorPage.BackgroundTransparency=1; ExecutorPage.Visible=false
+        local ConsolePage=Instance.new("Frame",ContentContainer); ConsolePage.Size=UDim2.new(1,0,1,0); ConsolePage.BackgroundTransparency=1; ConsolePage.Visible=false
 
         local function createFunctionButton(textKey, parent, callback)
     local b = Instance.new("TextButton", parent)
@@ -1272,12 +1275,115 @@ end)
         local ExecutorInput = Instance.new("TextBox", ExecutorPage); ExecutorInput.Size = UDim2.new(1, -20, 1, -60); ExecutorInput.Position = UDim2.new(0, 10, 0, 10); ExecutorInput.BackgroundColor3 = Color3.fromRGB(25, 25, 25); ExecutorInput.TextColor3 = Color3.fromRGB(255, 255, 255); ExecutorInput.Font = Enum.Font.Code; ExecutorInput.TextSize = 14; ExecutorInput.TextWrapped = true; ExecutorInput.TextXAlignment = Enum.TextXAlignment.Left; ExecutorInput.TextYAlignment = Enum.TextYAlignment.Top; ExecutorInput.ClearTextOnFocus = false; Instance.new("UICorner", ExecutorInput).CornerRadius = UDim.new(0, 6); ExecutorInput.Text = 'Print("HelloWorld!")' table.insert(translatableObjects, {object=ExecutorInput, property="PlaceholderText", key="executor_placeholder"}); local ExecutorStroke = Instance.new("UIStroke", ExecutorInput); ExecutorStroke.Color = currentTheme.main; table.insert(themableObjects, {object = ExecutorStroke, property="Color", colorType="main"}); local ExecuteButton = createFunctionButton("execute", ExecutorPage, function() local s,e = pcall(loadstring(ExecutorInput.Text)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end); ExecuteButton.Size = UDim2.new(0.5, -15, 0, 35); ExecuteButton.Position = UDim2.new(0, 10, 1, -45); local ClearButton = createFunctionButton("clear", ExecutorPage, function() ExecutorInput.Text = "" end); ClearButton.Size = UDim2.new(0.5, -15, 0, 35); ClearButton.Position = UDim2.new(0.5, 5, 1, -45)
         -- #endregion        
 
+        -- #region CONSOLE PAGE
+-- Бұл кодты -- #endregion EXECUTOR PAGE дегеннен кейін қоясың
+
+-- Консольдің негізгі элементтері
+local ConsoleWrapper = Instance.new("Frame", ConsolePage)
+ConsoleWrapper.Size = UDim2.new(1, -20, 1, -20)
+ConsoleWrapper.Position = UDim2.new(0.5, 0, 0.5, 0)
+ConsoleWrapper.AnchorPoint = Vector2.new(0.5, 0.5)
+ConsoleWrapper.BackgroundColor3 = Color3.fromRGB(30, 30, 30)
+ConsoleWrapper.BorderSizePixel = 0
+Instance.new("UICorner", ConsoleWrapper).CornerRadius = UDim.new(0, 6)
+
+-- Шығатын ақпараттарға арналған аймақ
+local OutputFrame = Instance.new("ScrollingFrame", ConsoleWrapper)
+OutputFrame.Size = UDim2.new(1, -10, 1, -55)
+OutputFrame.Position = UDim2.new(0.5, 0, 0, 5)
+OutputFrame.AnchorPoint = Vector2.new(0.5, 0)
+OutputFrame.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
+OutputFrame.BorderSizePixel = 0
+OutputFrame.ScrollBarThickness = 6
+Instance.new("UICorner", OutputFrame).CornerRadius = UDim.new(0, 4)
+local OutputLayout = Instance.new("UIListLayout", OutputFrame)
+OutputLayout.SortOrder = Enum.SortOrder.LayoutOrder
+OutputLayout.Padding = UDim.new(0, 3)
+
+-- Команда енгізетін төменгі панель
+local InputPanel = Instance.new("Frame", ConsoleWrapper)
+InputPanel.Size = UDim2.new(1, -10, 0, 40)
+InputPanel.Position = UDim2.new(0.5, 0, 1, -45)
+InputPanel.AnchorPoint = Vector2.new(0.5, 0)
+InputPanel.BackgroundTransparency = 1
+
+local InputBox = Instance.new("TextBox", InputPanel)
+InputBox.Size = UDim2.new(1, -110, 1, 0) -- Оң жақтағы батырмаларға орын қалдыру
+InputBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+InputBox.TextColor3 = Color3.fromRGB(220, 220, 220)
+InputBox.Font = Enum.Font.Code
+InputBox.TextSize = 16
+InputBox.ClearTextOnFocus = false
+table.insert(translatableObjects, { object = InputBox, property = "PlaceholderText", key = "console_placeholder" })
+Instance.new("UICorner", InputBox).CornerRadius = UDim.new(0, 6)
+
+local ExecuteButton = createFunctionButton("execute", InputPanel, function() end)
+ExecuteButton.Size = UDim2.new(0, 100, 1, 0)
+ExecuteButton.Position = UDim2.new(1, -100, 0, 0)
+ExecuteButton.Font = Enum.Font.SourceSansBold
+ExecuteButton.TextSize = 16
+
+-- Консоль логикасы
+local function AddToConsole(message, messageType)
+    local msgLabel = Instance.new("TextLabel")
+    msgLabel.Name = "ConsoleMessage"
+    msgLabel.Parent = OutputFrame
+    msgLabel.BackgroundTransparency = 1
+    msgLabel.Font = Enum.Font.Code
+    msgLabel.TextSize = 15
+    msgLabel.TextXAlignment = Enum.TextXAlignment.Left
+    msgLabel.TextWrapped = true
+    msgLabel.Size = UDim2.new(1, -10, 0, 0)
+    msgLabel.AutomaticSize = Enum.AutomaticSize.Y
+    msgLabel.Text = "> " .. tostring(message)
+
+    if messageType == Enum.MessageType.MessageOutput then -- print()
+        msgLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    elseif messageType == Enum.MessageType.MessageWarning then -- warn()
+        msgLabel.TextColor3 = Color3.fromRGB(255, 255, 0) -- Сары
+    elseif messageType == Enum.MessageType.MessageError then -- error()
+        msgLabel.TextColor3 = Color3.fromRGB(255, 50, 50) -- Ашық қызыл
+    else
+        msgLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    end
+    
+    task.wait()
+    OutputFrame.CanvasPosition = Vector2.new(0, OutputLayout.AbsoluteContentSize.Y)
+end
+
+-- Команданы орындау
+ExecuteButton.MouseButton1Click:Connect(function()
+    local command = InputBox.Text
+    if command:gsub("%s", "") == "" then return end
+
+    AddToConsole(command, Enum.MessageType.MessageOutput)
+    InputBox.Text = ""
+
+    local success, err = pcall(loadstring(command))
+    if not success and err then
+        AddToConsole(err, Enum.MessageType.MessageError)
+    end
+end)
+InputBox.FocusLost:Connect(function(enterPressed)
+    if enterPressed then
+        ExecuteButton.MouseButton1Click:Invoke()
+    end
+end)
+
+
+-- Roblox-тың өз консолінен ақпаратты ұстап алу
+game:GetService("LogService").MessageOut:Connect(function(message, messageType)
+    AddToConsole(message, messageType)
+end)
+
+        -- #endregion
+
         -- THEME REGISTRATION
         table.insert(themableObjects, {object=IconFrame, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=Header, property="BackgroundColor3", colorType="main"}); table.insert(themableObjects, {object=TitleLabel, property="TextColor3", colorType="text"}); table.insert(themableObjects, {object=WelcomeLabel, property="TextColor3", colorType="accent"});table.insert(themableObjects, {object=NurgazyStroke,property="Color",colorType="main"});
         
         -- MAIN LOGIC
-        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton}
-        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage}
+        tabs = {HomeButton,MainButton,InfoButton,GuiModsButton,PlayersButton,SettingsButton,ExecutorButton,ConsoleButton}
+        local pages = {HomePage,MainPage,InfoPage,GuiModsPage,PlayersPage,SettingsPage,ExecutorPage,ConsolePage}
         
         activeTab = HomeButton
 
