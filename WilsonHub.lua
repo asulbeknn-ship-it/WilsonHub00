@@ -1001,128 +1001,82 @@ translatableObjects[#translatableObjects + 1] = {object = deviceLabel, property 
 
         -- #region SCRIPTS PAGE
 
--- [[ МАҢЫЗДЫ: ОСЫ ЖЕРЛЕРДІ ӨЗІҢНІҢ АҚПАРАТЫҢМЕН ТОЛТЫР! ]]
--- Егер Gist ID мен Token-ді қалай алуды білмесең, маған айт, мен нұсқаулық жіберемін.
-local GIST_ID = "8bdcaa48641bf5948091d038c9905ebf" -- Мысалы: "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4"
-local GITHUB_TOKEN = "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" -- Мысалы: "ghp_xxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+-- [[ МАҢЫЗДЫ: GIST ID МЕН GITHUB TOKEN ОСЫ ЖЕРДЕ ТҰРУЫ КЕРЕК ]]
+local GIST_ID = "8bdcaa48641bf5948091d038c9905ebf" -- СЕНІҢ GIST ID-ЫҢ
+local GITHUB_TOKEN = "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" -- СЕНІҢ GITHUB TOKEN-ІҢ
 local GIST_FILENAME = "wilsonhub_scripts.json"
 
--- Скрипт құруға рұқсаты бар ойыншылар
 local authorizedUsers = { "adhdkbxbxnx", "Nurgazy_21" }
 local isAuthorized = table.find(authorizedUsers, player.Name)
-local customScripts = {} -- Онлайн базадан жүктелген скрипттер осында сақталады
+local customScripts = {}
 
--- [[ Онлайн базадан (Gist) скрипттерді оқу/жазу функциялары ]]
+-- [[ Онлайн базамен жұмыс істейтін функциялар (ТҮЗЕТІЛГЕН) ]]
 local function saveCustomScriptsToGist()
     if not isAuthorized or not GITHUB_TOKEN:find("ghp_") then return end
-    
-    local success, err = pcall(function()
+    pcall(function()
         HttpService:RequestAsync({
             Url = "https://api.github.com/gists/" .. GIST_ID,
             Method = "PATCH",
-            Headers = {
-                ["Authorization"] = "Bearer " .. GITHUB_TOKEN,
-                ["Accept"] = "application/vnd.github.v3+json"
-            },
-            Body = HttpService:JSONEncode({
-                files = { [GIST_FILENAME] = { content = HttpService:JSONEncode(customScripts) } }
-            })
+            Headers = { ["Authorization"] = "Bearer " .. GITHUB_TOKEN, ["Accept"] = "application/vnd.github.v3+json" },
+            Body = HttpService:JSONEncode({ files = { [GIST_FILENAME] = { content = HttpService:JSONEncode(customScripts) } } })
         })
     end)
-    if not success then
-        warn("WILSONHUB GIST SAVE ERROR: ", err)
-    end
 end
 
 local function loadCustomScriptsFromGist()
-    if GIST_ID:len() < 10 then return end
-    
-    local success, response = pcall(function()
-        return HttpService:GetAsync("https://api.github.com/gists/" .. GIST_ID, true)
-    end)
-    
+    if not GIST_ID or GIST_ID:len() < 20 then return end
+    local rawUrl = "https://gist.githubusercontent.com/asulbeknn-ship-it/" .. GIST_ID .. "/raw/"
+    local success, response = pcall(function() return HttpService:GetAsync(rawUrl, true) end)
     if success and response then
-        local gistData = HttpService:JSONDecode(response)
-        if gistData and gistData.files and gistData.files[GIST_FILENAME] then
-            local decoded = HttpService:JSONDecode(gistData.files[GIST_FILENAME].content)
-            if type(decoded) == "table" then
-                customScripts = decoded
-            end
+        local decoded, decode_err = pcall(HttpService.JSONDecode, HttpService, response)
+        if decoded and type(decoded) == "table" then
+            customScripts = decoded
+        else
+            warn("WILSONHUB GIST DECODE ERROR: ", decode_err or "Response was not valid JSON.")
         end
     else
         warn("WILSONHUB GIST LOAD ERROR: ", response)
     end
 end
 
--- [[ Интерфейс элементтерін құру ]]
-local TopBar = Instance.new("Frame", MainPage)
-TopBar.Size = UDim2.new(1, -20, 0, 30); TopBar.Position = UDim2.new(0, 10, 0, 10); TopBar.BackgroundTransparency = 1;
-local SearchBox = Instance.new("TextBox", TopBar)
-SearchBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45); SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255); SearchBox.Font = Enum.Font.SourceSans; SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = SearchBox, property = "PlaceholderText", key = "search_placeholder" }); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects, { object = SearchBoxStroke, property = "Color", colorType = "main" });
-
+-- [[ Интерфейс элементтері (өзгеріссіз) ]]
+local TopBar = Instance.new("Frame", MainPage); TopBar.Size = UDim2.new(1, -20, 0, 30); TopBar.Position = UDim2.new(0, 10, 0, 10); TopBar.BackgroundTransparency = 1;
+local SearchBox = Instance.new("TextBox", TopBar); SearchBox.BackgroundColor3 = Color3.fromRGB(45, 45, 45); SearchBox.TextColor3 = Color3.fromRGB(255, 255, 255); SearchBox.Font = Enum.Font.SourceSans; SearchBox.TextSize = 14; Instance.new("UICorner", SearchBox).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = SearchBox, property = "PlaceholderText", key = "search_placeholder" }); local SearchBoxStroke = Instance.new("UIStroke", SearchBox); SearchBoxStroke.Color = currentTheme.main; table.insert(themableObjects, { object = SearchBoxStroke, property = "Color", colorType = "main" });
 if isAuthorized then
-    local TopBarLayout = Instance.new("UIListLayout", TopBar)
-    TopBarLayout.FillDirection = Enum.FillDirection.Horizontal; TopBarLayout.Padding = UDim.new(0, 10);
-    local CreateScriptButton = createFunctionButton("create_script", TopBar, function() end)
-    CreateScriptButton.Size = UDim2.new(0.4, 0, 1, 0)
+    local TopBarLayout = Instance.new("UIListLayout", TopBar); TopBarLayout.FillDirection = Enum.FillDirection.Horizontal; TopBarLayout.Padding = UDim.new(0, 10);
+    local CreateScriptButton = createFunctionButton("create_script", TopBar, function() end); CreateScriptButton.Size = UDim2.new(0.4, 0, 1, 0);
     SearchBox.Size = UDim2.new(0.6, -10, 1, 0)
 else
     SearchBox.Size = UDim2.new(1, 0, 1, 0)
 end
-
-local ScriptsContainer = Instance.new("ScrollingFrame", MainPage)
-ScriptsContainer.Size = UDim2.new(1, -20, 1, -50); ScriptsContainer.Position = UDim2.new(0, 10, 0, 50); ScriptsContainer.BackgroundTransparency = 1; ScriptsContainer.ScrollBarThickness = 6;
-local ScriptsGrid = Instance.new("UIGridLayout", ScriptsContainer)
-ScriptsGrid.CellPadding = UDim2.new(0, 10, 0, 10); ScriptsGrid.CellSize = UDim2.new(0, 95, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
+local ScriptsContainer = Instance.new("ScrollingFrame", MainPage); ScriptsContainer.Size = UDim2.new(1, -20, 1, -50); ScriptsContainer.Position = UDim2.new(0, 10, 0, 50); ScriptsContainer.BackgroundTransparency = 1; ScriptsContainer.ScrollBarThickness = 6;
+local ScriptsGrid = Instance.new("UIGridLayout", ScriptsContainer); ScriptsGrid.CellPadding = UDim2.new(0, 10, 0, 10); ScriptsGrid.CellSize = UDim2.new(0, 95, 0, 40); ScriptsGrid.HorizontalAlignment = Enum.HorizontalAlignment.Center;
 local function updateScriptsCanvasSize() ScriptsContainer.CanvasSize = UDim2.fromOffset(0, ScriptsGrid.AbsoluteContentSize.Y) end
 ScriptsGrid:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(updateScriptsCanvasSize)
-
-local function showExecutedNotification()
-    Library.DefaultColor = Color3.fromRGB(0, 255, 0); Library:Notification({ Text = "SCRIPT EXECUTED!", Duration = 3 }); Library.DefaultColor = Color3.fromRGB(255, 0, 0);
-end
-
+local function showExecutedNotification() Library.DefaultColor = Color3.fromRGB(0, 255, 0); Library:Notification({ Text = "SCRIPT EXECUTED!", Duration = 3 }); Library.DefaultColor = Color3.fromRGB(255, 0, 0); end
 local function createCustomScriptButton(name, code)
-    local newKey = "custom_script_" .. name:gsub("%W", "") .. math.random(1000, 9999)
-    translations[newKey] = { text = { en = name, ru = name, kz = name } }
-    createFunctionButton(newKey, ScriptsContainer, function()
-        showExecutedNotification()
-        local s, e = pcall(loadstring(code)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end
-    end)
+    local newKey = "custom_script_" .. name:gsub("%W", "") .. math.random(1000, 9999); translations[newKey] = { text = { en = name, ru = name, kz = name } };
+    createFunctionButton(newKey, ScriptsContainer, function() showExecutedNotification(); local s, e = pcall(loadstring(code)); if not s then sendTranslatedNotification("notif_executor_error_title", tostring(e), 5) end end)
 end
-
 if isAuthorized then
-    local CreateScriptModal = Instance.new("Frame", MainFrame)
-    CreateScriptModal.Name = "CreateScriptModal"; CreateScriptModal.Size = UDim2.new(1, 0, 1, -40); CreateScriptModal.Position = UDim2.new(0, 0, 0, 40); CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0); CreateScriptModal.BackgroundTransparency = 0.7; CreateScriptModal.ZIndex = 10; CreateScriptModal.Visible = false;
+    local CreateScriptModal = Instance.new("Frame", MainFrame); CreateScriptModal.Name = "CreateScriptModal"; CreateScriptModal.Size = UDim2.new(1, 0, 1, -40); CreateScriptModal.Position = UDim2.new(0, 0, 0, 40); CreateScriptModal.BackgroundColor3 = Color3.fromRGB(0, 0, 0); CreateScriptModal.BackgroundTransparency = 0.7; CreateScriptModal.ZIndex = 10; CreateScriptModal.Visible = false;
     local ModalContent = Instance.new("Frame", CreateScriptModal); ModalContent.Size = UDim2.new(0, 350, 0, 230); ModalContent.Position = UDim2.new(0.5, -175, 0.5, -115); ModalContent.BackgroundColor3 = Color3.fromRGB(45, 45, 45); Instance.new("UICorner", ModalContent).CornerRadius = UDim.new(0, 8);
     local ModalTitle = Instance.new("TextLabel", ModalContent); ModalTitle.Size = UDim2.new(1, 0, 0, 30); ModalTitle.BackgroundTransparency = 1; ModalTitle.Font = Enum.Font.SourceSansBold; ModalTitle.TextSize = 20; ModalTitle.TextColor3 = Color3.fromRGB(255, 255, 255); table.insert(translatableObjects, { object = ModalTitle, property = "Text", key = "create_script_modal_title" });
     local ScriptNameInput = Instance.new("TextBox", ModalContent); ScriptNameInput.Size = UDim2.new(1, -20, 0, 30); ScriptNameInput.Position = UDim2.new(0, 10, 0, 40); ScriptNameInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptNameInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptNameInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptNameInput, property = "PlaceholderText", key = "script_name_placeholder" });
     local ScriptCodeInput = Instance.new("TextBox", ModalContent); ScriptCodeInput.Size = UDim2.new(1, -20, 0, 80); ScriptCodeInput.Position = UDim2.new(0, 10, 0, 80); ScriptCodeInput.MultiLine = true; ScriptCodeInput.TextXAlignment = Enum.TextXAlignment.Left; ScriptCodeInput.TextYAlignment = Enum.TextYAlignment.Top; ScriptCodeInput.BackgroundColor3 = Color3.fromRGB(30, 30, 30); ScriptCodeInput.TextColor3 = Color3.fromRGB(255, 255, 255); Instance.new("UICorner", ScriptCodeInput).CornerRadius = UDim.new(0, 6); table.insert(translatableObjects, { object = ScriptCodeInput, property = "PlaceholderText", key = "script_code_placeholder" });
-    
     local ConfirmCreateButton = createFunctionButton("create_button", ModalContent, function()
-        local scriptName, scriptCode = ScriptNameInput.Text, ScriptCodeInput.Text
-        if scriptName:gsub("%s", "") == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_name", 5) return end
-        if scriptCode:gsub("%s", "") == "" then sendTranslatedNotification("notif_executor_error_title", "notif_script_error_code", 5) return end
-        
-        table.insert(customScripts, { name = scriptName, code = scriptCode })
-        saveCustomScriptsToGist()
-        createCustomScriptButton(scriptName, scriptCode)
-        updateScriptsCanvasSize()
-        sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName})
-        CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
-    end)
-    ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35); ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45)
-    
-    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function() CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = "" end)
-    CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35); CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45)
-    
+        local scriptName, scriptCode = ScriptNameInput.Text, ScriptCodeInput.Text; if scriptName:gsub("%s", "") == "" then return end; if scriptCode:gsub("%s", "") == "" then return end
+        table.insert(customScripts, { name = scriptName, code = scriptCode }); saveCustomScriptsToGist(); createCustomScriptButton(scriptName, scriptCode); updateScriptsCanvasSize();
+        sendTranslatedNotification("notif_script_created_title", "notif_script_created_text", 4, nil, {scriptName}); CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = ""
+    end); ConfirmCreateButton.Size = UDim2.new(0.5, -15, 0, 35); ConfirmCreateButton.Position = UDim2.new(0, 10, 1, -45);
+    local CancelCreateButton = createFunctionButton("cancel_button", ModalContent, function() CreateScriptModal.Visible = false; ScriptNameInput.Text = ""; ScriptCodeInput.Text = "" end); CancelCreateButton.Size = UDim2.new(0.5, -15, 0, 35); CancelCreateButton.Position = UDim2.new(0.5, 5, 1, -45);
     TopBar:FindFirstChild("TextButton").MouseButton1Click:Connect(function() CreateScriptModal.Visible = true; applyLanguage(settings.language) end)
 end
 
 local function populateAllScripts()
-    -- Онлайн базадан жүктеп алу
     loadCustomScriptsFromGist()
     
-    -- 1. Стандартты (түпнұсқа) скрипттер
+    -- [[ БАРЛЫҚ СТАНДАРТТЫ СКРИПТТЕРДІҢ ТОЛЫҚ ТІЗІМІ ]]
     createFunctionButton("script_fly", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Fly-Script-48648"))() end);
     createFunctionButton("script_fireblock", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/amdzy088/Auto-fire-part-universal-/refs/heads/main/Auto%20fire%20part%20universal"))() end);
     createFunctionButton("script_speed", ScriptsContainer, function() showExecutedNotification(); local p=game:GetService("Players").LocalPlayer;local c=p.Character;if not c then return end;local h=c:WaitForChild("Humanoid");h.WalkSpeed=50;sendTranslatedNotification("notif_speed_title","notif_speed_text",5);h.Died:Connect(function()end)end)
@@ -1162,18 +1116,15 @@ local function populateAllScripts()
     createFunctionButton("script_invisible", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://rawscripts.net/raw/Universal-Script-Invisible-script-20557"))() end);
     createFunctionButton("script_flash", ScriptsContainer, function() showExecutedNotification(); loadstring(game:HttpGet("https://raw.githubusercontent.com/asulbeknn-ship-it/WilsonHub00/main/Toggle.lua"))() end);
     createFunctionButton("script_spin", ScriptsContainer, function() showExecutedNotification(); power = 500 game:GetService('RunService').Stepped:connect(function() game.Players.LocalPlayer.Character.Head.CanCollide = false game.Players.LocalPlayer.Character.UpperTorso.CanCollide = false game.Players.LocalPlayer.Character.LowerTorso.CanCollide = false game.Players.LocalPlayer.Character.HumanoidRootPart.CanCollide = false end) wait(.1) local bambam = Instance.new("BodyThrust") bambam.Parent = game.Players.LocalPlayer.Character.HumanoidRootPart bambam.Force = Vector3.new(power,0,power) bambam.Location = game.Players.LocalPlayer.Character.HumanoidRootPart.Position end);
+
+    -- Онлайн базадан жүктелген жеке скрипттер
+    for _, scriptData in ipairs(customScripts) do createCustomScriptButton(scriptData.name, scriptData.code) end
     
-    -- 2. Онлайн базадан жүктелген жеке скрипттер
-    for _, scriptData in ipairs(customScripts) do
-        createCustomScriptButton(scriptData.name, scriptData.code)
-    end
-    
-    task.wait(0.2)
+    task.wait(0.3)
     updateScriptsCanvasSize()
 end
 
 populateAllScripts()
-
 SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
     local s = SearchBox.Text:lower()
     for _, b in ipairs(ScriptsContainer:GetChildren()) do
@@ -1184,8 +1135,7 @@ SearchBox:GetPropertyChangedSignal("Text"):Connect(function()
         end
     end
 end)
-
-        -- #endregion
+-- #endregion
 
         -- #region PLAYERS PAGE (ТҮЗЕТІЛДІ)
         local PlayersList = Instance.new("ScrollingFrame", PlayersPage); PlayersList.Size = UDim2.new(1, -20, 1, -10); PlayersList.Position = UDim2.new(0, 10, 0, 5); PlayersList.BackgroundColor3 = Color3.fromRGB(45, 45, 45); PlayersList.ScrollBarThickness = 6; Instance.new("UICorner", PlayersList).CornerRadius = UDim.new(0, 6); 
