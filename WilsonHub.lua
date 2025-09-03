@@ -618,15 +618,58 @@ end)
 -- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
 -- ================================================================= --
 
--- 1. ЭКРАН ЗАГРУЗКИ
-local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); LoadingGui.Name = "LoadingGui"; LoadingGui.ResetOnSpawn = false; LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+-- 1. ЭКРАН ЗАГРУЗКИ (ЖАҢАРТЫЛҒАН)
+local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); 
+LoadingGui.Name = "LoadingGui"; 
+LoadingGui.ResetOnSpawn = false; 
+LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
 LoadingGui.IgnoreGuiInset = true
-local Background = Instance.new("Frame", LoadingGui); Background.Size = UDim2.new(1, 0, 1, 0) Background.BackgroundColor3 = Color3.fromRGB(40, 40, 40) Background.BackgroundTransparency = 0.3 Background.BorderSizePixel = 0
-local LoadingLabel = Instance.new("TextLabel", Background); LoadingLabel.Size = UDim2.new(1, 0, 0, 50); LoadingLabel.Position = UDim2.new(0, 0, 0.5, -60); LoadingLabel.BackgroundTransparency = 1; LoadingLabel.TextColor3 = currentTheme.accent; LoadingLabel.Font = Enum.Font.SourceSansBold; LoadingLabel.TextSize = 42; table.insert(translatableObjects, {object=LoadingLabel, property="Text", key="loading"})
-local PercentageLabel = Instance.new("TextLabel", Background); PercentageLabel.Size = UDim2.new(1, 0, 0, 30); PercentageLabel.Position = UDim2.new(0, 0, 0.5, 0); PercentageLabel.BackgroundTransparency = 1; PercentageLabel.TextColor3 = Color3.fromRGB(255, 255, 255); PercentageLabel.Font = Enum.Font.SourceSansBold; PercentageLabel.TextSize = 28; PercentageLabel.Text = "0 %"
-local ProgressBarBG = Instance.new("Frame", Background); ProgressBarBG.Size = UDim2.new(0, 400, 0, 25); ProgressBarBG.Position = UDim2.new(0.5, -200, 0.5, 40); ProgressBarBG.BackgroundColor3 = Color3.fromRGB(10, 10, 10); ProgressBarBG.BorderSizePixel = 1; ProgressBarBG.BorderColor3 = currentTheme.main; Instance.new("UICorner", ProgressBarBG).CornerRadius = UDim.new(0, 8)
-local ProgressBarFill = Instance.new("Frame", ProgressBarBG); ProgressBarFill.Size = UDim2.new(0, 0, 1, 0); ProgressBarFill.BackgroundColor3 = currentTheme.accent; Instance.new("UICorner", ProgressBarFill).CornerRadius = UDim.new(0, 8)
 
+local Background = Instance.new("Frame", LoadingGui)
+Background.Size = UDim2.new(1, 0, 1, 0) 
+Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Фон түсін қараңғылау еттім
+Background.BorderSizePixel = 0
+
+-- Файл аттарын көрсететін жаңа жазу
+local FileNameLabel = Instance.new("TextLabel", Background)
+FileNameLabel.Size = UDim2.new(1, 0, 0, 30)
+FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95) -- "Loading..." жазуының үстіне
+FileNameLabel.BackgroundTransparency = 1
+FileNameLabel.Font = Enum.Font.Code -- Хакер стиліндегі шрифт
+FileNameLabel.TextSize = 22
+FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Жасыл хакер түсі
+FileNameLabel.Text = "" -- Анимация үшін басында бос
+
+local LoadingLabel = Instance.new("TextLabel", Background)
+LoadingLabel.Size = UDim2.new(1, 0, 0, 50); 
+LoadingLabel.Position = UDim2.new(0, 0, 0.5, -60); 
+LoadingLabel.BackgroundTransparency = 1; 
+LoadingLabel.TextColor3 = currentTheme.accent; 
+LoadingLabel.Font = Enum.Font.SourceSansBold; 
+LoadingLabel.TextSize = 42; 
+table.insert(translatableObjects, {object=LoadingLabel, property="Text", key="loading"})
+
+local PercentageLabel = Instance.new("TextLabel", Background)
+PercentageLabel.Size = UDim2.new(1, 0, 0, 30); 
+PercentageLabel.Position = UDim2.new(0, 0, 0.5, 0); 
+PercentageLabel.BackgroundTransparency = 1; 
+PercentageLabel.TextColor3 = Color3.fromRGB(255, 255, 255); 
+PercentageLabel.Font = Enum.Font.SourceSansBold; 
+PercentageLabel.TextSize = 28; 
+PercentageLabel.Text = "0 %"
+
+local ProgressBarBG = Instance.new("Frame", Background); 
+ProgressBarBG.Size = UDim2.new(0, 400, 0, 25); 
+ProgressBarBG.Position = UDim2.new(0.5, -200, 0.5, 40); 
+ProgressBarBG.BackgroundColor3 = Color3.fromRGB(10, 10, 10); 
+ProgressBarBG.BorderSizePixel = 1; 
+ProgressBarBG.BorderColor3 = currentTheme.main; 
+Instance.new("UICorner", ProgressBarBG).CornerRadius = UDim.new(0, 8)
+
+local ProgressBarFill = Instance.new("Frame", ProgressBarBG); 
+ProgressBarFill.Size = UDim2.new(0, 0, 1, 0); 
+ProgressBarFill.BackgroundColor3 = currentTheme.accent; 
+Instance.new("UICorner", ProgressBarFill).CornerRadius = UDim.new(0, 8)
 
 if settings.theme == "Rainbow" then
     task.spawn(function()
@@ -1275,29 +1318,55 @@ end)
     end
 end)
 
--- 3. АНИМАЦИЯ ЗАГРУЗКИ
-applyLanguage(settings.language)
-local loadDuration=1
-for i=0,100 do 
-    local progress=i/100
-    local numDots=math.floor(i/12)%4
-    if LoadingLabel and LoadingLabel.Parent then
-		local langCode = languageMap[settings.language] or "en"
-		local baseLoadingText = translations.loading[langCode] or translations.loading.en
-        LoadingLabel.Text = baseLoadingText .. string.rep(".", numDots)
+-- 3. ЖАҢА АНИМАЦИЯ ЛОГИКАСЫ ЖӘНЕ 4. АЯҚТАУ
+task.spawn(function()
+    applyLanguage(settings.language)
+    local TweenService = game:GetService("TweenService")
+    
+    local filesToLoad = {
+        "init: Wilsonhub_settings.json",
+        "loading: Wilsonhub_scripts.json",
+        "compiling: WILSONHUB.lua",
+        "rendering: WilsonGui.json",
+        "EXECUTING..."
+    }
+    
+    local totalDuration = 4.5 -- Анимацияның жалпы ұзақтығы (4.5 секунд)
+    local timePerFile = totalDuration / #filesToLoad
+
+    -- Анимация циклі
+    for i, fileName in ipairs(filesToLoad) do
+        -- Файл атын біртіндеп жазу эффектісі
+        FileNameLabel.Text = ""
+        for j = 1, #fileName do
+            FileNameLabel.Text = string.sub(fileName, 1, j)
+            task.wait(0.03) -- Әр әріп арасындағы кідіріс
+        end
+        
+        -- Прогресс барды және пайызды жаңарту
+        local progress = i / #filesToLoad
+        local percent = math.floor(progress * 100)
+        
+        -- Прогресс барды жайлап толтыру
+        TweenService:Create(ProgressBarFill, TweenInfo.new(timePerFile * 0.5), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
+        
+        -- Пайызды санау эффектісі
+        local currentPercent = tonumber(PercentageLabel.Text:match("%d+")) or 0
+        for p = currentPercent + 1, percent do
+            PercentageLabel.Text = tostring(p) .. " %"
+            task.wait((timePerFile * 0.5) / (percent - currentPercent))
+        end
+        PercentageLabel.Text = tostring(percent) .. " %"
     end
-    PercentageLabel.Text=i.." %"
-    ProgressBarFill.Size=UDim2.new(progress,0,1,0)
-    task.wait(loadDuration/100)
-end
-task.wait(0.2)
+    
+    task.wait(0.3) -- Аяқталған соң сәл күту
 
-
--- 4. ЗАВЕРШЕНИЕ
-LoadingGui:Destroy()
-local WilsonHubGui=player.PlayerGui:FindFirstChild("WilsonHubGui")
-if WilsonHubGui then WilsonHubGui.Enabled=true end
-sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
+    -- GUI-ды жою және негізгісін қосу
+    LoadingGui:Destroy()
+    local WilsonHubGui = player.PlayerGui:FindFirstChild("WilsonHubGui")
+    if WilsonHubGui then WilsonHubGui.Enabled = true end
+    sendTranslatedNotification("notif_welcome_title", "notif_welcome_text", 7, "notif_welcome_button")
+end)
 
 -- [[ МУЗЫКАНЫ БАСҚАРУ ЖҮЙЕСІ (ЖАҢАРТЫЛҒАН) ]]
 -- Бастапқы айнымалылар
