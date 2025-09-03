@@ -618,7 +618,7 @@ end)
 -- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
 -- ================================================================= --
 
--- 1. ЭКРАН ЗАГРУЗКИ (ЖАҢАРТЫЛҒАН)
+-- 1. ЭКРАН ЗАГРУЗКИ (ЖЫЛДАМДАТЫЛҒАН)
 local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); 
 LoadingGui.Name = "LoadingGui"; 
 LoadingGui.ResetOnSpawn = false; 
@@ -627,18 +627,17 @@ LoadingGui.IgnoreGuiInset = true
 
 local Background = Instance.new("Frame", LoadingGui)
 Background.Size = UDim2.new(1, 0, 1, 0) 
-Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Фон түсін қараңғылау еттім
+Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
 Background.BorderSizePixel = 0
 
--- Файл аттарын көрсететін жаңа жазу
 local FileNameLabel = Instance.new("TextLabel", Background)
 FileNameLabel.Size = UDim2.new(1, 0, 0, 30)
-FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95) -- "Loading..." жазуының үстіне
+FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95)
 FileNameLabel.BackgroundTransparency = 1
-FileNameLabel.Font = Enum.Font.Code -- Хакер стиліндегі шрифт
+FileNameLabel.Font = Enum.Font.Code
 FileNameLabel.TextSize = 22
-FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Жасыл хакер түсі
-FileNameLabel.Text = "" -- Анимация үшін басында бос
+FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0)
+FileNameLabel.Text = ""
 
 local LoadingLabel = Instance.new("TextLabel", Background)
 LoadingLabel.Size = UDim2.new(1, 0, 0, 50); 
@@ -1331,37 +1330,32 @@ task.spawn(function()
         "EXECUTING..."
     }
     
-    local totalDuration = 4.5 -- Анимацияның жалпы ұзақтығы (4.5 секунд)
+    -- [[ ЖЫЛДАМДЫҚТЫ ОСЫ ЖЕРДЕН ӨЗГЕРТТІМ ]]
+    local totalDuration = 3.0 -- Анимацияның жалпы ұзақтығы (3 секунд)
     local timePerFile = totalDuration / #filesToLoad
 
-    -- Анимация циклі
     for i, fileName in ipairs(filesToLoad) do
-        -- Файл атын біртіндеп жазу эффектісі
         FileNameLabel.Text = ""
         for j = 1, #fileName do
             FileNameLabel.Text = string.sub(fileName, 1, j)
-            task.wait(0.03) -- Әр әріп арасындағы кідіріс
+            task.wait(0.02) -- Әріптердің шығуын да сәл тездеттім
         end
         
-        -- Прогресс барды және пайызды жаңарту
         local progress = i / #filesToLoad
         local percent = math.floor(progress * 100)
         
-        -- Прогресс барды жайлап толтыру
         TweenService:Create(ProgressBarFill, TweenInfo.new(timePerFile * 0.5), {Size = UDim2.new(progress, 0, 1, 0)}):Play()
         
-        -- Пайызды санау эффектісі
         local currentPercent = tonumber(PercentageLabel.Text:match("%d+")) or 0
         for p = currentPercent + 1, percent do
             PercentageLabel.Text = tostring(p) .. " %"
-            task.wait((timePerFile * 0.5) / (percent - currentPercent))
+            task.wait((timePerFile * 0.5) / (percent - currentPercent + 1))
         end
         PercentageLabel.Text = tostring(percent) .. " %"
     end
     
-    task.wait(0.3) -- Аяқталған соң сәл күту
+    task.wait(0.3)
 
-    -- GUI-ды жою және негізгісін қосу
     LoadingGui:Destroy()
     local WilsonHubGui = player.PlayerGui:FindFirstChild("WilsonHubGui")
     if WilsonHubGui then WilsonHubGui.Enabled = true end
