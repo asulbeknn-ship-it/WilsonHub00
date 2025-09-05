@@ -1,1 +1,3 @@
-showExecutedNotification(); workspace.Gravity = 30 end);
+local physicsService = game:GetService("Workspace")
+
+physicsService.Gravity = 30
