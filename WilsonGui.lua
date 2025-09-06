@@ -409,3 +409,51 @@ game:GetService("RunService").RenderStepped:Connect(function()
 end) end)
 CreateScriptButton("Univ fireparts", function() loadstring(game:HttpGet("https://raw.githubusercontent.com/Paul512-max/Troll-is-a-Pinning-Tower-2-Script-Trolling/refs/heads/main/Troll%20is%20a%20Pinning%20Tower%202%20Script"))() end)
 CreateScriptButton("Kill all fortline", function() loadstring(game:HttpGet("https://gist.githubusercontent.com/ExploiterGuy/4d95c83a854d6e7265a43094219d0b00/raw/8bc8d511803b2e5b2a1b6abe70c6e1c994601323/%255B%25F0%259F%2594%25AB%255D%2520Fortline"))() end)
+CreateScriptButton("noclip gui", function() -- Noclip Toggle GUI (แก้ไขแล้ว: OFF = กลับมาชนกำแพง)
+local ScreenGui = Instance.new("ScreenGui")
+local ToggleButton = Instance.new("TextButton")
+
+ScreenGui.Parent = game.CoreGui
+ToggleButton.Parent = ScreenGui
+ToggleButton.Text = "Noclip: OFF"
+ToggleButton.Size = UDim2.new(0, 200, 0, 50)
+ToggleButton.Position = UDim2.new(0.4, 0, 0.1, 0)
+ToggleButton.BackgroundColor3 = Color3.fromRGB(50, 50, 50)
+ToggleButton.TextColor3 = Color3.fromRGB(255, 255, 255)
+ToggleButton.Font = Enum.Font.SourceSansBold
+ToggleButton.TextSize = 24
+ToggleButton.Draggable = true
+
+-- ตัวแปรเปิด/ปิด
+getgenv().NoclipEnabled = false
+
+-- ฟังก์ชัน Toggle
+ToggleButton.MouseButton1Click:Connect(function()
+    getgenv().NoclipEnabled = not getgenv().NoclipEnabled
+    if getgenv().NoclipEnabled then
+        ToggleButton.Text = "Noclip: ON"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(0, 170, 0)
+    else
+        ToggleButton.Text = "Noclip: OFF"
+        ToggleButton.BackgroundColor3 = Color3.fromRGB(170, 0, 0)
+        -- คืนค่า CanCollide = true ตอนปิด
+        if game.Players.LocalPlayer.Character then
+            for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+                if v:IsA("BasePart") then
+                    v.CanCollide = true
+                end
+            end
+        end
+    end
+end)
+
+-- Loop Noclip
+game:GetService("RunService").Stepped:Connect(function()
+    if getgenv().NoclipEnabled and game.Players.LocalPlayer.Character then
+        for _,v in pairs(game.Players.LocalPlayer.Character:GetDescendants()) do
+            if v:IsA("BasePart") and v.CanCollide then
+                v.CanCollide = false
+            end
+        end
+    end
+end) end)
