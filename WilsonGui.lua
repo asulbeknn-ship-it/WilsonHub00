@@ -1,7 +1,7 @@
 local GUI_TITLE = "WILSONGUI V 1.0.0 BY WILLIAM"
-local GUI_MAIN_COLOR = Color3.fromRGB(0, 0, 255)
-local ICON_BACKGROUND_COLOR = Color3.fromRGB(25, 25, 25)
-local ICON_BORDER_COLOR = Color3.fromRGB(0, 0, 255)
+local GUI_MAIN_COLOR = Color3.fromRGB(0, 0, 0)
+local ICON_BACKGROUND_COLOR = Color3.fromRGB(255, 0, 0)
+local ICON_BORDER_COLOR = Color3.fromRGB(255, 0, 0)
 local ICON_ASSET_ID = "rbxassetid://121928953984347"
 
 local UserInputService = game:GetService("UserInputService")
@@ -22,14 +22,14 @@ mainFrame.Parent = screenGui
 local titleBar = Instance.new("Frame")
 titleBar.Name = "TitleBar"
 titleBar.Size = UDim2.new(1, 0, 0, 30)
-titleBar.BackgroundColor3 = Color3.fromRGB(0, 0, 139)
+titleBar.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 titleBar.Parent = mainFrame
 
 local titleLabel = Instance.new("TextLabel")
 titleLabel.Name = "TitleLabel"
 titleLabel.Size = UDim2.new(1, -30, 1, 0)
 titleLabel.BackgroundTransparency = 1
-titleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+titleLabel.TextColor3 = Color3.fromRGB(0, 0, 0)
 titleLabel.Font = Enum.Font.SourceSansBold
 titleLabel.TextSize = 18
 titleLabel.Text = GUI_TITLE
@@ -45,7 +45,7 @@ closeButton.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 closeButton.TextColor3 = Color3.fromRGB(0, 0, 0)
 closeButton.Font = Enum.Font.SourceSansBold
 closeButton.TextSize = 20
-closeButton.Text = "X"
+closeButton.Text = "—"
 closeButton.Parent = titleBar
 
 local contentFrame = Instance.new("Frame")
@@ -142,7 +142,7 @@ local function CreateScriptButton(buttonText, scriptFunction)
 	local button = Instance.new("TextButton")
 	button.Name = buttonText
 	button.Text = buttonText
-	button.BackgroundColor3 = Color3.fromRGB(0, 0, 139)
+	button.BackgroundColor3 = Color3.fromRGB(255, 0, 0)
 	button.TextColor3 = Color3.fromRGB(255, 255, 255)
 	button.Font = Enum.Font.SourceSans
 	button.TextSize = 16
