@@ -621,7 +621,73 @@ end)
 -- [[ ЖАҢА КІРІСПЕ АНИМАЦИЯСЫНЫҢ СОҢЫ ]]
 -- ================================================================= --
 
--- 1. СОЗДАНИЕ ГЛАВНОГО GUI
+-- 1. ЭКРАН ЗАГРУЗКИ (ЖАҢАРТЫЛҒАН)
+local LoadingGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); 
+LoadingGui.Name = "LoadingGui"; 
+LoadingGui.ResetOnSpawn = false; 
+LoadingGui.ZIndexBehavior = Enum.ZIndexBehavior.Global
+LoadingGui.IgnoreGuiInset = true
+
+local Background = Instance.new("Frame", LoadingGui)
+Background.Size = UDim2.new(1, 0, 1, 0) 
+Background.BackgroundColor3 = Color3.fromRGB(10, 10, 10) -- Фон түсін қараңғылау еттім
+Background.BorderSizePixel = 0
+
+-- Файл аттарын көрсететін жаңа жазу
+local FileNameLabel = Instance.new("TextLabel", Background)
+FileNameLabel.Size = UDim2.new(1, 0, 0, 30)
+FileNameLabel.Position = UDim2.new(0, 0, 0.5, -95) -- "Loading..." жазуының үстіне
+FileNameLabel.BackgroundTransparency = 1
+FileNameLabel.Font = Enum.Font.Code -- Хакер стиліндегі шрифт
+FileNameLabel.TextSize = 22
+FileNameLabel.TextColor3 = Color3.fromRGB(0, 255, 0) -- Жасыл хакер түсі
+FileNameLabel.Text = "" -- Анимация үшін басында бос
+
+local LoadingLabel = Instance.new("TextLabel", Background)
+LoadingLabel.Size = UDim2.new(1, 0, 0, 50); 
+LoadingLabel.Position = UDim2.new(0, 0, 0.5, -60); 
+LoadingLabel.BackgroundTransparency = 1; 
+LoadingLabel.TextColor3 = currentTheme.accent; 
+LoadingLabel.Font = Enum.Font.SourceSansBold; 
+LoadingLabel.TextSize = 42; 
+table.insert(translatableObjects, {object=LoadingLabel, property="Text", key="loading"})
+
+local PercentageLabel = Instance.new("TextLabel", Background)
+PercentageLabel.Size = UDim2.new(1, 0, 0, 30); 
+PercentageLabel.Position = UDim2.new(0, 0, 0.5, 0); 
+PercentageLabel.BackgroundTransparency = 1; 
+PercentageLabel.TextColor3 = Color3.fromRGB(255, 255, 255); 
+PercentageLabel.Font = Enum.Font.SourceSansBold; 
+PercentageLabel.TextSize = 28; 
+PercentageLabel.Text = "0 %"
+
+local ProgressBarBG = Instance.new("Frame", Background); 
+ProgressBarBG.Size = UDim2.new(0, 400, 0, 25); 
+ProgressBarBG.Position = UDim2.new(0.5, -200, 0.5, 40); 
+ProgressBarBG.BackgroundColor3 = Color3.fromRGB(10, 10, 10); 
+ProgressBarBG.BorderSizePixel = 1; 
+ProgressBarBG.BorderColor3 = currentTheme.main; 
+Instance.new("UICorner", ProgressBarBG).CornerRadius = UDim.new(0, 8)
+
+local ProgressBarFill = Instance.new("Frame", ProgressBarBG); 
+ProgressBarFill.Size = UDim2.new(0, 0, 1, 0); 
+ProgressBarFill.BackgroundColor3 = currentTheme.accent; 
+Instance.new("UICorner", ProgressBarFill).CornerRadius = UDim.new(0, 8)
+
+if settings.theme == "Rainbow" then
+    task.spawn(function()
+        while LoadingGui and LoadingGui.Parent do
+            local hue = tick() % 2 / 2
+            local rainbowColor = Color3.fromHSV(hue, 1, 1)
+            if LoadingLabel and LoadingLabel.Parent then LoadingLabel.TextColor3 = rainbowColor end
+            if ProgressBarBG and ProgressBarBG.Parent then ProgressBarBG.BorderColor3 = rainbowColor end
+            if ProgressBarFill and ProgressBarFill.Parent then ProgressBarFill.BackgroundColor3 = rainbowColor end
+            RunService.RenderStepped:Wait()
+        end
+    end)
+end
+
+-- 2. СОЗДАНИЕ ГЛАВНОГО GUI
 task.spawn(function()
     local success, err = pcall(function()
         local WilsonHubGui = Instance.new("ScreenGui", player:WaitForChild("PlayerGui")); WilsonHubGui.Name = "WilsonHubGui"; WilsonHubGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling; WilsonHubGui.ResetOnSpawn = false; WilsonHubGui.Enabled = false
